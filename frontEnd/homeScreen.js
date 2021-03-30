@@ -11,7 +11,6 @@ import {
   TouchableOpacity,
 } from "react-native";
 import styles from '../componentStyles.js'
-import { NavigationContainer } from '@react-navigation/native';
 
 export default HomeScreen = ({ navigation }) => {
     const [email, setEmail] = useState("");

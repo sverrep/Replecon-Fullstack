@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import HomeScreen from './frontEnd/homeScreen.js';
 import SignUpScreen from './frontEnd/signUpScreen.js';
-import ProfileScreen from './frontEnd/profileScreen.js';
+import StudentLoggedIn from './frontEnd/studentLoggedIn.js';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
@@ -18,7 +18,8 @@ export default function App() {
     />
     <Stack.Screen
         name="Profile"
-        component={ProfileScreen}
+        component={StudentLoggedIn}
+        options={{headerShown: false}}
     />
     <Stack.Screen
         name="SignUp"

@@ -10,7 +10,6 @@ import {
   TouchableOpacity,
 } from "react-native";
 import styles from '../componentStyles.js'
-import { NavigationContainer } from '@react-navigation/native';
 
 export default SignUpScreen = ({ navigation, route }) => {
     const [name, setName] = useState("");
