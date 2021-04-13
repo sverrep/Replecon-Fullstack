@@ -1,13 +1,13 @@
 from django.urls import path, include
-from .views import ShopViewSet, ItemViewSet
-from rest_framework.routers import DefaultRouter
+from .views import ShopDetails, ShopList, ItemDetails, ItemList, ItemFromShop
 
-router = DefaultRouter()
-router.register('shops', ShopViewSet, basename='shops')
-router.register('items', ItemViewSet, basename='items')
+
 
 
 urlpatterns = [
-path('', include(router.urls)),
-
+    path('shops/', ShopList.as_view()),
+    path('shops/<int:id>', ShopDetails.as_view()),
+    path('items/', ItemList.as_view()),
+    path('items/<int:id>', ItemDetails.as_view()),
+    path('itemfromshop/<int:shop>', ItemFromShop.as_view())
 ]
