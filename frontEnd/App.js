@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import HomeScreen from './frontEnd/homeScreen.js';
-import SignUpScreen from './frontEnd/signUpScreen.js';
-import StudentLoggedIn from './frontEnd/studentLoggedIn.js';
+import LoginScreen from './components/loginScreen.js';
+import SignUpScreen from './components/signUpScreen.js';
+import StudentLoggedIn from './components/studentLoggedIn.js';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
@@ -12,8 +12,8 @@ export default function App() {
   <NavigationContainer>
   <Stack.Navigator>
     <Stack.Screen
-        name = "Home"
-        component={HomeScreen}
+        name = "Login"
+        component={LoginScreen}
         options={{headerShown: false}}
     />
     <Stack.Screen
