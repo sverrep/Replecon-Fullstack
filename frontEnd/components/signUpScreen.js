@@ -1,5 +1,5 @@
 import 'react-native-gesture-handler';
-import React, { useState } from "react";
+import React, { useState, Component } from "react";
 import {
   StyleSheet,
   Text,
@@ -9,10 +9,25 @@ import {
   Button,
   TouchableOpacity,
 } from "react-native";
-import styles from '../componentStyles.js'
+import LoginOrSignupForm from './classes/LoginOrSignupForm.js';
 
-export default SignUpScreen = ({ navigation, route }) => {
-    const [name, setName] = useState("");
+class SignupScreen extends Component {
+    render() {
+        return (
+          <View style={{ flex: 1 }}>
+            <LoginOrSignupForm create />
+          </View>
+        );
+      }
+    };
+
+export default SignupScreen;
+   
+   
+   
+   
+   
+    /* const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [classCode, setClassCode] = useState("");
@@ -66,5 +81,4 @@ export default SignUpScreen = ({ navigation, route }) => {
             </TouchableOpacity>
 
     </SafeAreaView>
-    )
-};
+    )*/
