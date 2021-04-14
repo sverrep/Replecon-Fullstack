@@ -15,7 +15,6 @@ import styles from '../componentStyles.js'
 
 class LoginScreen extends Component {
     render() {
-      const { navigation } = this.props;
       return (
         <View style={{ flex: 1 }}>
           <LoginOrSignupForm />

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import LogInScreen from './components/loginScreen.js';
+import LoginScreen from './components/loginScreen.js';
 import SignUpScreen from './components/signUpScreen.js';
 import StudentLoggedIn from './components/studentLoggedIn.js';
 import { NavigationContainer } from '@react-navigation/native';
@@ -12,8 +12,8 @@ export default function App() {
   <NavigationContainer>
   <Stack.Navigator>
     <Stack.Screen
-        name = "Home"
-        component={LogInScreen}
+        name = "Login"
+        component={LoginScreen}
         options={{headerShown: false}}
     />
     <Stack.Screen

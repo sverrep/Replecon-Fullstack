@@ -39,7 +39,7 @@ class LoginOrSignupForm extends Component {
         }
         console.log(payload);
         
-        axios.post(`http://192.168.0.6:80/auth/${endpoint}/`, payload)
+        axios.post(`http://192.168.0.6:8000/auth/${endpoint}/`, payload)
         .then(response => {
             console.log(response.data);
             const { token, user } = response.data;

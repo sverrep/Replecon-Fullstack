@@ -14,7 +14,7 @@ class CreateUserAPIView(CreateAPIView):
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data = request.data)
-        serializer.is_valid(raise_Exception = True)
+        serializer.is_valid(raise_exception = True)
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
         token = Token.objects.create(user=serializer.instance)
@@ -28,6 +28,6 @@ class CreateUserAPIView(CreateAPIView):
 class LogoutUserAPIView(APIView):
     queryset = get_user_model().objects.all()
 
-    def get(self, reqiest, format = None):
+    def get(self, request, format = None):
         request.user.auth_token.delete()
         return Response(status=status.HTTP_200_OK)

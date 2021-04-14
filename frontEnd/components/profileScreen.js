@@ -1,5 +1,5 @@
 import 'react-native-gesture-handler';
-import React, { useState } from "react";
+import React, { Component } from "react";
 import {
   StyleSheet,
   Text,
@@ -9,20 +9,36 @@ import {
   TextInput,
   Button,
   TouchableOpacity,
-  StatusBar
 } from "react-native";
 import styles from '../componentStyles.js';
-import BankScreen from './bankScreen.js';
-import StoreScreen from './storeScreen.js';
-import ClassroomScreen from './classroomScreen.js';
-import StatsScreen from './statsScreen.js';
-import { createBottomTabNavigator, createAppContainer} from '@react-navigation/native';
-import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { useNavigation } from '@react-navigation/native';
+import axios from 'axios';
 
 
-export default ProfileScreen = ({ navigation, route }) => {
+class ProfileScreen extends Component {
+  handleRequest() {
+    // This request will only succeed if the Authorization header
+    // contains the API token
+    axios.get('http://192.168.0.6:8000/auth/logout/')
+      .then(response => {
+        axios.defaults.headers.common.Authorization = null
+        this.props.navigation.navigate('Login');
+      })
+      .catch(error =>  console.log(error));
+  }
+  
+  render() {
     return (
-        <Text>This is profile screen</Text>
-        );
-};
+      <View style={{ flex: 1 }}>
+        <Button title="Logout" onPress={this.handleRequest.bind(this)}/>
+      </View>
+    );
+  }
+}
+
+export default function(props) {
+  const navigation = useNavigation();
+
+  return <ProfileScreen {...props} navigation={navigation} />;
+}
