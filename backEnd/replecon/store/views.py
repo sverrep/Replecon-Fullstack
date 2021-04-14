@@ -3,17 +3,12 @@ from .models import Shop, Item
 from .serializers import ShopSerializer, ItemSerializer
 from rest_framework import viewsets, generics, mixins, viewsets
 
+from django.http import JsonResponse
+from rest_framework.parsers import JSONParser
+from rest_framework.decorators import api_view, APIView
+
 # Create your views here.
-'''
-class ShopViewSet(viewsets.ModelViewSet):
-    queryset = Shop.objects.all()
-    serializer_class = ShopSerializer
 
-class ItemViewSet(viewsets.ModelViewSet):
-    queryset = Item.objects.all()
-    serializer_class = ItemSerializer
-
-'''
 
 class ShopList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
     queryset = Shop.objects.all()
@@ -73,5 +68,4 @@ class ItemFromShop(generics.GenericAPIView, mixins.ListModelMixin, mixins.Retrie
     lookup_field = 'shop'
 
     def get(self, request, shop):
-        self.queryset.filter(shop=shop)
-        return self.list(request)
+        return self.list(request, shop=shop)
