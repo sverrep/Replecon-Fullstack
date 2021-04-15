@@ -54,4 +54,29 @@ export default styles = StyleSheet.create({
     marginTop: 20,
     backgroundColor: "#2196F3",
   },
+
+  fab: {
+    position: 'absolute',
+    margin: 16,
+    backgroundColor: "#8DFFF9",
+    right: 0,
+    top: 0,
+  },
+
+  profileContainer: {
+    flex: 1,
+    padding: 20,
+
+  },
+
+  cardStyle:{
+    padding: 10,
+    marginTop: 10,
+  },
+
+  balanceAmount:{
+    marginBottom: 30,
+    fontSize: 35,
+    fontWeight: "bold",
+  },
 });
