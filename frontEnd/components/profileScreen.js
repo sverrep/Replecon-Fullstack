@@ -33,11 +33,22 @@ const mydata = [
   {id: 12, amount:'94', symbol:'-'},
 ]
 
+const getTheme = (item) => {
+  if (item.symbol == '+')
+    return('green')
+  else if (item.symbol == '-')
+    return('red')
+
+}
+
 const renderData = (item) => {
+  const color = getTheme(item)
   return(
+    
     <Card style = {styles.cardStyle}>
+    
     <Text style={{ textAlign: "left" }}> Details</Text>
-    <Text style={{ textAlign: "right" }}>{item.symbol} {item.amount}</Text>
+    <Text style={{ textAlign: "right", color: color }}>{item.symbol} {item.amount}</Text>
     </Card>
   )
 
