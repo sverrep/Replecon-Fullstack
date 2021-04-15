@@ -7,14 +7,14 @@ import axios from 'axios';
 class LoginOrSignupForm extends Component {
 
     state = {
-        username: '',
+        email: '',
         password: '',
-        firstName: '',
-        lastName: ''
+        first_name: '',
+        class_code: ''
     }
 
-    onUsernameChange(text) {
-        this.setState({ username: text });
+    onEmailChange(text) {
+        this.setState({ email: text });
     }
 
     onPasswordChange(text) {
@@ -22,33 +22,38 @@ class LoginOrSignupForm extends Component {
     }
 
     onFirstNameChange(text) {
-        this.setState({ firstName: text });
+        this.setState({ first_name: text });
     }
 
-    onLastNameChange(text) {
-        this.setState({ lastName: text });
+    onClassCodeChange(text) {
+        this.setState({ class_code: text });
     }
 
     handleRequest() {
         const endpoint = this.props.create ? 'register' : 'login';
-        const payload = { username: this.state.username, password: this.state.password } 
+        const payload = { username: this.state.email, password: this.state.password } 
         
         if (this.props.create) {
-            payload.first_name = this.state.firstName;
-            payload.last_name = this.state.lastName;
+            payload.first_name = this.state.first_name;
         }
         console.log(payload);
         
         axios.post(`http://192.168.0.6:8000/auth/${endpoint}/`, payload)
         .then(response => {
-            console.log(response.data);
             const { token, user } = response.data;
-    
-            // We set the returned token as the default authorization header
             axios.defaults.headers.common.Authorization = `Token ${token}`;
-            
-            // Navigate to the home screen
-            this.props.navigation.navigate('Profile');
+            if(this.state.class_code != '') {
+                axios.put('http://192.168.0.6:8000/students/class_code/', {class_code: this.state.class_code})
+                .then(response => {
+                    console.log(response.data, "success");
+
+                    this.props.navigation.navigate('Profile');
+            })
+            .catch(error => console.log(error));
+            }
+            else {
+                this.props.navigation.navigate('Profile');
+            }
         })
         .catch(error => console.log(error));
     }
@@ -57,6 +62,7 @@ class LoginOrSignupForm extends Component {
         const { fieldStyle, textInputStyle } = style;
         if (this.props.create) {
         return (
+            <View style={{flex: 1, alignItems: 'center'}}>
             <View style={fieldStyle}>
                 <TextInput
                 placeholder="Name"
@@ -64,12 +70,15 @@ class LoginOrSignupForm extends Component {
                 onChangeText={this.onFirstNameChange.bind(this)}
                 style={textInputStyle}
                 />
+                </View>
+            <View style={fieldStyle}>
                 <TextInput
-                placeholder="Last Name"
+                placeholder="Class Code"
                 autoCorrect={false}
-                onChangeText={this.onLastNameChange.bind(this)}
+                onChangeText={this.onClassCodeChange.bind(this)}
                 style={textInputStyle}
                 />
+            </View>
             </View>
         );
         }
@@ -107,14 +116,14 @@ class LoginOrSignupForm extends Component {
         } = style;
 
         return (
-        <View style={{ flex: 1, backgroundColor: 'white' }}>
+        <View style={{ flex: 1, marginTop: 100 }}>
             <View style={formContainerStyle}>
             <View style={fieldStyle}>
                 <TextInput
-                placeholder="Username"
+                placeholder="Email"
                 autoCorrect={false}
                 autoCapitalize="none"
-                onChangeText={this.onUsernameChange.bind(this)}
+                onChangeText={this.onEmailChange.bind(this)}
                 style={textInputStyle}
                 />
             </View>
@@ -155,12 +164,12 @@ const style = StyleSheet.create({
   },
   fieldStyle: {
     flexDirection: 'row',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   buttonContainerStyle: {
     flex: 1,
     justifyContent: 'center',
-    padding: 25
+    padding: 25,
   },
   accountCreateTextStyle: {
     color: 'black'
