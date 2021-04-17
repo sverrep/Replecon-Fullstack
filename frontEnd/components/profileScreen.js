@@ -55,9 +55,21 @@ const renderData = (item) => {
 
 }
 
+
+
 const currency = 'Cook Dollars'
 
+
+
 class ProfileScreen extends Component {
+  state = {
+    balance: "",
+  }
+
+  componentDidMount(){
+    this.getStudentBalance()
+  }
+  
   handleRequest() {
     // This request will only succeed if the Authorization header
     // contains the API token
@@ -68,7 +80,20 @@ class ProfileScreen extends Component {
       })
       .catch(error =>  console.log(error));
   }
+
+  getStudentBalance() {
+    axios.get(getIP()+'/students/balance/')
+    .then(response => {
+      console.log(response.data)
+      const balance = response.data
+      this.setState({balance})
+      console.log(this.state.balance)
+    })
+    .catch(error =>  console.log(error));
+  }
   
+
+
   render() {
     return (
       <View style={[styles.profileContainer, {
@@ -86,7 +111,8 @@ class ProfileScreen extends Component {
 
       <View style={{ flex: 2 }}>
         <Text style = {styles.header}>Balance</Text>
-        <Text style = {styles.balanceAmount}>206.99 {currency}</Text>
+        <Text style = {styles.balanceAmount}>{this.state.balance} {currency}</Text>
+        
       </View>
       
       <View style={{ flex: 7 }}>
@@ -96,7 +122,7 @@ class ProfileScreen extends Component {
           renderItem = {({item})=> {
             return renderData(item)
           }}
-          keyExtractor = {item => item.id}
+          keyExtractor = {item => item.id.toString()}
         />
       </View>
     
