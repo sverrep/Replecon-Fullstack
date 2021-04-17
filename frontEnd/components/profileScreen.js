@@ -9,18 +9,58 @@ import {
   TextInput,
   Button,
   TouchableOpacity,
+  FlatList,
 } from "react-native";
 import styles from '../componentStyles.js';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
+import { FAB, Card } from 'react-native-paper';
 
+
+const mydata = [
+  {id: 1, amount:'100', symbol:'+'},
+  {id: 2, amount:'20', symbol:'-'},
+  {id: 3, amount:'50', symbol:'+'},
+  {id: 4, amount:'94', symbol:'-'},
+  {id: 5, amount:'100', symbol:'+'},
+  {id: 6, amount:'20', symbol:'-'},
+  {id: 7, amount:'50', symbol:'+'},
+  {id: 8, amount:'94', symbol:'-'},
+  {id: 9, amount:'100', symbol:'+'},
+  {id: 10, amount:'20', symbol:'-'},
+  {id: 11, amount:'50', symbol:'+'},
+  {id: 12, amount:'94', symbol:'-'},
+]
+
+const getTheme = (item) => {
+  if (item.symbol == '+')
+    return('green')
+  else if (item.symbol == '-')
+    return('red')
+
+}
+
+const renderData = (item) => {
+  const color = getTheme(item)
+  return(
+    
+    <Card style = {styles.cardStyle}>
+    
+    <Text style={{ textAlign: "left" }}> Details</Text>
+    <Text style={{ textAlign: "right", color: color }}>{item.symbol} {item.amount}</Text>
+    </Card>
+  )
+
+}
+
+const currency = 'Cook Dollars'
 
 class ProfileScreen extends Component {
   handleRequest() {
     // This request will only succeed if the Authorization header
     // contains the API token
-    axios.get('http://192.168.0.6:8000/auth/logout/')
+    axios.get('http://192.168.1.58:8000/auth/logout/')
       .then(response => {
         axios.defaults.headers.common.Authorization = null
         this.props.navigation.navigate('Login');
@@ -30,9 +70,36 @@ class ProfileScreen extends Component {
   
   render() {
     return (
+      <View style={[styles.profileContainer, {
+        flexDirection: "column"
+      }]}>
       <View style={{ flex: 1 }}>
-        <Button title="Logout" onPress={this.handleRequest.bind(this)}/>
+        <FAB
+          style = {styles.fab}
+          small = {true}
+          icon = 'logout-variant'
+
+          onPress={this.handleRequest.bind(this)}
+        />  
       </View>
+
+      <View style={{ flex: 2 }}>
+        <Text style = {styles.header}>Balance</Text>
+        <Text style = {styles.balanceAmount}>206.99 {currency}</Text>
+      </View>
+      
+      <View style={{ flex: 7 }}>
+        <Text style = {styles.header}>History</Text>
+        <FlatList
+          data = {mydata}
+          renderItem = {({item})=> {
+            return renderData(item)
+          }}
+          keyExtractor = {item => item.id}
+        />
+      </View>
+    
+    </View>
     );
   }
 }
