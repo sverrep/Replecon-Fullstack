@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Button, View, Text, TextInput, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import getIP from '../settings/settings.js';
 import axios from 'axios';
 
 
@@ -36,17 +37,13 @@ class LoginOrSignupForm extends Component {
         if (this.props.create) {
             payload.first_name = this.state.first_name;
         }
-        console.log(payload);
-        
-        axios.post(`http://192.168.1.58:8000/auth/${endpoint}/`, payload)
+        axios.post(getIP()+`/auth/${endpoint}/`, payload)
         .then(response => {
             const { token, user } = response.data;
             axios.defaults.headers.common.Authorization = `Token ${token}`;
             if(this.state.class_code != '') {
-                axios.put('http://192.168.0.6:8000/students/class_code/', {class_code: this.state.class_code})
+                axios.put(getIP()+'/students/class_code/', {class_code: this.state.class_code})
                 .then(response => {
-                    console.log(response.data, "success");
-
                     this.props.navigation.navigate('Profile');
             })
             .catch(error => console.log(error));

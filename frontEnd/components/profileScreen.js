@@ -15,6 +15,7 @@ import styles from '../componentStyles.js';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
+import getIP from './settings/settings.js';
 import { FAB, Card } from 'react-native-paper';
 
 
@@ -60,7 +61,7 @@ class ProfileScreen extends Component {
   handleRequest() {
     // This request will only succeed if the Authorization header
     // contains the API token
-    axios.get('http://192.168.1.58:8000/auth/logout/')
+    axios.get(getIP()+'/auth/logout/')
       .then(response => {
         axios.defaults.headers.common.Authorization = null
         this.props.navigation.navigate('Login');
