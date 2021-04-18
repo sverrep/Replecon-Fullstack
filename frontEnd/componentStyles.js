@@ -79,4 +79,14 @@ export default styles = StyleSheet.create({
     fontSize: 35,
     fontWeight: "bold",
   },
+
+  classroomContainer:{
+    flex: 1,
+    padding: 20,
+  },
+
+  studentCards:{
+    padding: 10,
+    marginTop: 10,
+  },
 });
