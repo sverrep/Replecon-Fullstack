@@ -7,7 +7,6 @@ from rest_framework import status, viewsets
 from rest_framework.views import APIView
 from users.serializers import CreateUserSerializer, CreateStudentSerializer
 from .models import Student
-import logging
 
 class CreateUserAPIView(CreateAPIView):
     permission_classes = [AllowAny]
@@ -51,7 +50,6 @@ class StudentClassCode(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
     def get(self, request, *args, **kwargs):
-        logger = logging.getLogger(__name__)
         queryset = Student.objects.all()
         loggedinStudent = Student.objects.get(user_id = request.user.id)
         serializer = CreateStudentSerializer(loggedinStudent)

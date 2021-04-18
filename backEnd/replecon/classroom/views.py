@@ -1,5 +1,4 @@
 from django.shortcuts import render
-from rest_framework.permissions import AllowAny
 from rest_framework import viewsets, generics, mixins
 from .models import Classroom
 from .serializers import ClassroomSerializer
@@ -8,7 +7,6 @@ from .serializers import ClassroomSerializer
 # Create your views here.
 
 class ClassroomList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
-    permission_classes = [AllowAny]
     queryset = Classroom.objects.all()
     serializer_class = ClassroomSerializer
 
@@ -19,7 +17,6 @@ class ClassroomList(generics.GenericAPIView, mixins.ListModelMixin, mixins.Creat
         return self.create(request)
 
 class ClassroomDetails(generics.GenericAPIView, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin):
-    permission_classes = [AllowAny]
     queryset = Classroom.objects.all()
     serializer_class = ClassroomSerializer
 
