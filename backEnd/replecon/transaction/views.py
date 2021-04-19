@@ -14,3 +14,13 @@ class CreateTransaction(generics.GenericAPIView, mixins.ListModelMixin, mixins.C
 
     def post(self, request):
         return self.create(request)
+
+class TransactionDetails(generics.GenericAPIView, mixins.RetrieveModelMixin):
+    queryset = Transaction.objects.all()
+    permission_classes = [AllowAny]
+    serializer_class = TransactionSerializer
+
+    lookup_field = 'id'
+
+    def get(self, request, id):
+        return self.retrieve(request, id=id)

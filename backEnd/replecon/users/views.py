@@ -52,7 +52,6 @@ class StudentClassCode(APIView):
     def get(self, request, *args, **kwargs):
         queryset = Student.objects.all()
         loggedin_student = Student.objects.get(user_id = request.user.id)
-        serializer = CreateStudentSerializer(loggedin_student)
         class_code = loggedin_student.class_code
         classroom_students = []
         for student in queryset:
@@ -63,10 +62,24 @@ class StudentClassCode(APIView):
         return Response(sorted_list, status=status.HTTP_200_OK)
 
 
-
 class StudentBalance(APIView):
     def get(self, request):
         student = Student.objects.get(user_id = request.user.id)
-        serializer = CreateStudentSerializer(student)
         return Response(student.balance, status=status.HTTP_200_OK)
+    
+    def put(self, request, *args, **kwargs):
+        sender = Student.objects.get(user_id = request.user.id)
+        data = request.data
+        recipient = Student.objects.get(data.user_id)
+        amount = data.amount
+        sender_serializer = CreateStudentSerializer(sender, {balance: (sender.balance - amount)})
+        recipient_serializer = CreateStudentSerializer(recipient, {balance: (recipient.balance + amount)})
+        if sender_serializer.is_valid() and recipient_serializer.is_valid():
+            sender_serializer.save()
+            recipient_serializer.save()
+            return Response(status=status.HTTP_201_CREATED)
+        return Response(recipient_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
         
