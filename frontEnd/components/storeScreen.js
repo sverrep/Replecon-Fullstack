@@ -1,5 +1,5 @@
 import 'react-native-gesture-handler';
-import React, { useState } from "react";
+import React, { Component } from "react";
 import {
   StyleSheet,
   Text,
@@ -11,9 +11,20 @@ import {
   TouchableOpacity,
   StatusBar
 } from "react-native";
+import { useNavigation } from '@react-navigation/native';
 import styles from '../componentStyles.js'
 import { NavigationContainer } from '@react-navigation/native';
 
-export default StoreScreen = ({ navigation, route }) => {
-    return <Text>This is store screen</Text>;
-};
+class StoreScreen extends Component {
+  render(){
+    return(
+      <Text>This is the store screem</Text>
+    )
+  }
+}
+
+export default function(props) {
+  const navigation = useNavigation();
+
+  return <StoreScreen {...props} navigation={navigation} />;
+}
