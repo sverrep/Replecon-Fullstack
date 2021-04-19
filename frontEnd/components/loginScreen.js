@@ -1,17 +1,7 @@
 import 'react-native-gesture-handler';
-import React, { useState, Component } from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  SafeAreaView,
-  Image,
-  TextInput,
-  Button,
-  TouchableOpacity,
-} from "react-native";
+import React, { Component } from "react";
+import { View } from "react-native";
 import LoginOrSignupForm from './classes/LoginOrSignupForm.js';
-import styles from '../componentStyles.js'
 
 class LoginScreen extends Component {
     render() {

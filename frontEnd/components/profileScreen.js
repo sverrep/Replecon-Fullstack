@@ -1,18 +1,7 @@
 import 'react-native-gesture-handler';
 import React, { Component } from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  SafeAreaView,
-  Image,
-  TextInput,
-  Button,
-  TouchableOpacity,
-  FlatList,
-} from "react-native";
+import { Text, View, FlatList} from "react-native";
 import styles from '../componentStyles.js';
-import Icon from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import getIP from './settings/settings.js';
@@ -84,10 +73,8 @@ class ProfileScreen extends Component {
   getStudentBalance() {
     axios.get(getIP()+'/students/balance/')
     .then(response => {
-      console.log(response.data)
       const balance = response.data
       this.setState({balance})
-      console.log(this.state.balance)
     })
     .catch(error =>  console.log(error));
   }
