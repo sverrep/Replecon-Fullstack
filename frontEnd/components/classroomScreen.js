@@ -92,14 +92,10 @@ class ClassroomScreen extends Component {
             this.setState({sender_id: response.data}, () => {
               const payload = { user_id: this.state.recipient_id, amount: this.state.amount };
               const transaction_payload = { recipient_id: this.state.recipient_id, sender_id: this.state.sender_id, category: "Transfer", amount: this.state.amount };
-              console.log(transaction_payload)
               axios.put(getIP()+'/students/balance/', payload)
               .then(response => {
-                console.log("success 1")
                 axios.post(getIP()+'/transactions/', transaction_payload)
                 .then(response => {
-                  console.log("success 2")
-                  console.log(response)
                 })
                 .catch(error => console.log(error))
             })

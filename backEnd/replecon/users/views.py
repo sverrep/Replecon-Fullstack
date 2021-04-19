@@ -8,7 +8,6 @@ from rest_framework.views import APIView
 from users.serializers import CreateUserSerializer, CreateStudentSerializer
 from .models import Student
 from decimal import Decimal
-import logging
 
 class CreateUserAPIView(CreateAPIView):
     permission_classes = [AllowAny]
@@ -75,7 +74,6 @@ class StudentBalance(APIView):
         return Response(student.balance, status=status.HTTP_200_OK)
     
     def put(self, request, *args, **kwargs):
-        logger = logging.getLogger(__name__)
         sender = Student.objects.get(user_id = request.user.id)
         data = request.data
         recipient = Student.objects.get(user_id = data["user_id"])
