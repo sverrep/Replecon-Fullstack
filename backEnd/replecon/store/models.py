@@ -4,7 +4,7 @@ from django.db import models
 
 class Shop(models.Model):
     shop_name = models.CharField(max_length=100)
-    classroom = models.IntegerField()
+    classroom = models.CharField(max_length=6)
 
 
 class Item(models.Model):
