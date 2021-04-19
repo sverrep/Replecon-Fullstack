@@ -7,7 +7,6 @@ from rest_framework import status, viewsets
 from rest_framework.views import APIView
 from users.serializers import CreateUserSerializer, CreateStudentSerializer
 from .models import Student
-import logging
 
 class CreateUserAPIView(CreateAPIView):
     permission_classes = [AllowAny]
@@ -49,14 +48,23 @@ class StudentClassCode(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def get(self, request, *args, **kwargs):
+        queryset = Student.objects.all()
+        loggedinStudent = Student.objects.get(user_id = request.user.id)
+        serializer = CreateStudentSerializer(loggedinStudent)
+        class_code = loggedinStudent.class_code
+        classroomStudents = []
+        for student in queryset:
+            if (student.class_code == class_code):
+                classroomStudents.append(student.user.first_name)
+        return Response(sorted(classroomStudents), status=status.HTTP_200_OK)
+
+
 
 class StudentBalance(APIView):
     def get(self, request):
-        logger = logging.getLogger(__name__)
         student = Student.objects.get(user_id = request.user.id)
         serializer = CreateStudentSerializer(student)
-        logger.error("                                                ")
-        logger.error(student.balance)
-        logger.error("                                                ")
         return Response(student.balance, status=status.HTTP_200_OK)
         
