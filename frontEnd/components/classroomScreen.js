@@ -38,6 +38,7 @@ class ClassroomScreen extends Component {
       </Card>
     )
   
+  }
 
   getClassStudents() {
     axios.get(getIP()+'/students/class_code/')
@@ -53,12 +54,13 @@ class ClassroomScreen extends Component {
     axios.get(getIP()+'/classrooms/')
     .then(response => {
       this.findClassroom(response.data)
+
     })
     .catch(error => console.log(error))
   }
 
   findClassroom(classrooms){
-    for (let i = 0; i < Object.keys(classrooms).length-1; i++)
+    for (let i = 0; i <= Object.keys(classrooms).length-1; i++)
     {
       if (classrooms[i].class_code == this.state.class_code)
       {
