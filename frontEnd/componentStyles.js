@@ -13,8 +13,13 @@ export default styles = StyleSheet.create({
   },
 
   header: {
-    marginBottom: 30,
+    marginBottom: 15,
     fontSize: 20,
+    fontWeight: "bold",
+  },
+
+  subHeader: {
+    fontSize: 15,
     fontWeight: "bold",
   },
 

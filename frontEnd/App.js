@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import LoginScreen from './components/loginScreen.js';
 import SignUpScreen from './components/signUpScreen.js';
 import StudentLoggedIn from './components/studentLoggedIn.js';

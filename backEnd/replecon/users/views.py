@@ -51,14 +51,16 @@ class StudentClassCode(APIView):
     
     def get(self, request, *args, **kwargs):
         queryset = Student.objects.all()
-        loggedinStudent = Student.objects.get(user_id = request.user.id)
-        serializer = CreateStudentSerializer(loggedinStudent)
-        class_code = loggedinStudent.class_code
-        classroomStudents = []
+        loggedin_student = Student.objects.get(user_id = request.user.id)
+        serializer = CreateStudentSerializer(loggedin_student)
+        class_code = loggedin_student.class_code
+        classroom_students = []
         for student in queryset:
             if (student.class_code == class_code):
-                classroomStudents.append(student.user.first_name)
-        return Response(sorted(classroomStudents), status=status.HTTP_200_OK)
+                tempdict = {"id": student.user.id, "name": student.user.first_name, "class_code": class_code}
+                classroom_students.append(tempdict)
+        sorted_list = sorted(classroom_students, key=lambda k: k['name']) 
+        return Response(sorted_list, status=status.HTTP_200_OK)
 
 
 

@@ -1,31 +1,16 @@
 import 'react-native-gesture-handler';
-import React, { Component, useState } from "react";
+import React, { Component } from "react";
 import {
   Text,
   View,
   FlatList,
-  
 } from "react-native";
-
 import { useNavigation } from '@react-navigation/native';
 import styles from '../componentStyles.js'
-import { NavigationContainer } from '@react-navigation/native';
-import { Button, Card, Avatar, Title, Paragraph } from 'react-native-paper';
+import { Button, Card } from 'react-native-paper';
+import getIP from "./settings/settings.js";
+import axios from 'axios';
 
-const mydata = [
-  {id: 1, name: 'steven'},
-  {id: 2,  name: 'steven'},
-  {id: 3,  name: 'steven'},
-  {id: 4,  name: 'steven'},
-  {id: 5,  name: 'steven'},
-  {id: 6,  name: 'steven'},
-  {id: 7,  name: 'steven'},
-  {id: 8, name: 'steven'},
-  {id: 9,  name: 'steven'},
-  {id: 10,  name: 'steven'},
-  {id: 11,  name: 'steven'},
-  {id: 12,  name: 'steven'},
-]
 
 const renderData = (item) => {
   return(
@@ -39,6 +24,47 @@ const renderData = (item) => {
 
 
 class ClassroomScreen extends Component {
+
+  state = {
+    students: [],
+    class_code: "",
+    class_name: "",
+    teacher_id: "",
+  }
+
+  getClassStudents() {
+    axios.get(getIP()+'/students/class_code/')
+    .then(response => {
+      this.setState({ students: response.data });
+      this.setState({ class_code: this.state.students[0].class_code })
+      this.getClassroomDetails()
+    })
+    .catch(error => console.log(error))
+  }
+
+  getClassroomDetails(){
+    axios.get(getIP()+'/classrooms/')
+    .then(response => {
+      this.findClassroom(response.data)
+    })
+    .catch(error => console.log(error))
+  }
+
+  findClassroom(classrooms){
+    for (let i = 0; i < Object.keys(classrooms).length-1; i++)
+    {
+      if (classrooms[i].class_code == this.state.class_code)
+      {
+        this.setState({ class_name: classrooms[i].class_name });
+        this.setState({ teacher_id: classrooms[i].teacher_id })
+      }
+    }
+  }
+
+  componentDidMount(){
+    this.getClassStudents()
+  }
+
   render() {
     return (
       <View style={[styles.classroomContainer, {
@@ -46,14 +72,15 @@ class ClassroomScreen extends Component {
       }]}>
       
         <View style={{ flex: 1 }}>
-          <Text style={styles.header}>This is the classroom Screen</Text>
+          <Text style={styles.header}>{this.state.class_name}</Text>
+          <Text style={styles.subHeader}>{this.state.teacher_id}</Text>
         </View>
 
-        <View style={{ flex: 4}}>
+        <View style={{ flex: 6 }}>
           
             <View>
               <FlatList
-                data = {mydata}
+                data = {this.state.students}
                 renderItem = {({item})=> {
                   return renderData(item)
                 }}
