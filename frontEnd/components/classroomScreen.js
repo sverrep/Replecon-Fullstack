@@ -23,6 +23,9 @@ class ClassroomScreen extends Component {
     teacher_id: "",
     show:false,
     name:"",
+    amount: "",
+    recipient_id: '',
+    sender_id: '',
   }
 
   clickedItem = (data) => {
@@ -65,13 +68,52 @@ class ClassroomScreen extends Component {
       if (classrooms[i].class_code == this.state.class_code)
       {
         this.setState({ class_name: classrooms[i].class_name });
-        this.setState({ teacher_id: classrooms[i].teacher_id })
+        this.setState({ teacher_id: classrooms[i].teacher_id });
       }
     }
   }
 
   componentDidMount(){
     this.getClassStudents()
+  }
+
+  onAmountChange(text) {
+    this.setState({ amount: text });
+  } 
+
+  createTransaction(){
+    for (let i = 0; i <= Object.keys(this.state.students).length-1; i++)
+    {
+      if (this.state.students[i].name == this.state.name)
+      {
+        this.setState({ recipient_id: this.state.students[i].id }, () => {
+          axios.get(getIP()+'/students/current/')
+          .then(response => {
+            this.setState({sender_id: response.data}, () => {
+              const payload = { user_id: this.state.recipient_id, amount: this.state.amount };
+              const transaction_payload = { recipient_id: this.state.recipient_id, sender_id: this.state.sender_id, category: "Transfer", amount: this.state.amount };
+              console.log(transaction_payload)
+              axios.put(getIP()+'/students/balance/', payload)
+              .then(response => {
+                console.log("success 1")
+                axios.post(getIP()+'/transactions/', transaction_payload)
+                .then(response => {
+                  console.log("success 2")
+                  console.log(response)
+                })
+                .catch(error => console.log(error))
+            })
+          })
+          .catch(error => console.log(error))
+          })
+          .catch(error => console.log(error))
+          this.setState({show:false});
+        });
+        break;
+      }
+    }
+
+    
   }
 
   render() {
@@ -114,9 +156,9 @@ class ClassroomScreen extends Component {
                   <TextInput
                     label="Amount"
                     mode = 'outlined'
-
+                    onChangeText={this.onAmountChange.bind(this)}
                   ></TextInput>
-                  <Button onPress={() => {this.setState({show:false})}}>Send Money</Button>
+                  <Button onPress={() => {this.createTransaction()}}>Send Money</Button>
                 </View>
 
               </View>

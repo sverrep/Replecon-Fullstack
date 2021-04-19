@@ -1,7 +1,7 @@
 from django.urls import path, include
 from django.conf.urls import url
 from rest_framework.authtoken.views import obtain_auth_token
-from .views import CreateUserAPIView, LogoutUserAPIView, UserViewSet, StudentClassCode, StudentBalance
+from .views import CreateUserAPIView, LogoutUserAPIView, UserViewSet, StudentClassCode, StudentBalance, CurrentStudent
 from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
@@ -14,4 +14,6 @@ urlpatterns = [
     path('', include(router.urls)),
     url('students/class_code/', StudentClassCode.as_view()),
     url('students/balance/', StudentBalance.as_view()),
+    url('students/current/', CurrentStudent.as_view()),
+
 ]
