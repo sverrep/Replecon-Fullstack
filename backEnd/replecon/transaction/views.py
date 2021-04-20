@@ -28,16 +28,33 @@ class TransactionDetails(generics.GenericAPIView, mixins.RetrieveModelMixin):
     def get(self, request, id):
         return self.retrieve(request, id=id)
 
+class StoreTransaction(APIView):
+    queryset = Transaction.objects.all()
+    permission_classes = [AllowAny]
+    serializer_class = TransactionSerializer
+
+    def post(self, request):
+        logger = logging.getLogger(__name__)
+        recipient = get_user_model().objects.get(username = "STORE")
+        sender_id = request.user.id
+        category = "Store Purchase"
+        amount = request.data["amount"]
+        data = { "recipient_id": recipient.id, "sender_id": sender_id, "category": category, "amount": amount }
+        transaction_serializer = TransactionSerializer(data = data)
+        if transaction_serializer.is_valid():
+            transaction_serializer.save()
+            return Response(transaction_serializer.data, status=status.HTTP_201_CREATED)
+        return Response(transaction_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
 class ListTransactionsByID(APIView):
     queryset = Transaction.objects.all()
     permission_classes = [AllowAny]
     serializer_class = TransactionSerializer
 
     def get(self, request):
-        logger = logging.getLogger(__name__)
         all_transactions = Transaction.objects.all()
         transactions = []
-        logger.error(request.user.id)
         for transaction in all_transactions:
             if (transaction.sender_id == request.user.id):
                 user = get_user_model().objects.get(id = transaction.recipient_id)

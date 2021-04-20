@@ -1,11 +1,13 @@
+from django.contrib.auth import get_user_model
 from django.shortcuts import render
-from .models import Shop, Item
-from .serializers import ShopSerializer, ItemSerializer
-from rest_framework import viewsets, generics, mixins, viewsets
-
+from .models import Shop, Item, BoughtItems
+from .serializers import ShopSerializer, ItemSerializer, BoughtItemsSerializer
+from rest_framework import viewsets, generics, mixins, viewsets, status
+from rest_framework.response import Response
 from django.http import JsonResponse
 from rest_framework.parsers import JSONParser
 from rest_framework.decorators import api_view, APIView
+import logging
 
 # Create your views here.
 
@@ -69,3 +71,28 @@ class ItemFromShop(generics.GenericAPIView, mixins.ListModelMixin, mixins.Retrie
 
     def get(self, request, shop):
         return self.list(request, shop=shop)
+
+class ListBoughtItems(APIView):
+
+    def get(self, request):
+        logger = logging.getLogger(__name__)
+        user = get_user_model().objects.get(id = request.user.id)
+        bought_items = BoughtItems.objects.all()
+        user_items = []
+        for item in bought_items:
+            if item.user_id == user.id:
+                tempitem = Item.objects.get(id = item.item_id)
+                tempdict = {"id": item.id, "item_name": tempitem.item_name, "item_description": tempitem.description}
+                user_items.append(tempdict)
+        return Response(user_items, status=status.HTTP_200_OK)
+    
+    def post(self, request):
+        logger = logging.getLogger(__name__)
+        user_id = request.user.id
+        bought_item = Item.objects.get(item_name = request.data["item_name"])
+        data = {"item_id": bought_item.id, "user_id": user_id}
+        bought_item_serializer = BoughtItemsSerializer(data = data)
+        if bought_item_serializer.is_valid():
+            bought_item_serializer.save()
+            return Response(bought_item_serializer.data, status=status.HTTP_201_CREATED)
+        return Response(bought_item_serializer.errors, status=status.HTTP_400_BAD_REQUEST)

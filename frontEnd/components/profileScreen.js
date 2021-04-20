@@ -1,11 +1,11 @@
 import 'react-native-gesture-handler';
 import React, { Component } from "react";
-import { Text, View, FlatList, Alert} from "react-native";
+import { Text, View, FlatList, Modal} from "react-native";
 import styles from '../componentStyles.js';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import axios from 'axios';
 import getIP from './settings/settings.js';
-import { FAB, Card } from 'react-native-paper';
+import { FAB, Card, Button, IconButton } from 'react-native-paper';
 
 class ProfileScreen extends Component {
   state = {
@@ -13,7 +13,9 @@ class ProfileScreen extends Component {
     name: "",
     user_id: "",
     transactions:[],
-    currency: 'Cook Dollars'
+    currency: 'Cook Dollars',
+    show:false,
+    bought_items:[],
   }
 
   componentDidMount(){
@@ -26,8 +28,6 @@ class ProfileScreen extends Component {
     this._unsubscribe();
   }
 
-
-
   profileSetup(){
     this.getStudentBalance()
     this.getStudentName()
@@ -35,8 +35,7 @@ class ProfileScreen extends Component {
   }
   
   handleRequest() {
-    // This request will only succeed if the Authorization header
-    // contains the API token
+
     axios.get(getIP()+'/auth/logout/')
       .then(response => {
         axios.defaults.headers.common.Authorization = null
@@ -97,6 +96,24 @@ class ProfileScreen extends Component {
     )
   }
 
+  renderBoughtItems(item){
+    return(
+      <Card style={styles.cardStyle}>
+        <Text style={{ textAlign: "left" }}> {item.item_name}</Text>
+      </Card>
+    )
+  }
+
+  clickedItem = (data) => {
+    axios.get(getIP()+'/items/boughtitems/')
+    .then(response => {
+      this.setState({bought_items: response.data}, () => {
+        this.setState({show:true})
+      })
+    })
+    .catch(error => console.log(error))
+  }
+
   render() {
     return (
       <View style={[styles.profileContainer, {
@@ -117,9 +134,34 @@ class ProfileScreen extends Component {
       <View style={{ flex: 2 }}>
         <Text style = {styles.header}>Balance</Text>
         <Text style = {styles.balanceAmount}>{this.state.balance} {this.state.currency}</Text>
-        
+        <Button onPress={() => {this.clickedItem()}}>Bought Items</Button>
+        <Modal
+          transparent = {true}
+          visible = {this.state.show}
+        >
+          <View style = {{backgroundColor:'#000000aa', flex:1}}>
+            <View style = {{backgroundColor:'#ffffff', margin:50, padding:40, borderRadius:10, marginTop:200, bottom: 50, flex:1}} >
+              <View style = {{position: 'absolute', right:0, top:0}}>
+                <IconButton
+                  icon="close-box-outline"
+                  color= 'grey'
+                  size={20}
+                  onPress={() => {this.setState({show:false})}}
+                />
+              </View>
+              <Text>Owned Items:</Text>
+              <FlatList
+                data = {this.state.bought_items}
+                renderItem = {({item})=> {
+                  return this.renderBoughtItems(item)
+                }}
+                keyExtractor = {item => item.id.toString()}
+              />
+            </View>
+          </View>
+        </Modal>
       </View>
-      
+
       <View style={{ flex: 7 }}>
         <Text style = {styles.header}>History</Text>
         <FlatList

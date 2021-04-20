@@ -101,6 +101,26 @@ class StoreScreen extends Component {
     this.getClassCode()
   }
 
+  purchaseItem(){
+    axios.post(getIP()+'/items/boughtitems/', { item_name: this.state.specific_item_name })
+    .then(response => {
+      axios.get(getIP()+'/students/store/')
+      .then(response => {
+        axios.put(getIP()+'/students/balance/', { amount: this.state.specific_price, user_id: response.data })
+        .then(response => {
+          axios.post(getIP()+'/transactions/buyFromStore/', { amount: this.state.specific_price })
+          .then(response => {
+            this.setState({show:false})
+          })
+          .catch(error => console.log(error + "transactions"))
+        })
+      . catch(error => console.log(error + "students"))
+      })
+      .catch(error => console.log(error + "store account"))
+    })
+    .catch(error => console.log(error + "items"))
+}
+
   render(){
     return(
       <View style={[styles.storeContainer, {
@@ -137,7 +157,7 @@ class StoreScreen extends Component {
               </View>
               <Text style = {styles.subHeader}>{this.state.specific_item_name}</Text>
               <Text style = {{marginTop:10, marginBottom:10}}>{this.state.specific_description}</Text>
-              <Button mode='contained' onPress={() => {this.setState({show:false})}}>Purchase for {this.state.specific_price}</Button>
+              <Button mode='contained' onPress={() => {this.purchaseItem()}}>Purchase for {this.state.specific_price}</Button>
             </View>
           </View>
         </Modal>
