@@ -34,8 +34,9 @@ class LogoutUserAPIView(APIView):
 
 class CurrentStudent(APIView):
     def get(self, request):
-        student = Student.objects.get(user_id = request.user.id)
-        return Response(student.user_id, status=status.HTTP_200_OK)
+        user = get_user_model().objects.get(id = request.user.id)
+        user_serializer = CreateUserSerializer(user)
+        return Response(user_serializer.data, status=status.HTTP_200_OK)
 
 class UserViewSet(viewsets.ModelViewSet):
     permission_classes = [AllowAny]
