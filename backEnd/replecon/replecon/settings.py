@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'users',
     'classroom',
     'transaction',
+    'bank',
 
 
 
