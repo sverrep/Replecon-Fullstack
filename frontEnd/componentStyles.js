@@ -80,7 +80,7 @@ export default styles = StyleSheet.create({
   },
 
   balanceAmount:{
-    marginBottom: 30,
+    marginBottom: 10,
     fontSize: 35,
     fontWeight: "bold",
   },
