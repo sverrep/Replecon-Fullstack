@@ -22,7 +22,7 @@ class TransactionIntrestRateList(generics.GenericAPIView, mixins.ListModelMixin,
     queryset = TransactionIntrestRate.objects.all()
     serializer_class = TransactionIntrestRateSerializer
 
-    def get(self.request):
+    def get(self, request):
         return self.list(request)
     
     def post(self, request):
