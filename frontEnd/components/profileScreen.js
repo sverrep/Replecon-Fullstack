@@ -1,62 +1,37 @@
 import 'react-native-gesture-handler';
 import React, { Component } from "react";
-import { Text, View, FlatList} from "react-native";
+import { Text, View, FlatList, Alert} from "react-native";
 import styles from '../componentStyles.js';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import axios from 'axios';
 import getIP from './settings/settings.js';
 import { FAB, Card } from 'react-native-paper';
 
-
-const mydata = [
-  {id: 1, amount:'100', symbol:'+'},
-  {id: 2, amount:'20', symbol:'-'},
-  {id: 3, amount:'50', symbol:'+'},
-  {id: 4, amount:'94', symbol:'-'},
-  {id: 5, amount:'100', symbol:'+'},
-  {id: 6, amount:'20', symbol:'-'},
-  {id: 7, amount:'50', symbol:'+'},
-  {id: 8, amount:'94', symbol:'-'},
-  {id: 9, amount:'100', symbol:'+'},
-  {id: 10, amount:'20', symbol:'-'},
-  {id: 11, amount:'50', symbol:'+'},
-  {id: 12, amount:'94', symbol:'-'},
-]
-
-const getTheme = (item) => {
-  if (item.symbol == '+')
-    return('green')
-  else if (item.symbol == '-')
-    return('red')
-
-}
-
-const renderData = (item) => {
-  const color = getTheme(item)
-  return(
-    
-    <Card style = {styles.cardStyle}>
-    
-    <Text style={{ textAlign: "left" }}> Details</Text>
-    <Text style={{ textAlign: "right", color: color }}>{item.symbol} {item.amount}</Text>
-    </Card>
-  )
-
-}
-
-
-
-const currency = 'Cook Dollars'
-
-
-
 class ProfileScreen extends Component {
   state = {
     balance: "",
+    name: "",
+    user_id: "",
+    transactions:[],
+    currency: 'Cook Dollars'
   }
 
   componentDidMount(){
+    this._unsubscribe = this.props.navigation.addListener('focus', () => {
+      this.profileSetup()
+    });
+  }
+
+  componentWillUnmount() {
+    this._unsubscribe();
+  }
+
+
+
+  profileSetup(){
     this.getStudentBalance()
+    this.getStudentName()
+    this.getStudentTransactions()
   }
   
   handleRequest() {
@@ -78,8 +53,49 @@ class ProfileScreen extends Component {
     })
     .catch(error =>  console.log(error));
   }
-  
 
+  getStudentName(){
+    axios.get(getIP()+'/students/current/')
+    .then(response => {
+      this.setState({name: response.data.first_name})
+      this.setState({user_id: response.data.id})
+    })
+    .catch(error => console.log(error))
+  }
+
+  getStudentTransactions(){
+    axios.get(getIP()+'/transactions/getAllStudentTransactions/')
+    .then(response =>{
+      this.setState({transactions: response.data})
+    })
+    .catch(error => console.log(error))
+  }
+
+  getTheme = (item) => {
+    if (item.symbol == '+')
+      return('green')
+    else if (item.symbol == '-')
+      return('red')
+  }
+
+  renderData = (item) => {
+    const color = this.getTheme(item)
+    var details = ""
+    if(color == "green")
+    {
+      details = "From " + item.name
+    }
+    else if(color == "red")
+    {
+      details = "To " + item.name
+    }
+    return(
+      <Card style = {styles.cardStyle}>
+        <Text style={{ textAlign: "left" }}> {details}</Text>
+        <Text style={{ textAlign: "right", color: color }}>{item.symbol} {item.amount}</Text>
+      </Card>
+    )
+  }
 
   render() {
     return (
@@ -87,6 +103,7 @@ class ProfileScreen extends Component {
         flexDirection: "column"
       }]}>
       <View style={{ flex: 1 }}>
+      <Text style={ {marginTop: 20, fontWeight: 'bold', fontSize: 20} }>Hello, {this.state.name}</Text>
         <FAB
           style = {styles.fab}
           small = {true}
@@ -94,20 +111,21 @@ class ProfileScreen extends Component {
 
           onPress={this.handleRequest.bind(this)}
         />  
+        
       </View>
 
       <View style={{ flex: 2 }}>
         <Text style = {styles.header}>Balance</Text>
-        <Text style = {styles.balanceAmount}>{this.state.balance} {currency}</Text>
+        <Text style = {styles.balanceAmount}>{this.state.balance} {this.state.currency}</Text>
         
       </View>
       
       <View style={{ flex: 7 }}>
         <Text style = {styles.header}>History</Text>
         <FlatList
-          data = {mydata}
+          data = {this.state.transactions}
           renderItem = {({item})=> {
-            return renderData(item)
+            return this.renderData(item)
           }}
           keyExtractor = {item => item.id.toString()}
         />

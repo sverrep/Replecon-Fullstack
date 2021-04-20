@@ -1,8 +1,11 @@
 from django.contrib.auth import get_user_model
 from rest_framework import viewsets, generics, mixins, status
+from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
+from rest_framework.views import APIView
 from .serializers import TransactionSerializer
 from .models import Transaction
+import logging
 
 class CreateTransaction(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
     permission_classes = [AllowAny]
@@ -24,3 +27,26 @@ class TransactionDetails(generics.GenericAPIView, mixins.RetrieveModelMixin):
 
     def get(self, request, id):
         return self.retrieve(request, id=id)
+
+class ListTransactionsByID(APIView):
+    queryset = Transaction.objects.all()
+    permission_classes = [AllowAny]
+    serializer_class = TransactionSerializer
+
+    def get(self, request):
+        logger = logging.getLogger(__name__)
+        all_transactions = Transaction.objects.all()
+        transactions = []
+        logger.error(request.user.id)
+        for transaction in all_transactions:
+            if (transaction.sender_id == request.user.id):
+                user = get_user_model().objects.get(id = transaction.recipient_id)
+                tempdict = {"id": transaction.id, "name": user.first_name, "amount": transaction.amount, "symbol": "-"}
+                transactions.append(tempdict)
+            elif (transaction.recipient_id == request.user.id):
+                user = get_user_model().objects.get(id = transaction.sender_id)
+                tempdict = {"id": transaction.id, "name": user.first_name, "amount": transaction.amount, "symbol": "+"}
+                transactions.append(tempdict)
+        transactions.reverse()
+        return Response(transactions, status=status.HTTP_200_OK)
+        

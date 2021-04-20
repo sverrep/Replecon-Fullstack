@@ -7,6 +7,7 @@ from rest_framework import status, viewsets
 from rest_framework.views import APIView
 from users.serializers import CreateUserSerializer, CreateStudentSerializer
 from .models import Student
+from decimal import Decimal
 
 class CreateUserAPIView(CreateAPIView):
     permission_classes = [AllowAny]
@@ -30,6 +31,12 @@ class LogoutUserAPIView(APIView):
     def get(self, request, format = None):
         request.user.auth_token.delete()
         return Response(status=status.HTTP_200_OK)
+
+class CurrentStudent(APIView):
+    def get(self, request):
+        user = get_user_model().objects.get(id = request.user.id)
+        user_serializer = CreateUserSerializer(user)
+        return Response(user_serializer.data, status=status.HTTP_200_OK)
 
 class UserViewSet(viewsets.ModelViewSet):
     permission_classes = [AllowAny]
@@ -70,15 +77,19 @@ class StudentBalance(APIView):
     def put(self, request, *args, **kwargs):
         sender = Student.objects.get(user_id = request.user.id)
         data = request.data
-        recipient = Student.objects.get(data.user_id)
-        amount = data.amount
-        sender_serializer = CreateStudentSerializer(sender, {balance: (sender.balance - amount)})
-        recipient_serializer = CreateStudentSerializer(recipient, {balance: (recipient.balance + amount)})
-        if sender_serializer.is_valid() and recipient_serializer.is_valid():
-            sender_serializer.save()
-            recipient_serializer.save()
-            return Response(status=status.HTTP_201_CREATED)
-        return Response(recipient_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        recipient = Student.objects.get(user_id = data["user_id"])
+        amount = data["amount"]
+        sender_data = {"balance": (sender.balance - Decimal(amount)), "class_code": sender.class_code}
+        recipient_data = {"balance": (recipient.balance + Decimal(amount)), "class_code": recipient.class_code}
+        sender_serializer = CreateStudentSerializer(sender, sender_data)
+        recipient_serializer = CreateStudentSerializer(recipient, recipient_data)
+        if sender_serializer.is_valid():
+            if recipient_serializer.is_valid():
+                sender_serializer.save()
+                recipient_serializer.save()
+                return Response(status=status.HTTP_201_CREATED)
+            return Response(recipient_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(sender_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 
