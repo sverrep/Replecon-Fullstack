@@ -94,4 +94,9 @@ export default styles = StyleSheet.create({
     padding: 10,
     marginTop: 10,
   },
+
+  storeContainer:{
+    flex: 1,
+    padding: 20,
+  }
 });
