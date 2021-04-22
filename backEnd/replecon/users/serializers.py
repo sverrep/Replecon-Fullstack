@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
-from .models import Student
+from .models import Student, Teacher
 
 class CreateUserSerializer(serializers.ModelSerializer):
     username = serializers.CharField()
@@ -21,4 +21,9 @@ class CreateUserSerializer(serializers.ModelSerializer):
 class CreateStudentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Student
-        fields = ['balance', 'class_code']
+        fields = ['user', 'balance', 'class_code']
+
+class CreateTeacherSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Teacher
+        fields = ['user', 'last_name']

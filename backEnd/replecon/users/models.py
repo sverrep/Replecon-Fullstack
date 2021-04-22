@@ -8,11 +8,6 @@ class Student(models.Model):
     balance = models.DecimalField(max_digits=5, decimal_places=2, default=0)
     class_code = models.CharField(max_length=6)
 
-@receiver(post_save, sender=User)
-def create_user_student(sender, instance, created, **kwargs):
-    if created:
-        Student.objects.create(user=instance)
-
-@receiver(post_save, sender=User)
-def save_user_student(sender, instance, **kwargs):
-    instance.student.save()
+class Teacher(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    last_name = models.CharField(max_length = 100)

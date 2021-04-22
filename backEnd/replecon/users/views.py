@@ -5,8 +5,8 @@ from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 from rest_framework import status, viewsets
 from rest_framework.views import APIView
-from users.serializers import CreateUserSerializer, CreateStudentSerializer
-from .models import Student
+from users.serializers import CreateUserSerializer, CreateStudentSerializer, CreateTeacherSerializer
+from .models import Student, Teacher
 from decimal import Decimal
 import logging
 
@@ -26,6 +26,28 @@ class CreateUserAPIView(CreateAPIView):
             headers=headers
         )
 
+class CreateTeacherAPIView(CreateAPIView):
+    def post(self, request):
+        logger = logging.getLogger(__name__)
+        teacher = get_user_model().objects.get(id = request.user.id)
+        data = {"user": teacher.id, "last_name": request.data["last_name"]}
+        serializer = CreateTeacherSerializer(data = data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        logger.error(serializer.errors)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class CreateStudentAPIView(CreateAPIView):
+    def post(self, request):
+        student = get_user_model().objects.get(id = request.user.id)
+        data = {"user": student.id, "class_code": request.data["class_code"]}
+        serializer = CreateStudentSerializer(data = data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 class LogoutUserAPIView(APIView):
     queryset = get_user_model().objects.all()
 
@@ -39,6 +61,15 @@ class CurrentStudent(APIView):
         user_serializer = CreateUserSerializer(user)
         return Response(user_serializer.data, status=status.HTTP_200_OK)
 
+class IsUserTeacher(APIView):
+    def get(self, request):
+        user = get_user_model().objects.get(id = request.user.id)
+        teachers = Teacher.objects.all()
+        for teacher in teachers:
+            if user.id == teacher.user_id:
+                return Response(True, status=status.HTTP_200_OK)
+        return Response(False, status=status.HTTP_200_OK)
+        
 class StoreStudent(APIView):
     def get(self, request):
         user = get_user_model().objects.get(username = "STORE")
@@ -54,15 +85,8 @@ class UserViewSet(viewsets.ModelViewSet):
         return Response(status=status.HTTP_200_OK)
     
 class StudentClassCode(APIView):
-    def put(self, request, *args, **kwargs):
-        student = Student.objects.get(user_id = request.user.id)
-        serializer = CreateStudentSerializer(student, data = request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-    def get(self, request, *args, **kwargs):
+    def get(self, request):
         queryset = Student.objects.all()
         loggedin_student = Student.objects.get(user_id = request.user.id)
         class_code = loggedin_student.class_code
@@ -80,7 +104,7 @@ class StudentBalance(APIView):
         student = Student.objects.get(user_id = request.user.id)
         return Response(student.balance, status=status.HTTP_200_OK)
     
-    def put(self, request, *args, **kwargs):
+    def put(self, request):
         logger = logging.getLogger(__name__)
         sender = Student.objects.get(user_id = request.user.id)
         data = request.data
