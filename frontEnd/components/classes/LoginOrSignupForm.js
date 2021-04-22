@@ -11,7 +11,9 @@ class LoginOrSignupForm extends Component {
         email: '',
         password: '',
         first_name: '',
-        class_code: ''
+        class_code: '',
+        last_name: '',
+        teacher: false,
     }
 
     onEmailChange(text) {
@@ -30,59 +32,103 @@ class LoginOrSignupForm extends Component {
         this.setState({ class_code: text });
     }
 
+    onLastNameChange(text) {
+        this.setState({ last_name: text });
+    }
+
     handleRequest() {
-        const endpoint = this.props.create ? 'register' : 'login';
+        const endpoint = this.props.studentcreate || this.props.teachercreate ? 'register' : 'login';
         const payload = { username: this.state.email, password: this.state.password } 
         
-        if (this.props.create) {
+        if (this.props.studentcreate || this.props.teachercreate) {
             payload.first_name = this.state.first_name;
         }
         axios.post(getIP()+`/auth/${endpoint}/`, payload)
         .then(response => {
             const { token, user } = response.data;
             axios.defaults.headers.common.Authorization = `Token ${token}`;
-            if(this.state.class_code != '') {
-                axios.put(getIP()+'/students/class_code/', {class_code: this.state.class_code})
-                .then(response => {
-                    this.props.navigation.navigate('Profile');
+            axios.get(getIP()+'/teachers/isTeacher/')
+            .then(response => {
+                this.setState({teacher: response.data}, () => {
+                    if(this.props.studentcreate) {
+                        axios.post(getIP()+'/students/create/', {class_code: this.state.class_code})
+                        .then(response => {
+                            this.props.navigation.navigate('Profile');
+                    })
+                    .catch(error => console.log(error));
+                    }
+                    else if (this.props.teachercreate) {
+                        axios.post(getIP()+'/teachers/create/', {last_name: this.state.last_name})
+                        .then(response => {
+                            this.props.navigation.navigate('TeacherProfile');
+                        })
+                        .catch(error => console.log(error));
+                    }
+                    else if(this.state.teacher == true) {
+                        this.props.navigation.navigate('TeacherProfile');
+                    }
+                    else {
+                        
+                        this.props.navigation.navigate('Profile');
+                    }
+                });
             })
             .catch(error => console.log(error));
-            }
-            else {
-                this.props.navigation.navigate('Profile');
-            }
+            
         })
         .catch(error => console.log(error));
     }
 
     renderCreateForm() {
         const { fieldStyle, textInputStyle } = style;
-        if (this.props.create) {
-        return (
-            <View style={{flex: 1, alignItems: 'center'}}>
-            <View style={fieldStyle}>
-                <TextInput
-                placeholder="Name"
-                autoCorrect={false}
-                onChangeText={this.onFirstNameChange.bind(this)}
-                style={textInputStyle}
-                />
+        if (this.props.studentcreate) {
+            return (
+                <View style={{flex: 1, alignItems: 'center'}}>
+                    <View style={fieldStyle}>
+                        <TextInput
+                        placeholder="Name"
+                        autoCorrect={false}
+                        onChangeText={this.onFirstNameChange.bind(this)}
+                        style={textInputStyle}
+                        />
+                    </View>
+                    <View style={fieldStyle}>
+                        <TextInput
+                        placeholder="Class Code"
+                        autoCorrect={false}
+                        onChangeText={this.onClassCodeChange.bind(this)}
+                        style={textInputStyle}
+                        />
+                    </View>
                 </View>
-            <View style={fieldStyle}>
-                <TextInput
-                placeholder="Class Code"
-                autoCorrect={false}
-                onChangeText={this.onClassCodeChange.bind(this)}
-                style={textInputStyle}
-                />
-            </View>
-            </View>
-        );
+            );
+        }
+        else if(this.props.teachercreate) {
+            return (
+                <View style={{flex: 1, alignItems: 'center'}}>
+                    <View style={fieldStyle}>
+                        <TextInput
+                        placeholder="First Name"
+                        autoCorrect={false}
+                        onChangeText={this.onFirstNameChange.bind(this)}
+                        style={textInputStyle}
+                        />
+                    </View>
+                    <View style={fieldStyle}>
+                    <TextInput
+                        placeholder="Last Name"
+                        autoCorrect={false}
+                        onChangeText={this.onLastNameChange.bind(this)}
+                        style={textInputStyle}
+                        />
+                    </View>
+                </View>
+            );
         }
     }
 
     renderButton() {
-        const buttonText = this.props.create ? 'Create' : 'Login';
+        const buttonText = this.props.studentcreate || this.props.teachercreate ? 'Create' : 'Login';
         return (
             <Button title={buttonText} onPress={this.handleRequest.bind(this)}/>
         );
@@ -90,26 +136,32 @@ class LoginOrSignupForm extends Component {
 
 
     renderCreateLink() {
-        if (!this.props.create) {
-        const { accountCreateTextStyle } = style;
-        return (
-            <Text style={accountCreateTextStyle}>
-            Or 
-            <Text style={{ color: 'blue' }} onPress={() => this.props.navigation.navigate('SignUp')}>
-                {' Sign-up'}
-            </Text>
-            </Text>
-        );
+        if (!this.props.studentcreate && !this.props.teachercreate) {
+            const { accountCreateTextStyle } = style;
+            return (
+                <Text style={accountCreateTextStyle}>
+                    Or 
+                    <Text style={{ color: 'blue' }} onPress={() => this.props.navigation.navigate('StudentSignUp')}>
+                        {' Student Sign-up'}
+                    </Text>
+                    {'\n\n'}
+                    Or 
+                    <Text style={{ color: 'blue' }} onPress={() => this.props.navigation.navigate('TeacherSignUp')}>
+                        {' Teacher Sign-up'}
+                    </Text>
+                </Text>
+                
+            );
         }
     }
 
     render() {
         const {
-        formContainerStyle,
-        fieldStyle,
-        textInputStyle,
-        buttonContainerStyle,
-        accountCreateContainerStyle
+            formContainerStyle,
+            fieldStyle,
+            textInputStyle,
+            buttonContainerStyle,
+            accountCreateContainerStyle
         } = style;
 
         return (
