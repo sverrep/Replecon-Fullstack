@@ -72,7 +72,7 @@ class TeacherSignedIn extends Component {
   renderData = (item) => {
     return(
       <View>
-        <Card style={styles.studentCards} onPress = {() => this.clickedItem(item)}>
+        <Card style={styles.studentCards} onPress = {() => this.props.navigation.navigate('TeacherClass', item)}>
           <View style={{flexDirection: "row", justifyContent:'space-between'}}>
             <View>
               <Text style={{ textAlign: "left" }}> {item.class_name} </Text>

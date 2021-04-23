@@ -2,7 +2,7 @@ import 'react-native-gesture-handler';
 import React, { Component } from "react";
 import { View, Text, FlatList } from "react-native";
 import { Button, Card } from 'react-native-paper';
-import { useNavigation } from '@react-navigation/native';
+import { TabRouter, useNavigation } from '@react-navigation/native';
 import styles from '../componentStyles.js'
 import axios from 'axios';
 
@@ -10,7 +10,7 @@ class TeacherClassScreen extends Component {
     
     state = {
         students: [],
-        class_code: 'HL11C',
+        class_code: '',
     }
 
     renderData = (item) =>{
@@ -85,7 +85,6 @@ class TeacherClassScreen extends Component {
           //this.setState({ test: response.data });
           this.setState({students:response.data});
           this.getCurrentClassStudents(response.data)
-          console.log(this.state.students)
         })
         .catch(error => console.log(error))
     }
@@ -104,11 +103,16 @@ class TeacherClassScreen extends Component {
     }
 
     componentDidMount(){
+        const {route} = this.props
+        const{class_name, class_code} = route.params;
+        this.setState({class_name:class_name})
+        this.setState({class_code:class_code})
         this.getClassStudents()
-        console.log()
+       
     }
 
     render() {
+      
       return (
         <View style={[styles.classroomContainer, {
             flexDirection: "column"
