@@ -57,8 +57,17 @@ class LogoutUserAPIView(APIView):
 
 class CurrentStudent(APIView):
     def get(self, request):
+        logger = logging.getLogger(__name__)
         user = get_user_model().objects.get(id = request.user.id)
+        users = get_user_model().objects.all()
+        teachers = Teacher.objects.all()
+        students = Student.objects.all()
         user_serializer = CreateUserSerializer(user)
+        for teacher in teachers:
+            if user.id == teacher.user_id:
+                teacher_serializer = CreateTeacherSerializer(teacher)
+                data = {'user': user_serializer.data, 'teacher': teacher_serializer.data}
+                return Response(data, status=status.HTTP_200_OK)
         return Response(user_serializer.data, status=status.HTTP_200_OK)
 
 class IsUserTeacher(APIView):
