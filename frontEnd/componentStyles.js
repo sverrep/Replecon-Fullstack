@@ -98,5 +98,14 @@ export default styles = StyleSheet.create({
   storeContainer:{
     flex: 1,
     padding: 20,
-  }
+  },
+
+  createClassBtn:{
+    width: "80%",
+    borderRadius: 25,
+    height: 50,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#8DFFF9",
+  },
 });
