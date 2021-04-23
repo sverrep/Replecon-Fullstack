@@ -120,8 +120,8 @@ class StudentBalance(APIView):
         data = request.data
         recipient = Student.objects.get(user_id = data["user_id"])
         amount = data["amount"]
-        sender_data = {"balance": (sender.balance - Decimal(amount)), "class_code": sender.class_code}
-        recipient_data = {"balance": (recipient.balance + Decimal(amount)), "class_code": recipient.class_code}
+        sender_data = {"user": sender.user.id, "balance": (sender.balance - Decimal(amount)), "class_code": sender.class_code}
+        recipient_data = {"user": recipient.user.id, "balance": (recipient.balance + Decimal(amount)), "class_code": recipient.class_code}
         sender_serializer = CreateStudentSerializer(sender, sender_data)
         recipient_serializer = CreateStudentSerializer(recipient, recipient_data)
         if sender_serializer.is_valid():
@@ -130,6 +130,7 @@ class StudentBalance(APIView):
                 recipient_serializer.save()
                 return Response(status=status.HTTP_201_CREATED)
             return Response(recipient_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        logger.error(sender_serializer.errors)
         return Response(sender_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
