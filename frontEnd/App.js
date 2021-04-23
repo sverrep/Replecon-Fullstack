@@ -4,6 +4,7 @@ import StudentSignUpScreen from './components/signUpScreen.js';
 import StudentLoggedIn from './components/studentLoggedIn.js';
 import TeacherSignUpScreen from './components/teacherSignUpScreen.js';
 import TeacherLoggedIn from './components/teacherLoggedIn.js';
+import TeacherClassScreen from './components/teacherClassScreen.js';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
@@ -36,6 +37,12 @@ export default function App() {
     <Stack.Screen
         name="TeacherProfile"
         component={TeacherLoggedIn }
+        options={{headerShown: false}}
+    />
+
+    <Stack.Screen
+        name="TeacherClass"
+        component={TeacherClassScreen}
         options={{headerShown: false}}
     />
        </Stack.Navigator>

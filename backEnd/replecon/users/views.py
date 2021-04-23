@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 from rest_framework import status, viewsets
 from rest_framework.views import APIView
+from rest_framework import viewsets, generics, mixins, viewsets, status
 from users.serializers import CreateUserSerializer, CreateStudentSerializer, CreateTeacherSerializer
 from .models import Student, Teacher
 from decimal import Decimal
@@ -123,5 +124,15 @@ class StudentBalance(APIView):
         return Response(sender_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+class StudentList(APIView):
+    
+    def get(self, request):
+        logger = logging.getLogger(__name__)
+        students = Student.objects.all()
+        data = []
+        for student in students:
+            tempdict = {"id": student.user.id, "name": student.user.first_name, "class_code": student.class_code, "balance": student.balance}
+            data.append(tempdict)
+        student_serializer = CreateStudentSerializer(students)
 
-        
+        return Response(data, status=status.HTTP_200_OK)
