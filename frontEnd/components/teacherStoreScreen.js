@@ -5,7 +5,6 @@ import { Button, Card, IconButton, TextInput  } from 'react-native-paper';
 import { TabRouter, useNavigation } from '@react-navigation/native';
 import styles from '../componentStyles.js'
 import axios from 'axios';
-import { ThemeConsumer } from 'react-native-elements';
 
 class TeacherStoreScreen extends Component {
 
@@ -16,8 +15,8 @@ class TeacherStoreScreen extends Component {
         classHasShop: false,
         items: [],
         
-        show:false,
-        showAdd:false,
+        showUpdateItem:false,
+        showAddItem:false,
         showCreateStore: false,
 
         spec_item_name: '',
@@ -31,7 +30,6 @@ class TeacherStoreScreen extends Component {
 
         new_store_name: '',
     }
-
 
     onUpdateItemNameChange(text){
         this.setState({ spec_item_name: text });
@@ -66,18 +64,18 @@ class TeacherStoreScreen extends Component {
     }
 
     clickedItem = (data) => {
-        this.setState({show:true})
+        this.setState({showUpdateItem:true})
         this.setState({spec_item_name:data.item_name})
         this.setState({spec_item_price:data.price})
         this.setState({spec_item_desc:data.description})
         this.setState({spec_item_id:data.id})
     }
 
-    addClicked(){
-        this.setState({showAdd:true})
+    addItemClicked(){
+        this.setState({showAddItem:true})
     }
 
-    CreateStoreClicked(){
+    createStoreClicked(){
         this.setState({showCreateStore:true})
     }
 
@@ -90,7 +88,6 @@ class TeacherStoreScreen extends Component {
             </Card>
           </View>
         )
-      
     }
 
     getShops(){
@@ -108,7 +105,6 @@ class TeacherStoreScreen extends Component {
                 this.setState({classHasShop:true})
                 this.setState({shop_id: shops[i].id})
             }
-            
         }
         this.getItems()
     }
@@ -131,13 +127,6 @@ class TeacherStoreScreen extends Component {
           }
         }
         this.setState({items:ar})
-    }
-
-    componentDidMount(){
-        const {route} = this.props
-        const class_code = route.params;
-        this.setState({class_code:class_code})
-        this.getShops()
     }
 
     getItem(){
@@ -173,7 +162,7 @@ class TeacherStoreScreen extends Component {
             
             <Modal
                     transparent = {true}
-                    visible = {this.state.show}
+                    visible = {this.state.showUpdateItem}
                 >
                     <View style = {{backgroundColor:'#000000aa', flex:1}}>
                         <View style = {{backgroundColor:'#ffffff', margin:20, padding:20, borderRadius:10, marginTop:100, bottom: 50, flex:1}} >
@@ -182,7 +171,7 @@ class TeacherStoreScreen extends Component {
                             icon="close-box-outline"
                             color= 'grey'
                             size={20}
-                            onPress={() => {this.setState({show:false})}}
+                            onPress={() => {this.setState({showUpdateItem:false})}}
                             />
                         </View>
                         <Text>Item Details:</Text>
@@ -249,10 +238,9 @@ class TeacherStoreScreen extends Component {
             description: this.state.new_item_desc,
             price: this.state.new_item_price,
             shop: this.state.shop_id,
-
         })
         .then(response => {
-          
+            
         })
         .catch(error => console.log(error))
     }
@@ -261,7 +249,7 @@ class TeacherStoreScreen extends Component {
         return(
             <Modal
                 transparent = {true}
-                visible = {this.state.showAdd}
+                visible = {this.state.showAddItem}
             >
                 <View style = {{backgroundColor:'#000000aa', flex:1}}>
                     <View style = {{backgroundColor:'#ffffff', margin:20, padding:20, borderRadius:10, marginTop:100, bottom: 50, flex:1}} >
@@ -270,7 +258,7 @@ class TeacherStoreScreen extends Component {
                             icon="close-box-outline"
                             color= 'grey'
                             size={20}
-                            onPress={() => {this.setState({showAdd:false})}}
+                            onPress={() => {this.setState({showAddItem:false})}}
                             />
                         </View>
                         <Text>Item Details:</Text>
@@ -331,7 +319,7 @@ class TeacherStoreScreen extends Component {
                     />
                     <Button
                     mode = 'contained'
-                    onPress = {() => this.addClicked()}
+                    onPress = {() => this.addItemClicked()}
                     >Add an Item</Button>
                 </View>
                 {this.renderUpdateModal()}
@@ -389,10 +377,9 @@ class TeacherStoreScreen extends Component {
                     </View>
                 </View>
             </Modal>
-
         )
-
     }
+    
     hasNoShop(){
         return(
             <View style={[styles.classroomContainer, {
@@ -406,15 +393,10 @@ class TeacherStoreScreen extends Component {
                     <Text style= {styles.subHeader}>This class doesn't have a store yet, start setting one up by creating a store</Text>
                     <Button
                     mode = 'contained'
-                    onPress = {() => this.CreateStoreClicked()}
+                    onPress = {() => this.createStoreClicked()}
                     >Create a store</Button>
                 </View>
-
                 {this.renderCreateStore()}
-                
-
-                
-                
             </View>
         )
     }
@@ -432,7 +414,13 @@ class TeacherStoreScreen extends Component {
                 this.hasNoShop()
             )
         }
-        
+    }
+
+    componentDidMount(){
+        const {route} = this.props
+        const class_code = route.params;
+        this.setState({class_code:class_code})
+        this.getShops()
     }
 
     render(){
