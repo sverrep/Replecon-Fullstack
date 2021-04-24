@@ -95,6 +95,12 @@ export default styles = StyleSheet.create({
     marginTop: 10,
   },
 
+  teacherPayCards:{
+    padding: 10,
+    marginTop: 10,
+    backgroundColor: "#add8e6",
+  },
+
   storeContainer:{
     flex: 1,
     padding: 20,
