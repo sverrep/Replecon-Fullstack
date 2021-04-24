@@ -14,15 +14,21 @@ class TeacherStoreScreen extends Component {
         shop_id: 0,
         classHasShop: false,
         items: [],
+        
         show:false,
         showAdd:false,
+        showCreateStore: false,
+
         spec_item_name: '',
         spec_item_desc: '',
         spec_item_price: '',
+        spec_item_id: 0,
 
         new_item_name: '',
         new_item_desc: '',
         new_item_price: 0,
+
+        new_store_name: '',
     }
 
     onNewItemNameChange(text){
@@ -36,16 +42,25 @@ class TeacherStoreScreen extends Component {
     onNewItemPriceChange(text){
         this.setState({ new_item_price: text });
     }
+    
+    onNewStoreNameChange(text){
+        this.setState({ new_store_name: text });
+    }
 
     clickedItem = (data) => {
         this.setState({show:true})
         this.setState({spec_item_name:data.item_name})
         this.setState({spec_item_price:data.price})
         this.setState({spec_item_desc:data.description})
+        this.setState({spec_item_id:data.id})
     }
 
     addClicked(){
         this.setState({showAdd:true})
+    }
+
+    CreateStoreClicked(){
+        this.setState({showCreateStore:true})
     }
 
     renderData = (item) => {
@@ -94,7 +109,8 @@ class TeacherStoreScreen extends Component {
         {
           if(allItems[i].shop==this.state.shop_id)
           {
-            ar.push(allItems[i])
+            console.log(allItems[i].id)
+            
           }
         }
         this.setState({items:ar})
@@ -280,10 +296,78 @@ class TeacherStoreScreen extends Component {
         )
     }
 
+    createNewStore(){
+        axios.post(getIP()+'/shops/', {
+            shop_name: this.state.new_store_name,
+            classroom: this.state.class_code,
+        })
+        .then(response => {
+          
+        })
+        .catch(error => console.log(error))
+    }
+
+    renderCreateStore(){
+        return(
+            <Modal
+                transparent = {true}
+                visible = {this.state.showCreateStore}
+            >
+                <View style = {{backgroundColor:'#000000aa', flex:1}}>
+                    <View style = {{backgroundColor:'#ffffff', margin:20, padding:20, borderRadius:10, marginTop:100, bottom: 50, flex:1}} >
+                        <View style = {{position: 'absolute', right:0, top:0}}>
+                            <IconButton
+                            icon="close-box-outline"
+                            color= 'grey'
+                            size={20}
+                            onPress={() => {this.setState({showCreateStore:false})}}
+                            />
+                        </View>
+                        <Text> Store Creation:</Text>
+                        <View style={{marginTop:10}}>
+                            <TextInput
+                                label="Store Name"
+                                mode = 'outlined'
+                                onChangeText={this.onNewStoreNameChange.bind(this)}
+                            ></TextInput>
+                        </View>
+                        
+                        <View style ={{marginTop:10}}>
+                            <Button 
+                            mode = 'contained'
+                            color = '#0FBC1A'
+                            onPress = {() => this.createNewStore()}
+                            >Create Store</Button>
+                        </View>
+                    </View>
+                </View>
+            </Modal>
+
+        )
+
+    }
     hasNoShop(){
         return(
-            <View>
-                <Text>This class has no shop, try setting one up</Text>
+            <View style={[styles.classroomContainer, {
+                flexDirection: "column"
+              }]}>
+                <View style={{flex:1}}>
+                    <Text style = {styles.header}>Store Admin Page</Text>
+                </View>
+
+                <View style = {{flex:5}}>
+                    <Text style= {styles.subHeader}>This class doesn't have a store yet, start setting one up by creating a store</Text>
+                    <Button
+                    mode = 'contained'
+                    onPress = {() => this.CreateStoreClicked()}
+                    >Create a store</Button>
+                </View>
+
+                {this.renderCreateStore()}
+                
+
+                
+                
             </View>
         )
     }
