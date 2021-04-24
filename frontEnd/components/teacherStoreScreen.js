@@ -5,6 +5,7 @@ import { Button, Card, IconButton, TextInput  } from 'react-native-paper';
 import { TabRouter, useNavigation } from '@react-navigation/native';
 import styles from '../componentStyles.js'
 import axios from 'axios';
+import { ThemeConsumer } from 'react-native-elements';
 
 class TeacherStoreScreen extends Component {
 
@@ -21,7 +22,7 @@ class TeacherStoreScreen extends Component {
 
         spec_item_name: '',
         spec_item_desc: '',
-        spec_item_price: '',
+        spec_item_price: 0,
         spec_item_id: 0,
 
         new_item_name: '',
@@ -29,6 +30,23 @@ class TeacherStoreScreen extends Component {
         new_item_price: 0,
 
         new_store_name: '',
+    }
+
+
+    onUpdateItemNameChange(text){
+        this.setState({ spec_item_name: text });
+    }
+    
+    onUpdateItemDescChange(text){
+        this.setState({ spec_item_desc: text });
+    }
+
+    onUpdateItemPriceChange(text){
+        this.setState({ spec_item_price: text });
+    }
+    
+    onUpdateStoreNameChange(text){
+        this.setState({ spec_store_name: text });
     }
 
     onNewItemNameChange(text){
@@ -109,8 +127,7 @@ class TeacherStoreScreen extends Component {
         {
           if(allItems[i].shop==this.state.shop_id)
           {
-            console.log(allItems[i].id)
-            
+            ar.push(allItems[i])
           }
         }
         this.setState({items:ar})
@@ -123,9 +140,37 @@ class TeacherStoreScreen extends Component {
         this.getShops()
     }
 
+    getItem(){
+        axios.get(getIP()+'/items/'+ this.state.spec_item_id)
+        .then(response => {
+          //console.log(response.data)
+        })
+        .catch(error => console.log(error))
+    }
+    
+    updateItem(){
+        axios.put(getIP()+'/items/'+ this.state.spec_item_id, {
+            item_name: this.state.spec_item_name,
+            description: this.state.spec_item_desc,
+            price: this.state.spec_item_price,
+            shop: this.state.shop_id,
+        })
+        .then(response => {
+          console.log(response.data)
+        })
+        .catch(error => console.log(error))
+    }
+
+    deleteItem(){
+        axios.delete(getIP()+'/items/'+ this.state.spec_item_id)
+        .then(response => {
+          console.log(response.data)
+        })
+        .catch(error => console.log(error))
+    }
     renderUpdateModal(){
         return(
-
+            
             <Modal
                     transparent = {true}
                     visible = {this.state.show}
@@ -147,7 +192,7 @@ class TeacherStoreScreen extends Component {
                                     defaultValue= {this.state.spec_item_name}
                                     label="Item Name"
                                     mode = 'outlined'
-                                    
+                                    onChangeText={this.onUpdateItemNameChange.bind(this)}
                                     ></TextInput>
 
                                 </View>
@@ -157,7 +202,7 @@ class TeacherStoreScreen extends Component {
                                 defaultValue= {this.state.spec_item_price}
                                 label="Item Price"
                                 mode = 'outlined'
-                                
+                                onChangeText={this.onUpdateItemPriceChange.bind(this)}
                                 ></TextInput>
                                 </View>
                             </View>
@@ -167,7 +212,7 @@ class TeacherStoreScreen extends Component {
                                 defaultValue= {this.state.spec_item_desc}
                                 label="Item Description"
                                 mode = 'outlined'
-                                //onChangeText={this.onNewClassNameChange.bind(this)}
+                                onChangeText={this.onUpdateItemDescChange.bind(this)}
                             ></TextInput>
                         </View>
                         
@@ -176,6 +221,7 @@ class TeacherStoreScreen extends Component {
                                 <Button 
                                 mode = 'contained'
                                 color = '#18E1FF'
+                                onPress = {() => this.updateItem()}
                                 >Update</Button>
                             </View>
 
@@ -183,6 +229,7 @@ class TeacherStoreScreen extends Component {
                                 <Button
                                 mode = 'contained'
                                 color = "#FF1818"
+                                onPress = {() => this.deleteItem()}
                                 >Delete</Button>
                             </View>
                             
