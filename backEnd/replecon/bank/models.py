@@ -9,3 +9,4 @@ class Bank(models.Model):
 class TransactionIntrestRate(models.Model):
     set_interest_rate = models.DecimalField(max_digits=6, decimal_places=2)
     transaction_id = models.IntegerField()
+    active = models.BooleanField()

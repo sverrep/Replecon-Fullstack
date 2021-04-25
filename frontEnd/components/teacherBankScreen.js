@@ -17,6 +17,7 @@ class TeacherBankScreen extends Component {
         interest_rate: "",
         payout_rate: "",
         student_savings: [],
+        banks: [],
 
     }
 
@@ -26,6 +27,7 @@ class TeacherBankScreen extends Component {
         const {route} = this.props
         const class_code = route.params;
         this.setState({class_code:class_code})
+        this.getBanks()
     }
 
     teacherClassSetup(){
@@ -50,11 +52,12 @@ class TeacherBankScreen extends Component {
 
     updateBankRates(){
         axios.put(getIP()+'/banks/' + this.state.bank_id, {
+            classroom: this.state.class_code,
             interest_rate: this.state.interest_rate,
             payout_rate: this.state.payout_rate,
         })
         .then(response => {
-          console.log(response.data)
+          this.setState({showUpdateBankRates:false})
         })
         .catch(error => console.log(error))
     }
@@ -63,11 +66,57 @@ class TeacherBankScreen extends Component {
         return(
           <View>
             <Card style={styles.studentCards}>
-                <Text style={styles.subHeader}>{item.name}   {item.initial_amount}  {'-->'}  {item.interest_rate}  {'-->'}  {item.final_amount}</Text>
+                <Text style={styles.subHeader}>{item.name}:   ${item.initial_amount}  {'-->'}  {item.interest_rate}%  {'-->'}  ${item.final_amount}</Text>
             </Card>
           </View>
         )
     }
+
+    getBanks(){
+        axios.get(getIP()+'/banks/')
+        .then(response => {
+          this.setState({banks: response.data})
+          this.checkForBank(response.data)
+        })
+        .catch(error => console.log(error))
+    }
+
+    checkForBank(banks){
+        for(let i = 0; i <= Object.keys(banks).length - 1; i++){
+            if(banks[i].classroom == this.state.class_code){
+                this.setState({classHasBank:true})
+                this.setState({bank_id: banks[i].id})
+                this.setState({interest_rate: banks[i].interest_rate})
+                this.setState({payout_rate: banks[i].payout_rate})
+            }
+        }
+        this.getStudentSavings()
+    }
+
+    getStudentSavings(){
+        axios.get(getIP()+'/transactionintrestrates/')
+        .then(response1 => {
+            for(let i = 0; i <= Object.keys(response1.data).length-1; i++)
+            {
+                axios.get(getIP()+'/transactions/' + response1.data[i].transaction_id)
+                .then(response => {
+                    var initamount = parseFloat(response.data.amount)
+                    axios.get(getIP()+'/users/' + response.data.sender_id)
+                    .then(response => {
+                        var intrate = parseFloat(response1.data[i].set_interest_rate)
+                        var finalamount = initamount + (initamount*(intrate/100))
+                        var tempdict = {"id": i, "name": response.data.first_name, "initial_amount": initamount, "interest_rate": intrate, "final_amount": finalamount}
+                        this.setState({student_savings: [...this.state.student_savings, tempdict]})
+                    })
+                    .catch(error => console.log(error))
+                })
+                .catch(error => console.log(error))
+            }
+            
+            
+        })
+        .catch(error => console.log(error))
+      }
 
     renderUpdateBankRatesModal(){
         return(
@@ -89,7 +138,7 @@ class TeacherBankScreen extends Component {
                         <View style={{flexDirection: 'row', marginTop:10}}>
                             <View style={{flex:2, marginRight:5}}>
                                 <TextInput
-                                defaultValue= {this.state.interest_rate}
+                                defaultValue= {this.state.interest_rate.toString()}
                                 label="Interest Rate"
                                 mode = 'outlined'
                                 onChangeText={this.onInterestRateChange.bind(this)}
@@ -98,7 +147,7 @@ class TeacherBankScreen extends Component {
                         </View>
                         <View style={{marginTop:10}}>
                             <TextInput
-                                defaultValue= {this.state.payout_rate}
+                                defaultValue= {this.state.payout_rate.toString()}
                                 label="Payout Rate in Weeks"
                                 mode = 'outlined'
                                 onChangeText={this.onPayoutRateChange.bind(this)}
@@ -126,6 +175,10 @@ class TeacherBankScreen extends Component {
               }]}>
                 <View style={{flex:1}}>
                     <Text style = {styles.header}>Bank Admin Page</Text>
+                    <View>
+                        <Text style = {styles.subHeader}>Interest Rate: {this.state.interest_rate}</Text>
+                        <Text style = {styles.subHeader}>Payout Rate in Weeks: {this.state.payout_rate}</Text>
+                    </View>
                 </View>
                 <View style = {{flex:5}}>
                     <FlatList
@@ -140,6 +193,7 @@ class TeacherBankScreen extends Component {
                     onPress = {() => this.updateBankRatesClicked()}
                     >Update Bank Rates</Button>
                 </View>
+                {this.renderUpdateBankRatesModal()}
             </View>
         )
     }
@@ -228,8 +282,7 @@ class TeacherBankScreen extends Component {
         if(this.state.classHasBank == true)
         {
             return(
-                <Text>Bank</Text>
-               // this.hasShop()
+                this.hasBank()
             )
         }
 

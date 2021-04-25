@@ -10,4 +10,4 @@ class BankSerializer(serializers.ModelSerializer):
 class TransactionIntrestRateSerializer(serializers.ModelSerializer):
     class Meta:
         model = TransactionIntrestRate
-        fields = ['id', 'set_interest_rate', 'transaction_id']
+        fields = ['id', 'set_interest_rate', 'transaction_id', 'active']
