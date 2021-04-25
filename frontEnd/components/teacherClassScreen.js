@@ -32,11 +32,13 @@ class TeacherClassScreen extends Component {
         )
     }
     renderButtons(){
+        const teacher_pay_params = {"students": this.state.students, "class_name": this.state.class_name}
         return(
             <View style={{flexDirection: 'row', justifyContent: 'center'}}>
                 <View style = {{padding: 5, marginTop:10 }}>
                     <Button
                     mode = 'contained'
+                    onPress = {() => this.props.navigation.navigate("TeacherPay", teacher_pay_params)}
                     >
                     Pay
                     </Button>
@@ -84,7 +86,6 @@ class TeacherClassScreen extends Component {
     getClassStudents() {
         axios.get(getIP()+'/students')
         .then(response => {
-          //this.setState({ test: response.data });
           this.setState({students:response.data});
           this.getCurrentClassStudents(response.data)
         })
@@ -105,12 +106,21 @@ class TeacherClassScreen extends Component {
     }
 
     componentDidMount(){
+        this._unsubscribe = this.props.navigation.addListener('focus', () => {
+            this.teacherClassSetup()
+          });
+    }
+
+    componentWillUnmount() {
+        this._unsubscribe();
+    }
+
+    teacherClassSetup(){
         const {route} = this.props
         const{class_name, class_code} = route.params;
         this.setState({class_name:class_name})
         this.setState({class_code:class_code})
         this.getClassStudents()
-       
     }
 
     render() {
