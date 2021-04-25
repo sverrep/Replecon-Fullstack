@@ -62,8 +62,9 @@ class TeacherClassScreen extends Component {
                     <View style={{marginTop:10}}>
                         <Button 
                         mode = 'contained'
+                        onPress = {() => this.props.navigation.navigate('TeacherBank', this.state.class_code)}
                         >
-                        Items
+                        Bank
                         </Button>
                     </View>
                 </View>
