@@ -54,6 +54,8 @@ class TeacherClassScreen extends Component {
                 <View style = {{padding: 5, marginTop:10 }}>
                     <Button
                     mode = 'contained'
+                    
+                    onPress = {() => this.props.navigation.navigate('TeacherStore', this.state.class_code)}
                     >
                     Store
                     </Button>
