@@ -1,8 +1,8 @@
 import 'react-native-gesture-handler';
 import React, { Component } from "react";
-import { View, Text, FlatList } from "react-native";
-import { Button, Card, TextInput } from 'react-native-paper';
-import { TabRouter, useNavigation } from '@react-navigation/native';
+import { View, Text, FlatList, Modal } from "react-native";
+import { Button, Card, TextInput, IconButton } from 'react-native-paper';
+import { useNavigation } from '@react-navigation/native';
 import styles from '../componentStyles.js'
 import axios from 'axios';
 
@@ -13,6 +13,7 @@ class TeacherPayScreen extends Component {
         class_name: "",
         selected: [],
         amount: "",
+        show: false,
     }
 
     componentDidMount(){
@@ -50,7 +51,7 @@ class TeacherPayScreen extends Component {
             })
             .catch(error => console.log(error))
         }
-
+        this.setState({show:false})
     }
 
     renderFlatList(){
@@ -118,8 +119,31 @@ class TeacherPayScreen extends Component {
         }
     }
 
+    renderPopUp(){
+        return (
+            <Modal
+            transparent = {true}
+            visible = {this.state.show}
+            >
+            <View style = {{backgroundColor:'#000000aa', flex:1}}>
+                <View style = {{backgroundColor:'#ffffff', margin:50, padding:40, borderRadius:10, marginTop:200, bottom: 50, flex:1}} >
+                <View style = {{position: 'absolute', right:0, top:0}}>
+                    <IconButton
+                    icon="close-box-outline"
+                    color= 'grey'
+                    size={20}
+                    onPress={() => {this.setState({show:false})}}
+                    />
+                </View>
+                <Text>Pay selected students {this.state.amount}?</Text>
+                <Button onPress={() => {this.paySelected()}}>Pay Students</Button>
+                </View>
+            </View>
+        </Modal>
+        );
+    }
+
     renderButtons(){
-        const teacher_pay_params = {"students": this.state.students, "class_name": this.state.class_name}
         return(
             <View style={{flexDirection: 'column', justifyContent: 'center'}}>
                 <TextInput
@@ -131,17 +155,9 @@ class TeacherPayScreen extends Component {
                     <Button
                     style={{backgroundColor: "#24a0ed"}}
                     mode = 'contained'
-                    onPress = {() => this.paySelected()}
+                    onPress = {() => this.setState({show: true})}
                     >
                     Pay Selected
-                    </Button>
-                </View>
-                <View style = {{padding: 5, marginTop:10 }}>
-                    <Button
-                    style={{backgroundColor: "#24a0ed"}}
-                    mode = 'contained'
-                    >
-                    Pay All
                     </Button>
                 </View>
             </View>
@@ -151,9 +167,7 @@ class TeacherPayScreen extends Component {
     render() {
       
       return (
-        <View style={[styles.classroomContainer, {
-            flexDirection: "column"
-          }]}>
+        <View style={[styles.classroomContainer, {flexDirection: "column"}]}>
           
             <View style={{ flex: 1 }}>
               <Text style={styles.header}>Pay Class {this.state.class_name}</Text>
@@ -168,6 +182,9 @@ class TeacherPayScreen extends Component {
             <View style={{flex:5}}>
                 {this.renderButtons()}
             </View>
+            {this.renderPopUp()}
+            
+
         </View>
       );
     }

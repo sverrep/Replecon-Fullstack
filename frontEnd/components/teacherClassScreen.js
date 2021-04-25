@@ -104,12 +104,21 @@ class TeacherClassScreen extends Component {
     }
 
     componentDidMount(){
+        this._unsubscribe = this.props.navigation.addListener('focus', () => {
+            this.teacherClassSetup()
+          });
+    }
+
+    componentWillUnmount() {
+        this._unsubscribe();
+    }
+
+    teacherClassSetup(){
         const {route} = this.props
         const{class_name, class_code} = route.params;
         this.setState({class_name:class_name})
         this.setState({class_code:class_code})
         this.getClassStudents()
-       
     }
 
     render() {
