@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'classroom',
     'transaction',
     'bank',
+    'tax',
 
 
 
