@@ -50,6 +50,7 @@ export default function App() {
     <Stack.Screen
         name="TeacherPay"
         component={TeacherPayScreen}
+    />
     <Stack.Screen
         name="TeacherStore"
         component={TeacherStoreScreen}
