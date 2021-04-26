@@ -33,6 +33,7 @@ class TeacherClassScreen extends Component {
     }
     renderButtons(){
         const teacher_pay_params = {"students": this.state.students, "class_name": this.state.class_name}
+        const teacher_bank_params = {"students": this.state.students, "class_code": this.state.class_code}
         return(
             <View style={{flexDirection: 'row', justifyContent: 'center'}}>
                 <View style = {{padding: 5, marginTop:10 }}>
@@ -62,8 +63,9 @@ class TeacherClassScreen extends Component {
                     <View style={{marginTop:10}}>
                         <Button 
                         mode = 'contained'
+                        onPress = {() => this.props.navigation.navigate('TeacherBank', teacher_bank_params)}
                         >
-                        Items
+                        Bank
                         </Button>
                     </View>
                 </View>

@@ -27,6 +27,15 @@ class CreateUserAPIView(CreateAPIView):
             headers=headers
         )
 
+class UserDetails(generics.GenericAPIView, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin):
+    queryset = get_user_model().objects.all()
+    serializer_class = CreateUserSerializer
+
+    lookup_field = 'id'
+
+    def get(self, request, id):
+        return self.retrieve(request, id=id)
+
 class CreateTeacherAPIView(CreateAPIView):
     def post(self, request):
         logger = logging.getLogger(__name__)
