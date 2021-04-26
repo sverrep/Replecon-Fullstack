@@ -1,10 +1,11 @@
 import 'react-native-gesture-handler';
 import React, { Component } from "react";
-import { View, Text, FlatList, Modal } from "react-native";
+import { View, Text, FlatList, Modal, ScrollView } from "react-native";
 import { Button, Card, RadioButton, IconButton, TextInput } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import styles from '../componentStyles.js'
 import axios from 'axios';
+import { ThemeConsumer } from 'react-native-elements';
 
 
 
@@ -19,13 +20,99 @@ state = {
     checked: '',
     current_tax_type: '',
     current_value: '',
-    showSimpleModal: false
+    showSimpleModal: false,
+
+    newSimpleValue: '',
+    progAmount: 0,
+    regAmount: 0,
+
+    current_low: '',
+    current_high: '',
+    current_per: '',
+
+    arOfLows: [],
+    arOfHighs: [],
+    arOfPer: [],
+
+    regArOfLows: [],
+    regArOfHighs:[],
+    regArOfPer:[],
+    current_bracket: {},
+    arOfBrackets: [],
+
+    current_sales_tax:'',
+    current_percent_tax:'',
+    current_flat_tax: '',
+}
+
+
+onUpdateLowChange(text, i, type){
+    if(type == 'prog'){
+        var tempAr = this.state.arOfLows
+        tempAr[i] = text
+        this.setState({arOfLows:tempAr})
+        this.setState({ current_low: text });
+    }
+
+    else if(type == 'reg'){
+        var tempAr = this.state.regArOfLows
+        tempAr[i] = text
+        this.setState({regArOfLows:tempAr})
+        this.setState({ current_low: text });
+    }
+    
+}
+
+onUpdateHighChange(text, i, type){
+    if(type == 'prog'){
+        var tempAr = this.state.arOfHighs
+        tempAr[i] = text
+        this.setState({arOfHighs:tempAr})
+        this.setState({ current_high: text });
+    }
+
+    else if(type == 'reg'){
+        var tempAr = this.state.regArOfHighs
+        tempAr[i] = text
+        this.setState({regArOfHighs:tempAr})
+        this.setState({ current_high: text });
+    }
+}
+onUpdatePerChange(text, i, type){
+    if(type == 'prog'){
+        var tempAr = this.state.arOfPer
+        tempAr[i] = text
+        this.setState({arOfPer:tempAr})
+        this.setState({ current_per: text });
+    }
+
+    else if(type == 'reg'){
+        var tempAr = this.state.regArOfPer
+        tempAr[i] = text
+        this.setState({regArOfPer:tempAr})
+        this.setState({ current_per: text });
+    }
+    
+}
+
+onUpdateValueChange(text){
+    this.setState({ newSimpleValue: text });
+}
+
+onUpdateFlatChange(text){
+    this.setState({current_flat_tax:text})
+}
+
+onUpdatePercentChange(text){
+    this.setState({current_percent_tax:text})
+}
+onUpdateSalesChange(text){
+    this.setState({current_sales_tax:text})
 }
 
 getTaxes(){
     axios.get(getIP()+'/taxes/')
         .then(response => {
-            console.log(response.data)
             this.checkForClassTax(response.data)
         })
         .catch(error => console.log(error))
@@ -59,6 +146,70 @@ clickedItem(tax_type){
         this.setState({current_value:this.state.class_tax.percentage_tax})
     }
 }
+
+checkTextInputs(){
+
+}
+
+progBracketClicked(text){
+    if( text == 'plus'){
+        this.setState({progAmount: this.state.progAmount+1})
+    }
+    else if(text == 'minus'){
+        this.setState({progAmount: this.state.progAmount-1})
+    }
+    
+    
+}
+
+regBracketClicked(text){
+    if( text == 'plus'){
+        this.setState({regAmount: this.state.regAmount+1})
+    }
+    else if(text == 'minus'){
+        this.setState({regAmount: this.state.regAmount-1})
+    }
+    
+    
+}
+
+updateEasyTax(tax_type){
+    var payload = {}
+    if(tax_type == 'Flat Tax'){
+        payload = {
+            class_code: this.state.class_tax.class_code,
+            flat_tax: this.state.newSimpleValue,
+            percentage_tax: this.state.class_tax.percentage_tax,
+            sales_tax: this.state.class_tax.sales_tax,
+            id: this.state.class_tax.id,
+        }
+        axios.put(getIP()+'/taxes/'+ this.state.class_tax.id, payload )
+        .then(response => {
+          console.log(response.data)
+        })
+        .catch(error => console.log(error))
+        this.setState({class_tax: payload})
+    }
+
+    else if(tax_type == 'Percentage Tax'){
+        payload = {
+            class_code: this.state.class_tax.class_code,
+            flat_tax: this.state.class_tax.flat_tax,
+            percentage_tax: this.state.newSimpleValue,
+            sales_tax: this.state.class_tax.sales_tax,
+            id: this.state.class_tax.id,
+        }
+        axios.put(getIP()+'/taxes/'+ this.state.class_tax.id, payload )
+        .then(response => {
+            console.log(response.data)
+        })
+        .catch(error => console.log(error))
+        this.setState({class_tax: payload})
+    }
+    this.setState({showSimpleModal:false})
+    
+    
+}
 renderSimpleModal(){
     return(
         <Modal
@@ -81,15 +232,15 @@ renderSimpleModal(){
                                         defaultValue= {this.state.current_value}
                                         label={this.state.current_tax_type}
                                         mode = 'outlined'
-                                        //onChangeText={this.onUpdateItemNameChange.bind(this)}
+                                        onChangeText={this.onUpdateValueChange.bind(this)}
                                         ></TextInput>
                                     </View>
                                 <View>
                                     <Button 
                                     mode = 'contained'
                                     color = '#18E1FF'
-                                    //onPress = {() => this.updateItem()}
-                                    >Update</Button>
+                                    onPress = {() => this.updateEasyTax(this.state.current_tax_type)}
+                                    >Update {this.state.current_tax_type}</Button>
                                 </View>
                         </View>
                     </View>
@@ -172,6 +323,96 @@ renderCards(){
     )
 }
 
+
+
+renderProgBracket(i, type){
+    return(
+        <View>
+            <View style ={{flexDirection: 'row', justifyContent: 'space-between'}}>
+                <View style = {{flex:2}}>
+                    <TextInput style = {{padding :10}}
+                        label="Low"
+                        mode = 'outlined'
+                        onChangeText={(val) => this.onUpdateLowChange(val, i, type)}
+                    ></TextInput>
+                </View>
+
+                <View style = {{flex: 2}}>
+                    <TextInput style = {{padding :10}}
+                        label="High"
+                        mode = 'outlined'
+                        onChangeText={(val) => this.onUpdateHighChange(val, i, type)}
+                    ></TextInput>
+                </View>
+
+                <View style = {{flex: 2}}>
+                    <TextInput style = {{padding:10}}
+                        label= "%"
+                        mode = 'outlined'
+                        onChangeText={(val) => this.onUpdatePerChange(val, i, type)}
+                    ></TextInput>
+                </View>         
+            </View>
+        </View>
+    )
+}
+
+renderAmount(type){
+    var ar = []
+    if(type=='prog'){
+        for (let i = 0; i<=this.state.progAmount-1; i++){
+            ar.push(this.renderProgBracket(i, type))
+        }
+    }
+    else if(type=='reg'){
+        for (let i = 0; i<=this.state.regAmount-1; i++){
+            ar.push(this.renderProgBracket(i, type))
+        }
+    }
+    return ar
+}
+
+setUpTax(){
+    axios.post(getIP()+'/taxes/', {
+        class_code: this.state.class_code,
+        sales_tax: this.state.current_sales_tax,
+        percentage_tax: this.state.current_percent_tax,
+        flat_tax: this.state.current_flat_tax,
+    })
+    .then(response => {
+        for(let i=0; i<=this.state.progAmount-1;i++){
+            axios.post(getIP()+'/progressivebrackets/', {
+                tax_id: response.data.id,
+                lower_bracket: this.state.arOfLows[i],
+                higher_bracket: this.state.arOfHighs[i],
+                percentage: this.state.arOfPer[i],
+            })
+            .then(response => {
+                
+            })
+            .catch(error => console.log(error))  
+        }
+        for(let i=0; i<=this.state.regAmount-1;i++){
+            axios.post(getIP()+'/regressivebrackets/', {
+                tax_id: response.data.id,
+                lower_bracket: this.state.regArOfLows[i],
+                higher_bracket: this.state.regArOfHighs[i],
+                percentage: this.state.regArOfPer[i],
+            })
+            .then(response => {
+                
+            })
+            .catch(error => console.log(error))
+        }
+    })
+    .catch(error => console.log(error))
+
+
+    
+
+    
+    
+}
 renderTaxView(){
     if(this.state.hasTaxesSetUp){
         return (
@@ -203,11 +444,98 @@ renderTaxView(){
                     <Text style = {styles.header}>Tax Set Up</Text>
                 </View>
 
-                <View style = {{flex:5}}>
-                    <Text style= {styles.subHeader}>This class doesn't have taxes set up yet, start setting one up below. All of these fields can by changed in the future.</Text>
-                    <Button
+                <View style = {{flex:10}}>
+                    <View style = {{flexDirection: 'row', justifyContent: 'space-between'}}>
+                        <View style = {{flex:1, padding: 10}}>
+                            <TextInput
+                                label="Flat Tax"
+                                mode = 'outlined'
+                                onChangeText={this.onUpdateFlatChange.bind(this)}
+                            ></TextInput>
+                        </View>
+
+                        <View style = {{flex:1, padding: 10}}>
+                            <TextInput
+                                label="Percentage Tax"
+                                mode = 'outlined'
+                                onChangeText={this.onUpdatePercentChange.bind(this)}
+                            ></TextInput>
+                        </View>
+                        <View style = {{flex:1, padding: 10}}>
+                            <TextInput
+                                label="Sales Tax"
+                                mode = 'outlined'
+                                onChangeText={this.onUpdateSalesChange.bind(this)}
+                            ></TextInput>
+                        </View>
+
+                    </View>
+                    
+                    <View>
+                    <View style ={{flexDirection: 'row', justifyContent: 'space-between'}}>
+                        <View>
+                            <Text style = {styles.header, {padding: 10}}>Progressive Taxes</Text>
+                        </View>
+                        <View style ={{flexDirection:'row'}}>
+                            
+                            <View>
+                            <IconButton
+                                icon="minus"
+                                color= 'grey'
+                                size={20}
+                                onPress={() => this.progBracketClicked('minus')}
+                            />
+                            </View>
+
+                            <View>
+                            <IconButton
+                                icon="plus"
+                                color= 'grey'
+                                size={20}
+                                onPress={() => this.progBracketClicked('plus')}
+                            />
+                            </View>
+                        </View>
+                    </View>
+                    <View>
+                    {this.renderAmount('prog')}
+                    </View>
+                    <View style ={{flexDirection: 'row', justifyContent: 'space-between'}}>
+                        <View>
+                            <Text style = {styles.header, {padding: 10}}>Regressive Taxes</Text>
+                        </View>
+                        <View style ={{flexDirection:'row'}}>
+                            
+                            <View>
+                            <IconButton
+                                icon="minus"
+                                color= 'grey'
+                                size={20}
+                                onPress={() => this.regBracketClicked('minus')}
+                            />
+                            </View>
+
+                            <View>
+                            <IconButton
+                                icon="plus"
+                                color= 'grey'
+                                size={20}
+                                onPress={() => this.regBracketClicked('plus')}
+                            />
+                            </View>
+                        </View>
+                    </View>
+
+                    <View>
+                    {this.renderAmount('reg')}
+                    </View>
+                    
+                    </View>
+                    
+                    <Button style = {{marginTop:10}}
                     mode = 'contained'
-                    >Save</Button>
+                    onPress={() => {this.setUpTax()}}
+                    >Set Up Taxes</Button>
                 </View>
             </View>
         )
@@ -216,7 +544,9 @@ renderTaxView(){
 
 render(){
     return(
-        this.renderTaxView()
+        <ScrollView>
+        {this.renderTaxView()}
+        </ScrollView>
     )
 }
 
