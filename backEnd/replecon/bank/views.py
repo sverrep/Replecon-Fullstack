@@ -51,9 +51,9 @@ class TransactionIntrestRateList(generics.GenericAPIView, mixins.ListModelMixin,
                 logger.error(request.data)
                 transaction_id = request.data["transaction_id"]
                 active = True
-                end_date = datetime.date.today() + datetime.timedelta(7)
+                end_date = datetime.date.today() + datetime.timedelta(bank.payout_rate * 7)
                 data = {"set_interest_rate": set_interest_rate, "transaction_id": transaction_id, "active": active, "end_date": end_date}
-                serializer = TransactionIntrestRateSerializer(data = data)
+                serializer = TransactionInterestRateSerializer(data = data)
                 if serializer.is_valid():
                     serializer.save()
                     return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -70,5 +70,4 @@ class TransactionIntrestRatePayoutDate(APIView):
         transaction = TransactionInterestRate.objects.get(transaction_id = id)
         current_date = datetime.date.today()
         payout_date = transaction.end_date - current_date
-        logger.error(payout_date)
         return Response(payout_date, status=status.HTTP_200_OK)

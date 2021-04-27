@@ -160,7 +160,13 @@ class BankScreen extends Component {
   }
   
   componentDidMount(){
-    this.getClassCode()
+    this._unsubscribe = this.props.navigation.addListener('focus', () => {
+      this.getClassCode()
+    });
+  }
+
+  componentWillUnmount() {
+    this._unsubscribe();
   }
 
   render(){
