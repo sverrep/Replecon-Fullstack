@@ -7,7 +7,9 @@ import TeacherLoggedIn from './components/teacherLoggedIn.js';
 import TeacherClassScreen from './components/teacherClassScreen.js';
 import TeacherPayScreen from './components/teacherPayScreen.js';
 import TeacherStoreScreen from './components/teacherStoreScreen.js';
-import TeacherTaxScreen from './components/teacherTaxesScreen.js'
+import TeacherTaxScreen from './components/teacherTaxesScreen.js';
+import TeacherUpdateProgScreen from './components/teacherProgressiveUpdateScreen.js';
+import TeacherUpdateRegScreen from './components/teacherRegressiveUpdateScreen.js';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
@@ -60,6 +62,18 @@ export default function App() {
     <Stack.Screen
         name="TeacherTax"
         component={TeacherTaxScreen}
+        options={{headerShown: false}}
+    />
+
+    <Stack.Screen
+        name="TeacherUpdateProg"
+        component={TeacherUpdateProgScreen}
+        options={{headerShown: false}}
+    />
+
+<Stack.Screen
+        name="TeacherUpdateReg"
+        component={TeacherUpdateRegScreen}
         options={{headerShown: false}}
     />
        </Stack.Navigator>

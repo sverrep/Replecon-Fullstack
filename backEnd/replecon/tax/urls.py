@@ -8,5 +8,5 @@ urlpatterns = [
     path('progressivebrackets/', ProgressiveBracketList.as_view()),
     path('progressivebrackets/<int:id>', ProgressiveBracketDetails.as_view()),
     path('regressivebrackets/', RegressiveBracketList.as_view()),
-    path('regressivebrackets/<int:id>/', RegressiveBracketDetails.as_view()),
+    path('regressivebrackets/<int:id>', RegressiveBracketDetails.as_view()),
 ]

@@ -297,7 +297,7 @@ renderCards(){
                 </View>
             </View>
             <View style= {{flex: 10}}> 
-                <Card style={styles.studentCards}>
+                <Card style={styles.studentCards} onPress = {() => this.props.navigation.navigate('TeacherUpdateProg', this.state.class_tax.id)}>
                     <Text>Progressive Tax</Text>
                 </Card>
             </View>
@@ -314,7 +314,7 @@ renderCards(){
                 </View>
             </View>
             <View style= {{flex: 10}}> 
-                <Card style={styles.studentCards}>
+                <Card style={styles.studentCards} onPress = {() => this.props.navigation.navigate('TeacherUpdateReg', this.state.class_tax.id)}>
                     <Text>Regressive Tax</Text>
                 </Card>
             </View>
@@ -554,6 +554,6 @@ render(){
 
 export default function(props) {
     const navigation = useNavigation();
-  
+
     return <TeacherTaxScreen {...props} navigation={navigation} />;
 }
