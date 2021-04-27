@@ -159,7 +159,7 @@ class BankScreen extends Component {
       .then(response => {
         axios.get(getIP()+'/students/bank/')
         .then(response => {
-          axios.put(getIP()+'/students/balance/', { amount: this.state.amount, user_id: response.data })
+          axios.put(getIP()+'/students/balance/', { amount: this.state.amount, user_id: response.data, recipient: false })
           .then(response => {
             this.setState({showSaving:false})
             this.getStudentSavings()
