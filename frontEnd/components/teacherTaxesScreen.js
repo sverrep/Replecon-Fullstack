@@ -22,6 +22,8 @@ state = {
     current_value: '',
     showSimpleModal: false,
 
+    students: [],
+
     newSimpleValue: '',
     progAmount: 0,
     regAmount: 0,
@@ -43,6 +45,9 @@ state = {
     current_sales_tax:'',
     current_percent_tax:'',
     current_flat_tax: '',
+
+    class_brackets:[],
+    class_regressive_brackets:[],
 }
 
 
@@ -130,10 +135,14 @@ checkForClassTax(alltaxes){
 
 componentDidMount(){
     const {route} = this.props
-    const {class_code, class_name} = route.params;
+    const {class_code, class_name, class_student} = route.params;
     this.setState({class_code:class_code})
     this.setState({class_name:class_name})
+    this.setState({students:class_student})
     this.getTaxes()
+
+    this.getAllBrackets()
+    this.getAllRegressiveBrackets()
 }
 
 clickedItem(tax_type){
@@ -185,7 +194,7 @@ updateEasyTax(tax_type){
         }
         axios.put(getIP()+'/taxes/'+ this.state.class_tax.id, payload )
         .then(response => {
-          console.log(response.data)
+          
         })
         .catch(error => console.log(error))
         this.setState({class_tax: payload})
@@ -406,12 +415,154 @@ setUpTax(){
         }
     })
     .catch(error => console.log(error))
+}
 
 
-    
+getAllBrackets(){
+    axios.get(getIP()+'/progressivebrackets/')
+    .then(response => {
+        this.getClassProgressiveBrackets(response.data)
+    })
+    .catch(error => console.log(error))  
+}
 
-    
-    
+getClassProgressiveBrackets(brackets){
+    var tempar = []
+    for(let i = 0; i<=Object.keys(brackets).length -1; i++){
+        if(brackets[i].tax_id==this.state.class_tax.id){
+            tempar.push(brackets[i])
+        }
+    }
+    this.setState({class_brackets:tempar})
+}
+
+getProgressiveTaxAmount(balance){
+    var tax = 0;
+    for(let i = 0; i<=Object.keys(this.state.class_brackets).length-1;i++){
+        var am = 0
+        if(balance>=this.state.class_brackets[i].higher_bracket){
+            am = (this.state.class_brackets[i].higher_bracket - this.state.class_brackets[i].lower_bracket) * (this.state.class_brackets[i].percentage/100)
+        }
+
+        else if(balance<=this.state.class_brackets[i].higher_bracket && balance>this.state.class_brackets[i].lower_bracket){
+            am = (balance - this.state.class_brackets[i].lower_bracket) * (this.state.class_brackets[i].percentage/100)
+        }
+        tax = tax + am
+        
+    }
+    return tax
+}
+
+getAllRegressiveBrackets(){
+    axios.get(getIP()+'/regressivebrackets/')
+    .then(response => {
+        this.getClassRegressiveBrackets(response.data)
+    })
+    .catch(error => console.log(error))  
+}
+
+getClassRegressiveBrackets(brackets){
+    var tempar = []
+    for(let i = 0; i<=Object.keys(brackets).length -1; i++){
+        if(brackets[i].tax_id==this.state.class_tax.id){
+            tempar.push(brackets[i])
+        }
+    }
+    this.setState({class_regressive_brackets:tempar})
+}
+
+getRegressiveTaxAmount(balance){
+    var tax = 0;
+    for(let i = 0; i<=Object.keys(this.state.class_regressive_brackets).length-1;i++){
+        var am = 0
+        if(balance>=this.state.class_regressive_brackets[i].higher_bracket){
+            am = (this.state.class_regressive_brackets[i].higher_bracket - this.state.class_regressive_brackets[i].lower_bracket) * (this.state.class_regressive_brackets[i].percentage/100)
+        }
+
+        else if(balance<=this.state.class_regressive_brackets[i].higher_bracket && balance>this.state.class_regressive_brackets[i].lower_bracket){
+            am = (balance - this.state.class_regressive_brackets[i].lower_bracket) * (this.state.class_regressive_brackets[i].percentage/100)
+        }
+        tax = tax + am
+        
+    }
+    return tax
+}
+
+taxTheClass(){
+    if(this.state.checked == 'first'){
+        var selected = this.state.students
+        for(let i = 0; i <= Object.keys(selected).length-1; i++)
+        {
+            var payload = { user_id: selected[i].id, amount: '-'+this.state.class_tax.flat_tax }; 
+            axios.put(getIP()+'/students/balance/', payload)
+            .then(response => {
+                axios.post(getIP()+'/transactions/teacherPayStudents/', {"user_id": response.data.user, "amount": '-'+this.state.class_tax.flat_tax})
+                .then(response => {
+                })
+                .catch(error => console.log(error))
+            })
+            .catch(error => console.log(error))
+        }
+    }
+
+    else if(this.state.checked == 'second'){
+        var selected = this.state.students
+        for(let i = 0; i <= Object.keys(selected).length-1; i++)
+        {
+            var percentamount = (selected[i].balance * (this.state.class_tax.percentage_tax/100)).toFixed(2)
+            var payload = { user_id: selected[i].id, amount: "-"+percentamount }; 
+            axios.put(getIP()+'/students/balance/', payload)
+            .then(response => {
+                axios.post(getIP()+'/transactions/teacherPayStudents/', {"user_id": response.data.user, "amount": "-"+percentamount})
+                .then(response => {
+                })
+                .catch(error => console.log(error))
+            })
+            .catch(error => console.log(error))
+        }
+
+    }
+
+    else if(this.state.checked == 'third'){
+        var selected = this.state.students
+        for(let i = 0; i <= Object.keys(selected).length-1; i++)
+        {   
+            var prog_amount = (this.getProgressiveTaxAmount(selected[i].balance)).toFixed(2)
+            if(prog_amount>0){
+                var payload = { user_id: selected[i].id, amount: '-'+prog_amount }; 
+                axios.put(getIP()+'/students/balance/', payload)
+                .then(response => {
+                    axios.post(getIP()+'/transactions/teacherPayStudents/', {"user_id": response.data.user, "amount": "-"+prog_amount})
+                    .then(response => {
+                    })
+                    .catch(error => console.log(error))
+                })
+                .catch(error => console.log(error))
+            }
+            
+        }
+
+    }
+
+    else if(this.state.checked == 'fourth'){
+        var selected = this.state.students
+        for(let i = 0; i <= Object.keys(selected).length-1; i++)
+        {   
+            var prog_amount = (this.getRegressiveTaxAmount(selected[i].balance)).toFixed(2)
+            if(prog_amount>0){
+                var payload = { user_id: selected[i].id, amount: '-'+prog_amount }; 
+                axios.put(getIP()+'/students/balance/', payload)
+                .then(response => {
+                    axios.post(getIP()+'/transactions/teacherPayStudents/', {"user_id": response.data.user, "amount": "-"+prog_amount})
+                    .then(response => {
+                    })
+                    .catch(error => console.log(error))
+                })
+                .catch(error => console.log(error))
+            }
+            
+        }
+    }
 }
 renderTaxView(){
     if(this.state.hasTaxesSetUp){
@@ -427,6 +578,7 @@ renderTaxView(){
                     {this.renderCards()}
                     <Button style ={{marginTop:15}}
                     mode = "contained"
+                    onPress={() => this.taxTheClass()}
                     >
                         Tax Class
                     </Button>
