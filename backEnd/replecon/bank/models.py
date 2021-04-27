@@ -6,7 +6,8 @@ class Bank(models.Model):
     interest_rate = models.DecimalField(max_digits=6, decimal_places=2)
     payout_rate = models.IntegerField()
 
-class TransactionIntrestRate(models.Model):
+class TransactionInterestRate(models.Model):
     set_interest_rate = models.DecimalField(max_digits=6, decimal_places=2)
     transaction_id = models.IntegerField()
     active = models.BooleanField()
+    end_date = models.DateField()

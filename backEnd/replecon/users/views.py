@@ -94,6 +94,12 @@ class StoreStudent(APIView):
         user = get_user_model().objects.get(username = "STORE")
         return Response(user.id, status=status.HTTP_200_OK)
 
+class BankStudent(APIView):
+    def get(self, request):
+        user = get_user_model().objects.get(username = "BANK")
+        return Response(user.id, status=status.HTTP_200_OK)
+        
+
 class UserViewSet(viewsets.ModelViewSet):
     permission_classes = [AllowAny]
     queryset = get_user_model().objects.all()
@@ -119,13 +125,19 @@ class StudentClassCode(APIView):
 
 
 class StudentBalance(APIView):
+    
     def get(self, request):
         student = Student.objects.get(user_id = request.user.id)
         return Response(student.balance, status=status.HTTP_200_OK)
     
     def put(self, request):
         logger = logging.getLogger(__name__)
-        if request.user.id in Student.objects.all():
+        isStudent = False
+        students = Student.objects.all()
+        for student in students:
+            if(student.user.id == request.user.id):
+                isStudent = True
+        if isStudent:
             sender = Student.objects.get(user_id = request.user.id)
             data = request.data
             recipient = Student.objects.get(user_id = data["user_id"])

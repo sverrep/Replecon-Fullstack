@@ -96,7 +96,7 @@ class TeacherBankScreen extends Component {
     }
 
     getStudentSavings(){
-        axios.get(getIP()+'/transactionintrestrates/')
+        axios.get(getIP()+'/transactioninterestrates/')
         .then(response1 => {
             for(let i = 0; i <= Object.keys(response1.data).length-1; i++)
             {
@@ -105,24 +105,15 @@ class TeacherBankScreen extends Component {
                     var initamount = parseFloat(response.data.amount)
                     axios.get(getIP()+'/users/' + response.data.sender_id)
                     .then(response => {
-                        for(let j = 0; i <= Object.keys(this.state.students).length-1; j++)
-                        {
-                            if(this.state.students[j].name == response.data.first_name)
-                            {
-                                var intrate = parseFloat(response1.data[i].set_interest_rate)
-                                var finalamount = initamount + (initamount*(intrate/100))
-                                var tempdict = {"id": i, "name": response.data.first_name, "initial_amount": initamount, "interest_rate": intrate, "final_amount": finalamount}
-                                this.setState({student_savings: [...this.state.student_savings, tempdict]})
-                                break;
-                            }
-                        }
+                        var intrate = parseFloat(response1.data[i].set_interest_rate)
+                        var finalamount = initamount + (initamount*(intrate/100))
+                        var tempdict = {"id": i, "name": response.data.first_name, "initial_amount": initamount, "interest_rate": intrate, "final_amount": finalamount}
+                        this.setState({student_savings: [...this.state.student_savings, tempdict]})
                     })
                     .catch(error => console.log(error))
                 })
                 .catch(error => console.log(error))
             }
-            
-            
         })
         .catch(error => console.log(error))
       }

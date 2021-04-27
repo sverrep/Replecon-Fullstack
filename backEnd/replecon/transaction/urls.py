@@ -1,5 +1,5 @@
 from django.urls import path, include
-from .views import CreateTransaction, TransactionDetails, ListTransactionsByID, StoreTransaction, TeacherPayStudents
+from .views import CreateTransaction, TransactionDetails, ListTransactionsByID, StoreTransaction, TeacherPayStudents, BankTransaction
 
 
 urlpatterns = [
@@ -8,4 +8,5 @@ urlpatterns = [
     path('transactions/getAllStudentTransactions/', ListTransactionsByID.as_view()),
     path('transactions/buyFromStore/', StoreTransaction.as_view()),
     path('transactions/teacherPayStudents/', TeacherPayStudents.as_view()),
+    path('transactions/banksavings/', BankTransaction.as_view()),
 ]
