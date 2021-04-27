@@ -1,13 +1,13 @@
 from rest_framework import serializers
-from .models import Bank, TransactionIntrestRate
+from .models import Bank, TransactionInterestRate
 
 class BankSerializer(serializers.ModelSerializer):
     class Meta:
         model = Bank
-        fields = ['id', 'classroom', 'current_intrest_rate']
+        fields = ['id', 'classroom', 'interest_rate', 'payout_rate']
 
 
-class TransactionIntrestRateSerializer(serializers.ModelSerializer):
+class TransactionInterestRateSerializer(serializers.ModelSerializer):
     class Meta:
-        model = TransactionIntrestRate
-        fields = ['id', 'set_intrest_rate', 'transaction_id']
+        model = TransactionInterestRate
+        fields = ['id', 'set_interest_rate', 'transaction_id', 'active', 'end_date']

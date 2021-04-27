@@ -106,7 +106,7 @@ class StoreScreen extends Component {
     .then(response => {
       axios.get(getIP()+'/students/store/')
       .then(response => {
-        axios.put(getIP()+'/students/balance/', { amount: this.state.specific_price, user_id: response.data })
+        axios.put(getIP()+'/students/balance/', { amount: this.state.specific_price, user_id: response.data, recipient: false })
         .then(response => {
           axios.post(getIP()+'/transactions/buyFromStore/', { amount: this.state.specific_price })
           .then(response => {

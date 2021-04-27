@@ -38,7 +38,6 @@ class TeacherPayScreen extends Component {
 
     paySelected(){
         var selected = this.state.selected
-        console.log(selected)
         for(let i = 0; i <= Object.keys(selected).length-1; i++)
         {
             var payload = { user_id: selected[i], amount: this.state.amount }; 

@@ -87,10 +87,6 @@ class TeacherSignedIn extends Component {
   
   }
 
-  clickedItem(item){
-    console.log("clicked")
-  }
-
   createClass(){
     axios.get(getIP()+'/classrooms/')
     .then(response => {
@@ -123,7 +119,6 @@ class TeacherSignedIn extends Component {
 
           onPress={this.logOutRequest.bind(this)}
         />  
-        
       </View>
       
       <View style={{flex: 1, alignItems:'center'}}>
@@ -162,12 +157,8 @@ class TeacherSignedIn extends Component {
               ></TextInput>
               <Button onPress={() => {this.createClass()}}>Create Class</Button>
             </View>
-
           </View>
-
-
         </Modal>
-    
     </View>
 
     );

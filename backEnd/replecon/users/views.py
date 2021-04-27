@@ -27,6 +27,15 @@ class CreateUserAPIView(CreateAPIView):
             headers=headers
         )
 
+class UserDetails(generics.GenericAPIView, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin):
+    queryset = get_user_model().objects.all()
+    serializer_class = CreateUserSerializer
+
+    lookup_field = 'id'
+
+    def get(self, request, id):
+        return self.retrieve(request, id=id)
+
 class CreateTeacherAPIView(CreateAPIView):
     def post(self, request):
         logger = logging.getLogger(__name__)
@@ -85,6 +94,12 @@ class StoreStudent(APIView):
         user = get_user_model().objects.get(username = "STORE")
         return Response(user.id, status=status.HTTP_200_OK)
 
+class BankStudent(APIView):
+    def get(self, request):
+        user = get_user_model().objects.get(username = "BANK")
+        return Response(user.id, status=status.HTTP_200_OK)
+        
+
 class UserViewSet(viewsets.ModelViewSet):
     permission_classes = [AllowAny]
     queryset = get_user_model().objects.all()
@@ -110,16 +125,26 @@ class StudentClassCode(APIView):
 
 
 class StudentBalance(APIView):
+    
     def get(self, request):
         student = Student.objects.get(user_id = request.user.id)
         return Response(student.balance, status=status.HTTP_200_OK)
     
     def put(self, request):
         logger = logging.getLogger(__name__)
-        if request.user.id in Student.objects.all():
-            sender = Student.objects.get(user_id = request.user.id)
+        isStudent = False
+        students = Student.objects.all()
+        for student in students:
+            if(student.user.id == request.user.id):
+                isStudent = True
+        if isStudent:
             data = request.data
-            recipient = Student.objects.get(user_id = data["user_id"])
+            if request.data["recipient"] == True:
+                sender = Student.objects.get(user_id = data["user_id"])
+                recipient = Student.objects.get(user_id = request.user.id)
+            elif request.data["recipient"] == False:
+                sender = Student.objects.get(user_id = request.user.id)
+                recipient = Student.objects.get(user_id = data["user_id"])
             amount = data["amount"]
             sender_data = {"user": sender.user.id, "balance": (sender.balance - Decimal(amount)), "class_code": sender.class_code}
             recipient_data = {"user": recipient.user.id, "balance": (recipient.balance + Decimal(amount)), "class_code": recipient.class_code}
