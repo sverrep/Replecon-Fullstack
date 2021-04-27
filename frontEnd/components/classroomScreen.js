@@ -8,7 +8,6 @@ import {
 } from "react-native";
 import { useNavigation } from '@react-navigation/native';
 import styles from '../componentStyles.js'
-import { NavigationContainer } from '@react-navigation/native';
 import { Button, Card, TextInput, IconButton } from 'react-native-paper';
 import getIP from "./settings/settings.js";
 import axios from 'axios';
@@ -20,7 +19,7 @@ class ClassroomScreen extends Component {
     students: [],
     class_code: "",
     class_name: "",
-    teacher_id: "",
+    teacher: {},
     show:false,
     name:"",
     amount: "",
@@ -68,7 +67,17 @@ class ClassroomScreen extends Component {
       if (classrooms[i].class_code == this.state.class_code)
       {
         this.setState({ class_name: classrooms[i].class_name });
-        this.setState({ teacher_id: classrooms[i].teacher_id });
+        axios.get(getIP()+'/teachers/')
+        .then(response => {
+          for(let j = 0; j <= Object.keys(response.data).length-1; j++)
+          {
+            if (response.data[j].id == classrooms[i].teacher_id)
+            {
+              this.setState({teacher: response.data[j]})
+            }
+          }
+        })
+        .catch(error => console.log(error))
       }
     }
   }
@@ -121,7 +130,7 @@ class ClassroomScreen extends Component {
         <View style={{ flex: 1 }}>
 
           <Text style={styles.header}>{this.state.class_name}</Text>
-          <Text style={styles.subHeader}>{this.state.teacher_id}</Text>
+          <Text style={styles.subHeader}>{this.state.teacher.last_name}</Text>
         </View>
 
         <View style={{ flex: 6 }}>
