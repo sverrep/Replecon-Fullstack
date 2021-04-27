@@ -46,6 +46,36 @@ class StoreTransaction(APIView):
             return Response(transaction_serializer.data, status=status.HTTP_201_CREATED)
         return Response(transaction_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+class BankTransaction(APIView):
+    queryset = Transaction.objects.all()
+    serializer_class = TransactionSerializer
+
+    def post(self, request):
+        logger = logging.getLogger(__name__)
+        bank = get_user_model().objects.get(username = "BANK")
+        if(request.data["done"] == True):
+            sender_id = bank.id
+            category = "Bank Savings"
+            amount = request.data["amount"]
+            recipient_id = request.user.id
+            data = { "recipient_id": recipient_id, "sender_id": sender_id, "category": category, "amount": amount}
+            transaction_serializer = TransactionSerializer(data = data)
+            if transaction_serializer.is_valid():
+                transaction_serializer.save()
+                return Response(transaction_serializer.data, status=status.HTTP_201_CREATED)
+            return Response(transaction_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            sender_id = request.user.id
+            category = "Bank Savings"
+            amount = request.data["amount"]
+            data = { "recipient_id": bank.id, "sender_id": sender_id, "category": category, "amount": amount }
+            transaction_serializer = TransactionSerializer(data = data)
+            if transaction_serializer.is_valid():
+                transaction_serializer.save()
+                return Response(transaction_serializer.data, status=status.HTTP_201_CREATED)
+            return Response(transaction_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
 class TeacherPayStudents(APIView):
 
     def post(self, request):

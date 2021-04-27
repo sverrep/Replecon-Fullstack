@@ -65,13 +65,17 @@ class TeacherBankScreen extends Component {
     }
 
     renderData = (item) => {
-        return(
-          <View>
-            <Card style={styles.studentCards}>
-                <Text style={styles.subHeader}>{item.name}:   ${item.initial_amount}  {'-->'}  {item.interest_rate}%  {'-->'}  ${item.final_amount}</Text>
-            </Card>
-          </View>
-        )
+        if(item.active == true)
+        {
+            return(
+                <View>
+                  <Card style={styles.studentCards}>
+                      <Text style={styles.subHeader}>{item.name}:   ${item.initial_amount}  {'-->'}  {item.interest_rate}%  {'-->'}  ${item.final_amount}</Text>
+                      <Text>Pays out in {item.payout_date} days</Text>
+                  </Card>
+                </View>
+            )
+        }
     }
 
     getBanks(){
@@ -96,33 +100,37 @@ class TeacherBankScreen extends Component {
     }
 
     getStudentSavings(){
-        axios.get(getIP()+'/transactionintrestrates/')
+        axios.get(getIP()+'/transactioninterestrates/')
         .then(response1 => {
             for(let i = 0; i <= Object.keys(response1.data).length-1; i++)
             {
                 axios.get(getIP()+'/transactions/' + response1.data[i].transaction_id)
-                .then(response => {
-                    var initamount = parseFloat(response.data.amount)
-                    axios.get(getIP()+'/users/' + response.data.sender_id)
-                    .then(response => {
-                        for(let j = 0; i <= Object.keys(this.state.students).length-1; j++)
-                        {
-                            if(this.state.students[j].name == response.data.first_name)
-                            {
-                                var intrate = parseFloat(response1.data[i].set_interest_rate)
-                                var finalamount = initamount + (initamount*(intrate/100))
-                                var tempdict = {"id": i, "name": response.data.first_name, "initial_amount": initamount, "interest_rate": intrate, "final_amount": finalamount}
-                                this.setState({student_savings: [...this.state.student_savings, tempdict]})
-                                break;
+                .then(response2 => {
+                    var initamount = parseFloat(response2.data.amount)
+                    axios.get(getIP()+'/users/' + response2.data.sender_id)
+                    .then(userresponse => {
+                        var intrate = parseFloat(response1.data[i].set_interest_rate)
+                        var finalamount = initamount + (initamount*(intrate/100))
+                        axios.get(getIP()+'/transactioninterestrates/payoutdate/' + response2.data.id)
+                        .then(response => {
+                            var payout_date = (((response.data / 60) / 60) / 24)
+                            var tempdict = {
+                                "id": i, 
+                                "name": userresponse.data.first_name, 
+                                "initial_amount": initamount, 
+                                "interest_rate": intrate, 
+                                "final_amount": finalamount, 
+                                "payout_date": payout_date,
+                                "active": response1.data[i].active
                             }
-                        }
+                            this.setState({student_savings: [...this.state.student_savings, tempdict]})
+                        })
+                        .catch(error => console.log(error))
                     })
                     .catch(error => console.log(error))
                 })
                 .catch(error => console.log(error))
             }
-            
-            
         })
         .catch(error => console.log(error))
       }
