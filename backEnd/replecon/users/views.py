@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 from rest_framework import status, viewsets
 from rest_framework.views import APIView
-from rest_framework import viewsets, generics, mixins, viewsets, status
+from rest_framework import viewsets, generics, mixins, status
 from users.serializers import CreateUserSerializer, CreateStudentSerializer, CreateTeacherSerializer
 from .models import Student, Teacher
 from decimal import Decimal
@@ -35,6 +35,17 @@ class UserDetails(generics.GenericAPIView, mixins.RetrieveModelMixin, mixins.Upd
 
     def get(self, request, id):
         return self.retrieve(request, id=id)
+
+class TeacherList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
+    queryset = Teacher.objects.all()
+    permission_classes = [AllowAny]
+    serializer_class = CreateTeacherSerializer
+
+    def get(self, request):
+        return self.list(request)
+    
+    def post(self, request):
+        return self.create(request)
 
 class CreateTeacherAPIView(CreateAPIView):
     def post(self, request):
@@ -181,3 +192,4 @@ class StudentList(APIView):
             data.append(tempdict)
         sorted_list = sorted(data, key=lambda k: k['name']) 
         return Response(sorted_list, status=status.HTTP_200_OK)
+
