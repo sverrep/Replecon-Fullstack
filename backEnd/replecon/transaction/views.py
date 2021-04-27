@@ -68,6 +68,7 @@ class ListTransactionsByID(APIView):
     serializer_class = TransactionSerializer
 
     def get(self, request):
+        logger = logging.getLogger(__name__)
         all_transactions = Transaction.objects.all()
         transactions = []
         for transaction in all_transactions:
@@ -76,9 +77,16 @@ class ListTransactionsByID(APIView):
                 tempdict = {"id": transaction.id, "name": user.first_name, "amount": transaction.amount, "symbol": "-"}
                 transactions.append(tempdict)
             elif (transaction.recipient_id == request.user.id):
-                user = get_user_model().objects.get(id = transaction.sender_id)
-                tempdict = {"id": transaction.id, "name": user.first_name, "amount": transaction.amount, "symbol": "+"}
-                transactions.append(tempdict)
+                amountstr = str(transaction.amount)
+                if "-" in amountstr:
+                    newamountstr = amountstr.replace("-", "")
+                    user = get_user_model().objects.get(id = transaction.sender_id)
+                    tempdict = {"id": transaction.id, "name": user.first_name, "amount": newamountstr, "symbol": "-"}
+                    transactions.append(tempdict)
+                else:
+                    user = get_user_model().objects.get(id = transaction.sender_id)
+                    tempdict = {"id": transaction.id, "name": user.first_name, "amount": transaction.amount, "symbol": "+"}
+                    transactions.append(tempdict)
         transactions.reverse()
         return Response(transactions, status=status.HTTP_200_OK)
         
