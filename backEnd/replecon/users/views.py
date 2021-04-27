@@ -138,9 +138,13 @@ class StudentBalance(APIView):
             if(student.user.id == request.user.id):
                 isStudent = True
         if isStudent:
-            sender = Student.objects.get(user_id = request.user.id)
             data = request.data
-            recipient = Student.objects.get(user_id = data["user_id"])
+            if request.data["recipient"] == True:
+                sender = Student.objects.get(user_id = data["user_id"])
+                recipient = Student.objects.get(user_id = request.user.id)
+            elif request.data["recipient"] == False:
+                sender = Student.objects.get(user_id = request.user.id)
+                recipient = Student.objects.get(user_id = data["user_id"])
             amount = data["amount"]
             sender_data = {"user": sender.user.id, "balance": (sender.balance - Decimal(amount)), "class_code": sender.class_code}
             recipient_data = {"user": recipient.user.id, "balance": (recipient.balance + Decimal(amount)), "class_code": recipient.class_code}

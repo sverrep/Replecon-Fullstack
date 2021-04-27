@@ -59,6 +59,19 @@ class TransactionIntrestRateList(generics.GenericAPIView, mixins.ListModelMixin,
                     return Response(serializer.data, status=status.HTTP_201_CREATED)
                 logger.error(serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def put(self, request):
+        logger = logging.getLogger(__name__)
+        logger.error(request.data["transaction_id"])
+        transaction = TransactionInterestRate.objects.get(transaction_id = request.data["transaction_id"])
+        active = request.data["active"]
+        data = {"set_interest_rate": transaction.set_interest_rate, "transaction_id": transaction.transaction_id, "active": active, "end_date": transaction.end_date}
+        serializer = TransactionInterestRateSerializer(transaction, data = data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        logger.error(serializer.errors)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class TransactionIntrestRatePayoutDate(APIView):
     queryset = TransactionInterestRate.objects.all()

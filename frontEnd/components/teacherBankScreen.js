@@ -65,14 +65,17 @@ class TeacherBankScreen extends Component {
     }
 
     renderData = (item) => {
-        return(
-          <View>
-            <Card style={styles.studentCards}>
-                <Text style={styles.subHeader}>{item.name}:   ${item.initial_amount}  {'-->'}  {item.interest_rate}%  {'-->'}  ${item.final_amount}</Text>
-                <Text>Pays out in {item.payout_date} days</Text>
-            </Card>
-          </View>
-        )
+        if(item.active == true)
+        {
+            return(
+                <View>
+                  <Card style={styles.studentCards}>
+                      <Text style={styles.subHeader}>{item.name}:   ${item.initial_amount}  {'-->'}  {item.interest_rate}%  {'-->'}  ${item.final_amount}</Text>
+                      <Text>Pays out in {item.payout_date} days</Text>
+                  </Card>
+                </View>
+            )
+        }
     }
 
     getBanks(){
@@ -111,7 +114,15 @@ class TeacherBankScreen extends Component {
                         axios.get(getIP()+'/transactioninterestrates/payoutdate/' + response2.data.id)
                         .then(response => {
                             var payout_date = (((response.data / 60) / 60) / 24)
-                            var tempdict = {"id": i, "name": userresponse.data.first_name, "initial_amount": initamount, "interest_rate": intrate, "final_amount": finalamount, "payout_date": payout_date}
+                            var tempdict = {
+                                "id": i, 
+                                "name": userresponse.data.first_name, 
+                                "initial_amount": initamount, 
+                                "interest_rate": intrate, 
+                                "final_amount": finalamount, 
+                                "payout_date": payout_date,
+                                "active": response1.data[i].active
+                            }
                             this.setState({student_savings: [...this.state.student_savings, tempdict]})
                         })
                         .catch(error => console.log(error))

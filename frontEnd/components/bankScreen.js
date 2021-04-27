@@ -18,7 +18,9 @@ class BankScreen extends Component {
     loggedin_student: {},
     savings: [],
     amount: '',
-    show: false,
+    showSaving: false,
+    showClaiming: false,
+    selected_savings: {},
 
   }
 
@@ -60,19 +62,48 @@ class BankScreen extends Component {
     }
   }
 
-  claimSavings(transaction_id){
-    
+  claimSavings(){
+    console.log(this.state.selected_savings)
+    if(this.state.selected_savings.payout_date == 0)
+    {
+      axios.post(getIP()+'/transactions/banksavings/', {"amount": this.state.selected_savings.final_amount, "done": true})
+      .then(response => {
+        console.log(response.data)
+        axios.put(getIP()+'/transactioninterestrates/', {active: false, class_code: this.state.class_code, transaction_id: this.state.selected_savings.transaction_id})
+        .then(response => {
+          console.log(response.data)
+          axios.get(getIP()+'/students/bank/')
+          .then(response => {
+            console.log(response.data)
+            axios.put(getIP()+'/students/balance/', { amount: this.state.selected_savings.final_amount, user_id: response.data, recipient: true })
+            .then(response => {
+              console.log(response.data)
+              this.setState({showSaving:false})
+              this.getStudentSavings()
+            })
+            .catch(error => console.log(error))
+          })
+          .catch(error => console.log(error))
+        })
+        .catch(error => console.log(error))
+      })
+      .catch(error => console.log(error))
+    }
   }
 
   renderData = (item) => {
-    return(
-      <View>
-        <Card style={styles.studentCards} onPress={() => {this.claimSavings(item.transaction_id)}}>
-            <Text style={styles.subHeader}> ${item.initial_amount}  {'-->'}  {item.interest_rate}%  {'-->'}  ${item.final_amount}</Text>
-            <Text>Claimable in: {item.payout_date} days</Text>
-        </Card>
-      </View>
-    )
+    if(item.active == true)
+    {
+      return(
+        <View>
+          <Card style={styles.studentCards} onPress={() => {this.clickedClaimingPopUp(item)}}>
+              <Text style={styles.subHeader}> ${item.initial_amount}  {'-->'}  {item.interest_rate}%  {'-->'}  ${item.final_amount}</Text>
+              <Text>Claimable in: {item.payout_date} days</Text>
+          </Card>
+        </View>
+      )
+    }
+    
   }
 
   getStudentSavings(){
@@ -82,16 +113,24 @@ class BankScreen extends Component {
         for(let i = 0; i <= Object.keys(response1.data).length-1; i++)
         {
             axios.get(getIP()+'/transactions/' + response1.data[i].transaction_id)
-            .then(response => {
-                var initamount = parseFloat(response.data.amount)
-                if(this.state.loggedin_student.id == response.data.sender_id)
+            .then(response2 => {
+                var initamount = parseFloat(response2.data.amount)
+                if(this.state.loggedin_student.id == response2.data.sender_id)
                 {
                     var intrate = parseFloat(response1.data[i].set_interest_rate)
                     var finalamount = initamount + (initamount*(intrate/100))
-                    axios.get(getIP()+'/transactioninterestrates/payoutdate/' + response.data.id)
+                    axios.get(getIP()+'/transactioninterestrates/payoutdate/' + response2.data.id)
                     .then(response => {
                       var payout_date = (((response.data / 60) / 60) / 24)
-                      var tempdict = {"id": i, "initial_amount": initamount, "interest_rate": intrate, "final_amount": finalamount, "transaction_id": response.data.id, "payout_date": payout_date}
+                      var tempdict = {
+                        "id": i, 
+                        "initial_amount": initamount, 
+                        "interest_rate": intrate, 
+                        "final_amount": finalamount, 
+                        "transaction_id": response2.data.id, 
+                        "payout_date": payout_date, 
+                        "active": response1.data[i].active
+                      }
                       this.setState({savings: [...this.state.savings, tempdict]})
                     })
                     .catch(error => console.log(error))
@@ -103,12 +142,17 @@ class BankScreen extends Component {
     .catch(error => console.log(error))
   }
 
-  renderSavingsPopUp(){
-    this.setState({show:true})
+  clickedSavingsPopUp(){
+    this.setState({showSaving:true})
+  }
+
+  clickedClaimingPopUp(item){
+    this.setState({showClaiming: true})
+    this.setState({selected_savings: item })
   }
 
   setStudentSavings(){
-    axios.post(getIP()+'/transactions/banksavings/', {"amount": this.state.amount})
+    axios.post(getIP()+'/transactions/banksavings/', {"amount": this.state.amount, "done": false})
     .then(response => {
       var transaction_id = response.data["id"]
       axios.post(getIP()+'/transactioninterestrates/', {"class_code": this.state.class_code, "transaction_id": transaction_id})
@@ -117,7 +161,7 @@ class BankScreen extends Component {
         .then(response => {
           axios.put(getIP()+'/students/balance/', { amount: this.state.amount, user_id: response.data })
           .then(response => {
-            this.setState({show:false})
+            this.setState({showSaving:false})
             this.getStudentSavings()
           })
           .catch(error => console.log(error))
@@ -129,11 +173,11 @@ class BankScreen extends Component {
     .catch(error => console.log(error))
   }
 
-  renderPopUp(){
+  renderSavingsPopUp(){
     return(
       <Modal
           transparent = {true}
-          visible = {this.state.show}
+          visible = {this.state.showSaving}
       >
           <View style = {{backgroundColor:'#000000aa', flex:1}}>
           <View style = {{backgroundColor:'#ffffff', margin:50, padding:40, borderRadius:10, marginTop:200, bottom: 50, flex:1}} >
@@ -142,7 +186,7 @@ class BankScreen extends Component {
                 icon="close-box-outline"
                 color= 'grey'
                 size={20}
-                onPress={() => {this.setState({show:false})}}
+                onPress={() => {this.setState({showSaving:false})}}
               />
             </View>
             <Text>Duration {this.state.payout_rate} Week</Text>
@@ -153,6 +197,29 @@ class BankScreen extends Component {
               onChangeText={this.onAmountChange.bind(this)}
             />
             <Button onPress={() => {this.setStudentSavings()}}>Insert Savings {this.state.selected_name}</Button>
+          </View>
+        </View>
+      </Modal>
+    )
+  }
+
+  renderClaimingPopUp(){
+    return(
+      <Modal
+          transparent = {true}
+          visible = {this.state.showClaiming}
+      >
+          <View style = {{backgroundColor:'#000000aa', flex:1}}>
+          <View style = {{backgroundColor:'#ffffff', margin:40, padding:40, borderRadius:10, marginTop:300, bottom: 0}} >
+            <View style = {{position: 'absolute', right:0, top:0}}>
+              <IconButton
+                icon="close-box-outline"
+                color= 'grey'
+                size={20}
+                onPress={() => {this.setState({showClaiming:false})}}
+              />
+            </View>
+            <Button onPress={() => {this.claimSavings()}}>Claim Savings</Button>
           </View>
         </View>
       </Modal>
@@ -203,12 +270,13 @@ class BankScreen extends Component {
 
         <View style={{flex: 1}}>
           <Button
-          onPress = {() =>{this.renderSavingsPopUp()}}
+          onPress = {() =>{this.clickedSavingsPopUp()}}
           mode = 'contained'
           >Start Saving</Button>
         </View>
         
-        {this.renderPopUp()}
+        {this.renderSavingsPopUp()}
+        {this.renderClaimingPopUp()}
       </View>
       
     )
