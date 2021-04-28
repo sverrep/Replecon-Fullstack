@@ -25,11 +25,16 @@ class ClassroomScreen extends Component {
     amount: "",
     recipient_id: '',
     sender_id: '',
+    balance: 0,
+
+    showError: false,
+    errorMessage: '',
   }
 
   clickedItem = (data) => {
     this.setState({show:true})
     this.setState({name:data.name})
+    this.setState({showError:false})
   }
 
   renderData = (item) => {
@@ -84,13 +89,50 @@ class ClassroomScreen extends Component {
 
   componentDidMount(){
     this.getClassStudents()
+    this.getStudentBalance()
   }
 
   onAmountChange(text) {
     this.setState({ amount: text });
+    this.setState({showError:false})
   } 
 
+  displayErrorMessage(){
+    return (this.state.showError && <Text style={{color: "red"}}>{this.state.errorMessage}</Text>)
+  }
+
+  getStudentBalance(){
+    axios.get(getIP()+'/students/balance/')
+            .then(response => {  
+              this.setState({balance:response.data})
+            })
+            .catch(error => console.log(error))
+  }
+
+  amountIsValid(amount){
+      if(isNaN(amount)){
+          this.setState({errorMessage: 'Make sure to that amount is a number', showError: true})
+          return false
+      }
+      else{
+          if(Math.sign(amount) == 1){
+            if(amount>this.state.balance){
+              this.setState({errorMessage: 'You do not have that much money', showError: true})
+              return false
+            }
+            else{
+              return true
+            }
+          }
+          else{
+              this.setState({errorMessage: 'Make sure to that amount is a positive number', showError: true})
+              return false
+          }
+      }
+    } 
+
   createTransaction(){
+    if(this.amountIsValid(this.state.amount)){
     for (let i = 0; i <= Object.keys(this.state.students).length-1; i++)
     {
       if (this.state.students[i].name == this.state.name)
@@ -117,6 +159,7 @@ class ClassroomScreen extends Component {
         break;
       }
     }
+  }
 
     
   }
@@ -163,6 +206,7 @@ class ClassroomScreen extends Component {
                     mode = 'outlined'
                     onChangeText={this.onAmountChange.bind(this)}
                   ></TextInput>
+                  {this.displayErrorMessage()}
                   <Button onPress={() => {this.createTransaction()}}>Send Money</Button>
                 </View>
 
