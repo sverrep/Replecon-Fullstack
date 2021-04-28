@@ -192,27 +192,61 @@ flat_tax_isValid(flat_tax){
 
     if(isNaN(flat_tax)){
         this.setState({errorMessage: 'Make sure to that flat tax is a number', showError: true})
-        console.log("error")
         return false
     }
     else{
-        return true
+        if(Math.sign(flat_tax) == 1){
+            return true
+        }
+        else{
+            this.setState({errorMessage: 'Make sure to that flat tax is a positive number', showError: true})
+            return false
+        }
     }
 }
 
 percentage_tax_isValid(percentage_tax){
     if(isNaN(percentage_tax)){
         this.setState({errorMessage: 'Make sure to that percentage tax is a number', showError: true})
-        console.log("error")
         return false
     }
     else{
+        
         if( parseInt(percentage_tax)>100){
             this.setState({errorMessage: 'Make sure to that percentage tax is below 100', showError: true})
             return false
         }
         else{
-            return true
+            if(Math.sign(percentage_tax) == 1){
+                return true
+            }
+            else{
+                this.setState({errorMessage: 'Make sure to that percentage tax is a positive number', showError: true})
+                return false
+            }
+        }
+    }
+}
+
+sales_tax_isValid(sale_tax){
+    if(isNaN(sale_tax)){
+        this.setState({errorMessage: 'Make sure to that sales tax is a number', showError: true})
+        
+        return false
+    }
+    else{
+        if( parseInt(sale_tax)>100){
+            this.setState({errorMessage: 'Make sure to that sales tax is below 100%', showError: true})
+            return false
+        }
+        else{
+            if(Math.sign(sale_tax) == 1){
+                return true
+            }
+            else{
+                this.setState({errorMessage: 'Make sure to that sales tax is a positive number', showError: true})
+                return false
+            }
         }
     }
 }
@@ -427,7 +461,94 @@ renderAmount(type){
     return ar
 }
 
+checkIfNumValid(num){
+    console.log('im here')
+    if(isNaN(num)){
+        this.setState({errorMessage: 'Make sure to that brackets only include numbers', showError: true})
+        return false
+    }
+    else{
+        if(Math.sign(num) == 1){
+            return true
+        }
+        else{
+            this.setState({errorMessage: 'Make sure to that the brackets only contain positive numbers', showError: true})
+            return false
+        }
+    }
+}
+progressive_taxes_isValid(){
+    console.log("prog here")
+    status = true
+    for(let i = 0; i <= Object.keys(this.state.arOfLows).length-1; i++ ){
+        console.log(i)
+        if (this.checkIfNumValid(this.state.arOfLows[i])){
+
+        }
+        else{
+            status = false
+        }
+
+        if (this.checkIfNumValid(this.state.arOfHighs[i])){
+
+        }
+        else{
+            status = false
+        }
+
+        if (this.checkIfNumValid(this.state.arOfPer[i])){
+
+        }
+        else{
+            status = false
+        }
+    }
+    return status
+}
+
+regressive_taxes_isValid(){
+    status = true
+    for(let i = 0; i <= Object.keys(this.state.regArOfLows).length-1; i++ ){
+        if (this.checkIfNumValid(this.state.regArOfLows[i])){
+
+        }
+        else{
+            status = false
+        }
+
+        if (this.checkIfNumValid(this.state.regArOfHighs[i])){
+
+        }
+        else{
+            status = false
+        }
+
+        if (this.checkIfNumValid(this.state.regArOfPer[i])){
+
+        }
+        else{
+            status = false
+        }
+    }
+    return status
+}
+
+setupIsValid(){
+    if(this.flat_tax_isValid(this.state.current_flat_tax)){
+        if(this.percentage_tax_isValid(this.state.current_percent_tax)){
+            if(this.sales_tax_isValid(this.state.current_sales_tax)){
+                if(this.regressive_taxes_isValid()){
+                    if(this.progressive_taxes_isValid()){
+                        return true
+                    }
+                }
+            }
+        }
+    }
+}
+
 setUpTax(){
+    if(this.setupIsValid()){
     axios.post(getIP()+'/taxes/', {
         class_code: this.state.class_code,
         sales_tax: this.state.current_sales_tax,
@@ -461,6 +582,7 @@ setUpTax(){
         }
     })
     .catch(error => console.log(error))
+    }
 }
 
 
@@ -666,9 +788,11 @@ renderTaxView(){
                                 onChangeText={this.onUpdateSalesChange.bind(this)}
                             ></TextInput>
                         </View>
-
+                       
                     </View>
-                    
+                    <View>
+                    {this.displayErrorMessage()}
+                    </View>
                     <View>
                     <View style ={{flexDirection: 'row', justifyContent: 'space-between'}}>
                         <View>
