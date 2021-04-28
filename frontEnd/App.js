@@ -49,7 +49,6 @@ export default function App() {
     <Stack.Screen
         name="TeacherClass"
         component={TeacherClassScreen}
-        options={{headerShown: false}}
     />
     <Stack.Screen
         name="TeacherPay"
@@ -58,30 +57,25 @@ export default function App() {
     <Stack.Screen
         name="TeacherStore"
         component={TeacherStoreScreen}
-        options={{headerShown: false}}
     />
     <Stack.Screen
         name="TeacherTax"
         component={TeacherTaxScreen}
-        options={{headerShown: false}}
     />
 
     <Stack.Screen
         name="TeacherUpdateProg"
         component={TeacherUpdateProgScreen}
-        options={{headerShown: false}}
     />
 
     <Stack.Screen
         name="TeacherUpdateReg"
         component={TeacherUpdateRegScreen}
-        options={{headerShown: false}}
     />
     
     <Stack.Screen
         name="TeacherBank"
         component={TeacherBankScreen}
-
     />
        </Stack.Navigator>
       </NavigationContainer>
