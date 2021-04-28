@@ -20,6 +20,10 @@ state = {
     arOfPer:[],
     arOfId:[],
 
+    showError: false,
+    errorMessage: '',
+
+
 }
 
 deleteBracket(){
@@ -212,7 +216,55 @@ renderButtons(){
     )
 }
 
+displayErrorMessage(){
+    return (this.state.showError && <Text style={{color: "red"}}>{this.state.errorMessage}</Text>)
+}
+
+checkIfNumValid(num){
+    if(isNaN(num)){
+        this.setState({errorMessage: 'Make sure to that brackets only include numbers', showError: true})
+        return false
+    }
+    else{
+        if(Math.sign(num) == 1){
+            return true
+        }
+        else{
+            this.setState({errorMessage: 'Make sure to that the brackets only contain positive numbers', showError: true})
+            return false
+        }
+    }
+}
+
+progressive_taxes_isValid(){
+    var status = true
+    for(let i = 0; i <= Object.keys(this.state.arOfLow).length-1; i++ ){
+        if (this.checkIfNumValid(this.state.arOfLow[i])){
+
+        }
+        else{
+            status = false
+        }
+
+        if (this.checkIfNumValid(this.state.arOfHigh[i])){
+
+        }
+        else{
+            status = false
+        }
+
+        if (this.checkIfNumValid(this.state.arOfPer[i])){
+
+        }
+        else{
+            status = false
+        }
+    }
+    return status
+}
+
 updateBrackets(){
+    if(this.progressive_taxes_isValid()){
     for(let i = 0; i<= Object.keys(this.state.arOfId).length-1; i++){
         axios.put(getIP()+'/progressivebrackets/'+ this.state.arOfId[i], {
             tax_id: this.state.tax_id,
@@ -221,9 +273,10 @@ updateBrackets(){
             percentage: this.state.arOfPer[i], 
         })
         .then(response => {
-            console.log(response.data)
+            
         })
         .catch(error => console.log(error))  
+    }
     }
 }
 
@@ -245,6 +298,7 @@ render(){
             <Text>Update Progressive {this.state.tax_id}</Text>
             {this.renderButtons()}
             {this.renderTextInputs()}
+            {this.displayErrorMessage()}
             {this.renderUpdateButton()}
         </View>
         
