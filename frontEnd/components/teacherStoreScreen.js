@@ -19,14 +19,10 @@ class TeacherStoreScreen extends Component {
         showAddItem:false,
         showCreateStore: false,
 
-        spec_item_name: '',
-        spec_item_desc: '',
-        spec_item_price: 0,
-        spec_item_id: 0,
-
-        new_item_name: '',
-        new_item_desc: '',
-        new_item_price: 0,
+        item_name: '',
+        item_desc: '',
+        item_price: 0,
+        item_id: 0,
 
         store_name: '',
 
@@ -34,28 +30,16 @@ class TeacherStoreScreen extends Component {
         error: '',
     }
 
-    onUpdateItemNameChange(text){
-        this.setState({ spec_item_name: text, showError: false });
+    onItemNameChange(text){
+        this.setState({ item_name: text, showError: false });
     }
     
-    onUpdateItemDescChange(text){
-        this.setState({ spec_item_desc: text, showError: false });
+    onItemDescChange(text){
+        this.setState({ item_desc: text, showError: false });
     }
 
-    onUpdateItemPriceChange(text){
-        this.setState({ spec_item_price: text, showError: false });
-    }
-
-    onNewItemNameChange(text){
-        this.setState({ new_item_name: text, showError: false });
-    }
-    
-    onNewItemDescChange(text){
-        this.setState({ new_item_desc: text, showError: false });
-    }
-
-    onNewItemPriceChange(text){
-        this.setState({ new_item_price: text, showError: false });
+    onItemPriceChange(text){
+        this.setState({ item_price: text, showError: false });
     }
     
     onStoreNameChange(text){
@@ -68,10 +52,10 @@ class TeacherStoreScreen extends Component {
 
     clickedItem = (data) => {
         this.setState({showUpdateItem:true})
-        this.setState({spec_item_name:data.item_name})
-        this.setState({spec_item_price:data.price})
-        this.setState({spec_item_desc:data.description})
-        this.setState({spec_item_id:data.id})
+        this.setState({item_name:data.item_name})
+        this.setState({item_price:data.price})
+        this.setState({item_desc:data.description})
+        this.setState({item_id:data.id})
     }
 
     addItemClicked(){
@@ -132,27 +116,32 @@ class TeacherStoreScreen extends Component {
     }
 
     getItem(){
-        axios.get(getIP()+'/items/'+ this.state.spec_item_id)
+        axios.get(getIP()+'/items/'+ this.state.item_id)
         .then(response => {
         })
         .catch(error => console.log(error))
     }
     
     updateItem(){
-        axios.put(getIP()+'/items/'+ this.state.spec_item_id, {
-            item_name: this.state.spec_item_name,
-            description: this.state.spec_item_desc,
-            price: this.state.spec_item_price,
-            shop: this.state.shop_id,
-        })
-        .then(response => {
-          console.log(response.data)
-        })
-        .catch(error => console.log(error))
+        if(this.validateItem())
+        {
+            axios.put(getIP()+'/items/'+ this.state.item_id, {
+                item_name: this.state.item_name,
+                description: this.state.item_desc,
+                price: this.state.item_price,
+                shop: this.state.shop_id,
+            })
+            .then(response => {
+                this.setState({showUpdateItem: false, items: []})
+                this.getItems()
+            })
+            .catch(error => console.log(error))
+        }
+        
     }
 
     deleteItem(){
-        axios.delete(getIP()+'/items/'+ this.state.spec_item_id)
+        axios.delete(getIP()+'/items/'+ this.state.item_id)
         .then(response => {
           this.setState({showUpdateItem: false, items: []})
           this.getItems()
@@ -181,30 +170,30 @@ class TeacherStoreScreen extends Component {
                             <View style={{flexDirection: 'row', marginTop:10}}>
                                 <View style={{flex:2, marginRight:5}}>
                                     <TextInput
-                                    defaultValue= {this.state.spec_item_name}
+                                    defaultValue= {this.state.item_name}
                                     label="Item Name"
                                     mode = 'outlined'
-                                    onChangeText={this.onUpdateItemNameChange.bind(this)}
+                                    onChangeText={this.onItemNameChange.bind(this)}
                                     ></TextInput>
 
                                 </View>
                                 
                                 <View style={{flex: 1, marginLeft: 5}}>
                                 <TextInput
-                                defaultValue= {this.state.spec_item_price}
+                                defaultValue= {this.state.item_price}
                                 label="Item Price"
                                 mode = 'outlined'
-                                onChangeText={this.onUpdateItemPriceChange.bind(this)}
+                                onChangeText={this.onItemPriceChange.bind(this)}
                                 ></TextInput>
                                 </View>
                             </View>
                         
                         <View style={{marginTop:10}}>
                             <TextInput
-                                defaultValue= {this.state.spec_item_desc}
+                                defaultValue= {this.state.item_desc}
                                 label="Item Description"
                                 mode = 'outlined'
-                                onChangeText={this.onUpdateItemDescChange.bind(this)}
+                                onChangeText={this.onItemDescChange.bind(this)}
                             ></TextInput>
                         </View>
                         
@@ -226,6 +215,9 @@ class TeacherStoreScreen extends Component {
                             </View>
                             
                         </View>
+                        <View style={{alignItems: 'center'}}>
+                            {this.displayError()}
+                        </View>
                         
                         </View>
                     </View>
@@ -234,14 +226,14 @@ class TeacherStoreScreen extends Component {
 
     }
 
-    validateAddItem(){
-        if(this.state.new_item_name != '')
+    validateItem(){
+        if(this.state.item_name != '')
         {
-            if(!isNaN(this.state.new_item_price))
+            if(!isNaN(this.state.item_price))
             {
-                if(Math.sign(parseFloat(this.state.new_item_price)) == 1)
+                if(Math.sign(parseFloat(this.state.item_price)) == 1)
                 {
-                    if(this.state.new_item_desc)
+                    if(this.state.item_desc)
                     {
                         return true
                     }
@@ -269,12 +261,12 @@ class TeacherStoreScreen extends Component {
     }
 
     addItem(){
-        if(this.validateAddItem())
+        if(this.validateItem())
         {
             axios.post(getIP()+'/items/', {
-                item_name: this.state.new_item_name,
-                description: this.state.new_item_desc,
-                price: this.state.new_item_price,
+                item_name: this.state.item_name,
+                description: this.state.item_desc,
+                price: this.state.item_price,
                 shop: this.state.shop_id,
             })
             .then(response => {
@@ -307,7 +299,7 @@ class TeacherStoreScreen extends Component {
                                 <TextInput
                                     label="Item Name"
                                     mode = 'outlined'
-                                    onChangeText={this.onNewItemNameChange.bind(this)}
+                                    onChangeText={this.onItemNameChange.bind(this)}
                                 ></TextInput>
 
                             </View>
@@ -315,7 +307,7 @@ class TeacherStoreScreen extends Component {
                                 <TextInput
                                     label="Item Price"
                                     mode = 'outlined'
-                                    onChangeText={this.onNewItemPriceChange.bind(this)}
+                                    onChangeText={this.onItemPriceChange.bind(this)}
                                 ></TextInput>
                             </View>
                         </View>
@@ -323,7 +315,7 @@ class TeacherStoreScreen extends Component {
                             <TextInput
                                 label="Item Description"
                                 mode = 'outlined'
-                                onChangeText={this.onNewItemDescChange.bind(this)}
+                                onChangeText={this.onItemDescChange.bind(this)}
                             ></TextInput>
                         </View>
                         
