@@ -48,8 +48,14 @@ state = {
 
     class_brackets:[],
     class_regressive_brackets:[],
+
+    errorMessage: '',
+    showError: false,
 }
 
+displayErrorMessage(){
+    return (this.state.showError && <Text style={{color: "red"}}>{this.state.errorMessage}</Text>)
+}
 
 onUpdateLowChange(text, i, type){
     if(type == 'prog'){
@@ -182,40 +188,77 @@ regBracketClicked(text){
     
 }
 
+flat_tax_isValid(flat_tax){
+
+    if(isNaN(flat_tax)){
+        this.setState({errorMessage: 'Make sure to that flat tax is a number', showError: true})
+        console.log("error")
+        return false
+    }
+    else{
+        return true
+    }
+}
+
+percentage_tax_isValid(percentage_tax){
+    if(isNaN(percentage_tax)){
+        this.setState({errorMessage: 'Make sure to that percentage tax is a number', showError: true})
+        console.log("error")
+        return false
+    }
+    else{
+        if( parseInt(percentage_tax)>100){
+            this.setState({errorMessage: 'Make sure to that percentage tax is below 100', showError: true})
+            return false
+        }
+        else{
+            return true
+        }
+    }
+}
+
 updateEasyTax(tax_type){
     var payload = {}
     if(tax_type == 'Flat Tax'){
-        payload = {
-            class_code: this.state.class_tax.class_code,
-            flat_tax: this.state.newSimpleValue,
-            percentage_tax: this.state.class_tax.percentage_tax,
-            sales_tax: this.state.class_tax.sales_tax,
-            id: this.state.class_tax.id,
+        if(this.flat_tax_isValid(this.state.newSimpleValue)){
+            payload = {
+                class_code: this.state.class_tax.class_code,
+                flat_tax: this.state.newSimpleValue,
+                percentage_tax: this.state.class_tax.percentage_tax,
+                sales_tax: this.state.class_tax.sales_tax,
+                id: this.state.class_tax.id,
+            }
+            axios.put(getIP()+'/taxes/'+ this.state.class_tax.id, payload )
+            .then(response => {
+              
+            })
+            .catch(error => console.log(error))
+            this.setState({class_tax: payload})
+            this.setState({showSimpleModal:false})
         }
-        axios.put(getIP()+'/taxes/'+ this.state.class_tax.id, payload )
-        .then(response => {
-          
-        })
-        .catch(error => console.log(error))
-        this.setState({class_tax: payload})
+        
+        
     }
 
     else if(tax_type == 'Percentage Tax'){
-        payload = {
-            class_code: this.state.class_tax.class_code,
-            flat_tax: this.state.class_tax.flat_tax,
-            percentage_tax: this.state.newSimpleValue,
-            sales_tax: this.state.class_tax.sales_tax,
-            id: this.state.class_tax.id,
+        if(this.percentage_tax_isValid(this.state.newSimpleValue)){
+            payload = {
+                class_code: this.state.class_tax.class_code,
+                flat_tax: this.state.class_tax.flat_tax,
+                percentage_tax: this.state.newSimpleValue,
+                sales_tax: this.state.class_tax.sales_tax,
+                id: this.state.class_tax.id,
+            }
+            axios.put(getIP()+'/taxes/'+ this.state.class_tax.id, payload )
+            .then(response => {
+                console.log(response.data)
+            })
+            .catch(error => console.log(error))
+            this.setState({class_tax: payload})
+            this.setState({showSimpleModal:false})
         }
-        axios.put(getIP()+'/taxes/'+ this.state.class_tax.id, payload )
-        .then(response => {
-            console.log(response.data)
-        })
-        .catch(error => console.log(error))
-        this.setState({class_tax: payload})
+        
     }
-    this.setState({showSimpleModal:false})
     
     
 }
@@ -243,6 +286,7 @@ renderSimpleModal(){
                                         mode = 'outlined'
                                         onChangeText={this.onUpdateValueChange.bind(this)}
                                         ></TextInput>
+                                        {this.displayErrorMessage()}
                                     </View>
                                 <View>
                                     <Button 
@@ -250,7 +294,9 @@ renderSimpleModal(){
                                     color = '#18E1FF'
                                     onPress = {() => this.updateEasyTax(this.state.current_tax_type)}
                                     >Update {this.state.current_tax_type}</Button>
+                                
                                 </View>
+                                
                         </View>
                     </View>
                 </Modal>
