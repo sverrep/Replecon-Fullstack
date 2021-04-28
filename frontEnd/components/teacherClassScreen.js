@@ -17,6 +17,9 @@ class TeacherClassScreen extends Component {
         selected_name: "",
         selected_balance: "",
         selected_id: "",
+
+        showError: false,
+        errorMessage: '',
     }
 
     renderData = (item) =>{
@@ -47,6 +50,7 @@ class TeacherClassScreen extends Component {
 
     onAmountChange(text) {
         this.setState({ amount: text });
+        this.setState({showError: false})
       } 
 
     renderStudentClickedModal(){
@@ -71,6 +75,7 @@ class TeacherClassScreen extends Component {
                     mode = 'outlined'
                     onChangeText={this.onAmountChange.bind(this)}
                   />
+                  {this.displayErrorMessage()}
                   <Button onPress={() => {this.sendToStudent()}}>Send to {this.state.selected_name}</Button>
                   <Button onPress={() => {this.chargeFromStudent()}}>Charge from {this.state.selected_name}</Button>
                 </View>
@@ -79,7 +84,28 @@ class TeacherClassScreen extends Component {
         )
     }
 
+    displayErrorMessage(){
+        return (this.state.showError && <Text style={{color: "red"}}>{this.state.errorMessage}</Text>)
+    }
+
+    amountIsValid(amount){
+        if(isNaN(amount)){
+            this.setState({errorMessage: 'Make sure to that amount is a number', showError: true})
+            return false
+        }
+        else{
+            if(Math.sign(amount) == 1){
+                return true
+            }
+            else{
+                this.setState({errorMessage: 'Make sure to that amount is a positive number', showError: true})
+                return false
+            }
+        }
+    }   
+
     sendToStudent(){
+        if(this.amountIsValid(this.state.amount)){
         var payload = { user_id: this.state.selected_id, amount: this.state.amount }; 
         axios.put(getIP()+'/students/balance/', payload)
         .then(response => {
@@ -101,6 +127,7 @@ class TeacherClassScreen extends Component {
         })
         .catch(error => console.log(error))
         this.setState({show:false})
+        }
     }
 
     chargeFromStudent(){

@@ -14,6 +14,9 @@ class TeacherPayScreen extends Component {
         selected: [],
         amount: "",
         show: false,
+
+        showError: false,
+        errorMessage: '',
     }
 
     componentDidMount(){
@@ -22,6 +25,7 @@ class TeacherPayScreen extends Component {
 
     onAmountChange(text) {
         this.setState({ amount: text });
+        this.setState({showError: false})
       } 
 
     teacherPaySetUp(){
@@ -36,7 +40,30 @@ class TeacherPayScreen extends Component {
         
     }
 
+    displayErrorMessage(){
+        return (this.state.showError && <Text style={{color: "red"}}>{this.state.errorMessage}</Text>)
+    }
+
+    amountIsValid(amount){
+        if(isNaN(amount)){
+            this.setState({errorMessage: 'Make sure to that amount is a number', showError: true})
+            this.setState({show:false})
+            return false
+        }
+        else{
+            if(Math.sign(amount) == 1){
+                return true
+            }
+            else{
+                this.setState({errorMessage: 'Make sure to that amount is a positive number', showError: true})
+                this.setState({show:false})
+                return false
+            }
+        }
+    }   
+
     paySelected(){
+        if(this.amountIsValid(this.state.amount)){
         var selected = this.state.selected
         for(let i = 0; i <= Object.keys(selected).length-1; i++)
         {
@@ -51,6 +78,7 @@ class TeacherPayScreen extends Component {
             .catch(error => console.log(error))
         }
         this.setState({show:false})
+        }
     }
 
     renderFlatList(){
@@ -151,6 +179,7 @@ class TeacherPayScreen extends Component {
                     onChangeText={this.onAmountChange.bind(this)}
                   ></TextInput>
                 <View style = {{padding: 5, marginTop:10 }}>
+                    {this.displayErrorMessage()}
                     <Button
                     style={{backgroundColor: "#24a0ed"}}
                     mode = 'contained'
