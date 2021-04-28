@@ -19,6 +19,8 @@ class TeacherBankScreen extends Component {
         payout_rate: "",
         student_savings: [],
         banks: [],
+        showError: false,
+        error: '',
 
     }
 
@@ -52,16 +54,23 @@ class TeacherBankScreen extends Component {
         this.setState({showUpdateBankRates:true})
     }
 
+    displayError(){
+        return this.state.showError && <Text style={{color: "red"}}>{this.state.error}</Text> 
+    }
+
     updateBankRates(){
-        axios.put(getIP()+'/banks/' + this.state.bank_id, {
-            classroom: this.state.class_code,
-            interest_rate: this.state.interest_rate,
-            payout_rate: this.state.payout_rate,
-        })
-        .then(response => {
-          this.setState({showUpdateBankRates:false})
-        })
-        .catch(error => console.log(error))
+       if(this.validateBank())
+        {
+            axios.put(getIP()+'/banks/' + this.state.bank_id, {
+                classroom: this.state.class_code,
+                interest_rate: this.state.interest_rate,
+                payout_rate: this.state.payout_rate,
+            })
+            .then(response => {
+              this.setState({showUpdateBankRates:false})
+            })
+            .catch(error => console.log(error))
+        }
     }
 
     renderData = (item) => {
@@ -179,6 +188,9 @@ class TeacherBankScreen extends Component {
                                 >Update</Button>
                             </View>
                         </View>
+                        <View style={{alignItems: 'center'}}>
+                            {this.displayError()}
+                        </View>
                     </View>
                 </View>
             </Modal>
@@ -215,17 +227,63 @@ class TeacherBankScreen extends Component {
         )
     }
 
+    validateBank(){
+        if(this.state.interest_rate != '')
+        {
+            if(this.state.payout_rate != '')
+            {
+                if(!isNaN(this.state.interest_rate))
+                {
+                    
+                    if(parseFloat(this.state.interest_rate) > 0 && parseFloat(this.state.interest_rate) < 100)
+                    {
+                        if(!isNaN(this.state.payout_rate))
+                        {
+                            return true
+                        }
+                        else
+                        {
+                            this.setState({error: "Please enter a number for payout rate", showError: true})
+                        }
+                    }
+                    else
+                    {
+                        this.setState({error: "Please enter a valid interest rate percentage", showError: true})
+                    }
+                }
+                else
+                {
+                    this.setState({error: "Please enter a valid interest rate", showError: true})
+                }
+            }
+            else
+            {
+                this.setState({error: "Please enter a payout rate", showError: true})
+            }
+        }
+        else
+        {
+            this.setState({error: "Please enter an interest rate", showError: true})
+        }
+        
+        
+    }
+
     createNewBank(){
-        console.log(this.state.class_code, this.state.interest_rate, this.state.payout_rate)
-        axios.post(getIP()+'/banks/', {
-            classroom: this.state.class_code,
-            interest_rate: this.state.interest_rate,
-            payout_rate: this.state.payout_rate,
-        })
-        .then(response => {
-          
-        })
-        .catch(error => console.log(error))
+        if(this.validateBank())
+        {
+            axios.post(getIP()+'/banks/', {
+                classroom: this.state.class_code,
+                interest_rate: this.state.interest_rate,
+                payout_rate: this.state.payout_rate,
+            })
+            .then(response => {
+                this.setState({showCreateBank: false})
+                this.getBanks()
+            })
+            .catch(error => console.log(error))
+        }
+        
     }
 
     renderCreateBank(){
@@ -268,6 +326,9 @@ class TeacherBankScreen extends Component {
                             onPress = {() => this.createNewBank()}
                             >Create Bank</Button>
                         </View>
+                    <View style={{alignItems: 'center'}}>
+                        {this.displayError()}
+                    </View>
                     </View>
                 </View>
             </Modal>
