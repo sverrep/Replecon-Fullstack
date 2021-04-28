@@ -35,31 +35,31 @@ class TeacherStoreScreen extends Component {
     }
 
     onUpdateItemNameChange(text){
-        this.setState({ spec_item_name: text });
+        this.setState({ spec_item_name: text, showError: false });
     }
     
     onUpdateItemDescChange(text){
-        this.setState({ spec_item_desc: text });
+        this.setState({ spec_item_desc: text, showError: false });
     }
 
     onUpdateItemPriceChange(text){
-        this.setState({ spec_item_price: text });
+        this.setState({ spec_item_price: text, showError: false });
     }
 
     onNewItemNameChange(text){
-        this.setState({ new_item_name: text });
+        this.setState({ new_item_name: text, showError: false });
     }
     
     onNewItemDescChange(text){
-        this.setState({ new_item_desc: text });
+        this.setState({ new_item_desc: text, showError: false });
     }
 
     onNewItemPriceChange(text){
-        this.setState({ new_item_price: text });
+        this.setState({ new_item_price: text, showError: false });
     }
     
     onStoreNameChange(text){
-        this.setState({ store_name: text });
+        this.setState({ store_name: text, showError: false });
     }
 
     displayError(){
@@ -154,7 +154,9 @@ class TeacherStoreScreen extends Component {
     deleteItem(){
         axios.delete(getIP()+'/items/'+ this.state.spec_item_id)
         .then(response => {
-          console.log(response.data)
+          this.setState({showUpdateItem: false, items: []})
+          this.getItems()
+
         })
         .catch(error => console.log(error))
     }
@@ -232,18 +234,55 @@ class TeacherStoreScreen extends Component {
 
     }
 
-    addItem(){
-        
-        axios.post(getIP()+'/items/', {
-            item_name: this.state.new_item_name,
-            description: this.state.new_item_desc,
-            price: this.state.new_item_price,
-            shop: this.state.shop_id,
-        })
-        .then(response => {
+    validateAddItem(){
+        if(this.state.new_item_name != '')
+        {
+            if(!isNaN(this.state.new_item_price))
+            {
+                if(Math.sign(parseFloat(this.state.new_item_price)) == 1)
+                {
+                    if(this.state.new_item_desc)
+                    {
+                        return true
+                    }
+                    else
+                    {
+                        this.setState({error: "Please enter a valid item description", showError: true})
+                    }
+                }
+                else
+                {
+                    this.setState({error: "Please enter a valid item price", showError: true})
+                }
+            }
+            else
+            {
+                this.setState({error: "Please enter a number", showError: true})
+            }
             
-        })
-        .catch(error => console.log(error))
+            
+        }
+        else
+        {
+            this.setState({error: "Please enter a valid item name", showError: true})
+        }
+    }
+
+    addItem(){
+        if(this.validateAddItem())
+        {
+            axios.post(getIP()+'/items/', {
+                item_name: this.state.new_item_name,
+                description: this.state.new_item_desc,
+                price: this.state.new_item_price,
+                shop: this.state.shop_id,
+            })
+            .then(response => {
+                this.setState({showAddItem: false, items: [...this.state.items, response.data]})
+            })
+            .catch(error => console.log(error))
+        }
+       
     }
 
     renderAddModal(){
@@ -294,6 +333,9 @@ class TeacherStoreScreen extends Component {
                             color = '#0FBC1A'
                             onPress = {() => this.addItem()}
                             >Add Item</Button>
+                        </View>
+                        <View style={{alignItems: 'center'}}>
+                            {this.displayError()}
                         </View>
                     </View>
                 </View>
@@ -346,7 +388,6 @@ class TeacherStoreScreen extends Component {
         }
         else
         {
-            console.log("yo")
             this.setState({error: "Please enter a valid store name", showError: true})
         }
     }
