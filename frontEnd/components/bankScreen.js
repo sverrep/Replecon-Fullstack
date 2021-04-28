@@ -21,11 +21,18 @@ class BankScreen extends Component {
     showSaving: false,
     showClaiming: false,
     selected_savings: {},
+    error: '',
+    errorDisplay: false,
+    student_balance: 0,
 
   }
 
   onAmountChange(text){
     this.setState({ amount: text });
+  }
+
+  displayError(){
+    return this.state.showError && <Text style={{color: "red"}}>{this.state.error}</Text>
   }
 
   getClassCode(){
@@ -151,26 +158,65 @@ class BankScreen extends Component {
     this.setState({selected_savings: item })
   }
 
-  setStudentSavings(){
-    axios.post(getIP()+'/transactions/banksavings/', {"amount": this.state.amount, "done": false})
+   getStudentBalance()
+  {
+    axios.get(getIP()+'/students/balance/')
     .then(response => {
-      var transaction_id = response.data["id"]
-      axios.post(getIP()+'/transactioninterestrates/', {"class_code": this.state.class_code, "transaction_id": transaction_id})
+      this.setState({student_balance: response.data})
+    })
+    .catch(error => console.log(error))
+  }
+
+  validateSetStudentSavings(){
+    if(!isNaN(this.state.amount))
+    {
+      if(Math.sign(parseFloat(this.state.amount)) == 1 )
+        {
+          if(this.state.student_balance >= this.state.amount)
+          {
+            return true
+          }
+          else
+          {
+            alert("You do not have enough money!")
+          }
+        }
+      else
+      {
+        this.setState({error: "Please enter a number higher than 0", showError: true})
+      }
+    }
+    else
+    {
+      this.setState({error: "Please enter a number", showError: true})
+    }
+        
+
+  }
+
+  setStudentSavings(){
+    if(this.validateSetStudentSavings())
+    {
+      axios.post(getIP()+'/transactions/banksavings/', {"amount": this.state.amount, "done": false})
       .then(response => {
-        axios.get(getIP()+'/students/bank/')
+        var transaction_id = response.data["id"]
+        axios.post(getIP()+'/transactioninterestrates/', {"class_code": this.state.class_code, "transaction_id": transaction_id})
         .then(response => {
-          axios.put(getIP()+'/students/balance/', { amount: this.state.amount, user_id: response.data, recipient: false })
+          axios.get(getIP()+'/students/bank/')
           .then(response => {
-            this.setState({showSaving:false})
-            this.getStudentSavings()
+            axios.put(getIP()+'/students/balance/', { amount: this.state.amount, user_id: response.data, recipient: false })
+            .then(response => {
+              this.setState({showSaving:false})
+              this.getStudentSavings()
+            })
+            .catch(error => console.log(error))
           })
           .catch(error => console.log(error))
         })
         .catch(error => console.log(error))
       })
       .catch(error => console.log(error))
-    })
-    .catch(error => console.log(error))
+    }
   }
 
   renderSavingsPopUp(){
@@ -197,6 +243,9 @@ class BankScreen extends Component {
               onChangeText={this.onAmountChange.bind(this)}
             />
             <Button onPress={() => {this.setStudentSavings()}}>Insert Savings {this.state.selected_name}</Button>
+            <View style={{alignItems: 'center'}}>
+              {this.displayError()}
+            </View>
           </View>
         </View>
       </Modal>
@@ -225,10 +274,15 @@ class BankScreen extends Component {
       </Modal>
     )
   }
+
+  bankSetup(){
+    this.getClassCode()
+    this.getStudentBalance()
+  }
   
   componentDidMount(){
     this._unsubscribe = this.props.navigation.addListener('focus', () => {
-      this.getClassCode()
+      this.bankSetup()
     });
   }
 

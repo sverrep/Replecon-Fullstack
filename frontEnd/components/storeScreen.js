@@ -24,6 +24,7 @@ class StoreScreen extends Component {
     specific_item_name: '',
     specific_price: '',
     specific_description:'',
+    student_balance: '',
   }
   //Card set ups
   clickedItem = (data) => {
@@ -99,26 +100,54 @@ class StoreScreen extends Component {
 
   componentDidMount(){
     this.getClassCode()
+    this.getStudentBalance()
+  }
+
+  getStudentBalance()
+  {
+    axios.get(getIP()+'/students/balance/')
+    .then(response => {
+      this.setState({student_balance: response.data})
+    })
+    .catch(error => console.log(error))
+  }
+
+  validatePurchase()
+  {
+    console.log(this.state.student_balance)
+    if(this.state.student_balance >= this.state.specific_price)
+    {
+      return true
+    }
+    else
+    {
+      alert("You do not have enough money!")
+      return false
+    }
   }
 
   purchaseItem(){
-    axios.post(getIP()+'/items/boughtitems/', { item_name: this.state.specific_item_name })
-    .then(response => {
-      axios.get(getIP()+'/students/store/')
+    if(this.validatePurchase())
+    {
+      axios.post(getIP()+'/items/boughtitems/', { item_name: this.state.specific_item_name })
       .then(response => {
-        axios.put(getIP()+'/students/balance/', { amount: this.state.specific_price, user_id: response.data, recipient: false })
+        axios.get(getIP()+'/students/store/')
         .then(response => {
-          axios.post(getIP()+'/transactions/buyFromStore/', { amount: this.state.specific_price })
+          axios.put(getIP()+'/students/balance/', { amount: this.state.specific_price, user_id: response.data, recipient: false })
           .then(response => {
-            this.setState({show:false})
+            axios.post(getIP()+'/transactions/buyFromStore/', { amount: this.state.specific_price })
+            .then(response => {
+              this.setState({show:false})
+              this.getStudentBalance()
+            })
+            .catch(error => console.log(error + "transactions"))
           })
-          .catch(error => console.log(error + "transactions"))
+        . catch(error => console.log(error + "students"))
         })
-      . catch(error => console.log(error + "students"))
+        .catch(error => console.log(error + "store account"))
       })
-      .catch(error => console.log(error + "store account"))
-    })
-    .catch(error => console.log(error + "items"))
+      .catch(error => console.log(error + "items"))
+    } 
 }
 
   render(){
