@@ -47,13 +47,20 @@ class LoginOrSignupForm extends Component {
         var reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
         if (reg.test(this.state.email))
         {
-            if(this.state.class_code.length == 6)
+            if (this.state.class_code != "")
             {
-                return (true)
+                if(this.state.class_code.length == 6)
+                {
+                    return true
+                }
+                else
+                {
+                    this.setState({error: "Class Code needs to be 6 characters long", showError: true})
+                }
             }
             else
             {
-                this.setState({error: "Class Code needs to be 6 characters long", showError: true})
+                return true
             }
         }
         else
