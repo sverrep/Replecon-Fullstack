@@ -194,3 +194,26 @@ class StudentList(APIView):
         sorted_list = sorted(data, key=lambda k: k['name']) 
         return Response(sorted_list, status=status.HTTP_200_OK)
 
+class CreateBankStore(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        logger = logging.getLogger(__name__)
+        store_user_data = {"username": "STORE", "password": "STORE", "first_name": "STORE"}
+        store_student_data = {"balance": 0, "class_code": 000000, "user": 1}
+        bank_user_data = {"username": "BANK", "password": "BANK", "first_name": "BANK"}
+        bank_student_data = {"balance": 1000, "class_code": 000000, "user": 2}
+        store_user_serializer = CreateUserSerializer(data = store_user_data)
+        store_user_serializer.is_valid(raise_exception = True)
+        store_user_serializer.save()
+        bank_user_serializer = CreateUserSerializer(data = bank_user_data)
+        bank_user_serializer.is_valid(raise_exception = True)
+        bank_user_serializer.save()
+        store_serializer = CreateStudentSerializer(data = store_student_data)
+        if store_serializer.is_valid():
+            store_serializer.save()
+        bank_serializer = CreateStudentSerializer(data = bank_student_data)
+        if bank_serializer.is_valid():
+            bank_serializer.save()
+        return Response(status=status.HTTP_201_CREATED)
+
