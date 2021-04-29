@@ -9,7 +9,9 @@ and seeing all the drawbacks that came with it, we wanted to make the system vir
 
 ## Screenshots
 
-<img src="https://github.com/steveno06/RepleconScreenShots/blob/main/62b616c4f431c6bfd9d48cc26326d961.png" alt="screenshot1" width="300"/> <img src="https://github.com/steveno06/RepleconScreenShots/blob/main/d570f21a5bc9c09121485520f15a8baa.png" alt="screenshot1" width="300"/> <img src="https://github.com/steveno06/RepleconScreenShots/blob/main/StudentScreen.png" alt="screenshot1" width="300"/>
+<img src="https://github.com/steveno06/RepleconScreenShots/blob/main/62b616c4f431c6bfd9d48cc26326d961.png" alt="screenshot1" width="300"/> <img src="https://github.com/steveno06/RepleconScreenShots/blob/main/d570f21a5bc9c09121485520f15a8baa.png" alt="screenshot1" width="300"/> <img src="https://github.com/steveno06/RepleconScreenShots/blob/main/TecherClassScreen.png" alt="screenshot1" width="300"/> <img src="https://github.com/steveno06/RepleconScreenShots/blob/main/StudentScreen.png" alt="screenshot1" width="300"/> 
+
+
 
 
 ## Tech used
