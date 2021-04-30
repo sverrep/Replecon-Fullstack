@@ -61,7 +61,7 @@ class BankScreen extends Component {
   getBankDetails(banks){
     for (let i = 0; i<=Object.keys(banks).length -1;i++)
     {
-      if(banks[i].classroom==this.state.class_code)
+      if(banks[i].class_code==this.state.class_code)
       {
         this.setState({interest_rate:banks[i].interest_rate})
         this.setState({payout_rate:banks[i].payout_rate})

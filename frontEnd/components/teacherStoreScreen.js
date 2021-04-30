@@ -88,7 +88,7 @@ class TeacherStoreScreen extends Component {
 
     checkForShop(shops){
         for(let i = 0; i <= Object.keys(shops).length - 1; i++){
-            if(shops[i].classroom == this.state.class_code){
+            if(shops[i].class_code == this.state.class_code){
                 this.setState({classHasShop:true, store_name: shops[i].shop_name, shop_id: shops[i].id})
             }
         }
@@ -107,7 +107,7 @@ class TeacherStoreScreen extends Component {
         var ar = []
         for(let i = 0; i<=Object.keys(allItems).length -1; i++)
         {
-          if(allItems[i].shop==this.state.shop_id)
+          if(allItems[i].shop_id==this.state.shop_id)
           {
             ar.push(allItems[i])
           }
@@ -129,7 +129,7 @@ class TeacherStoreScreen extends Component {
                 item_name: this.state.item_name,
                 description: this.state.item_desc,
                 price: this.state.item_price,
-                shop: this.state.shop_id,
+                shop_id: this.state.shop_id,
             })
             .then(response => {
                 this.setState({showUpdateItem: false, items: []})
@@ -267,7 +267,7 @@ class TeacherStoreScreen extends Component {
                 item_name: this.state.item_name,
                 description: this.state.item_desc,
                 price: this.state.item_price,
-                shop: this.state.shop_id,
+                shop_id: this.state.shop_id,
             })
             .then(response => {
                 this.setState({showAddItem: false, items: [...this.state.items, response.data]})
@@ -371,7 +371,7 @@ class TeacherStoreScreen extends Component {
         {
             axios.post(getIP()+'/shops/', {
                 shop_name: this.state.store_name,
-                classroom: this.state.class_code,
+                class_code: this.state.class_code,
             })
             .then(response => {
               this.setState({showCreateStore: false, classHasShop: true})

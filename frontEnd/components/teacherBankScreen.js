@@ -62,7 +62,7 @@ class TeacherBankScreen extends Component {
        if(this.validateBank())
         {
             axios.put(getIP()+'/banks/' + this.state.bank_id, {
-                classroom: this.state.class_code,
+                class_code: this.state.class_code,
                 interest_rate: this.state.interest_rate,
                 payout_rate: this.state.payout_rate,
             })
@@ -98,7 +98,7 @@ class TeacherBankScreen extends Component {
 
     checkForBank(banks){
         for(let i = 0; i <= Object.keys(banks).length - 1; i++){
-            if(banks[i].classroom == this.state.class_code){
+            if(banks[i].class_code == this.state.class_code){
                 this.setState({classHasBank:true})
                 this.setState({bank_id: banks[i].id})
                 this.setState({interest_rate: banks[i].interest_rate})
@@ -273,7 +273,7 @@ class TeacherBankScreen extends Component {
         if(this.validateBank())
         {
             axios.post(getIP()+'/banks/', {
-                classroom: this.state.class_code,
+                class_code: this.state.class_code,
                 interest_rate: this.state.interest_rate,
                 payout_rate: this.state.payout_rate,
             })

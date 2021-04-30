@@ -4,14 +4,14 @@ from django.db import models
 
 class Shop(models.Model):
     shop_name = models.CharField(max_length=100)
-    classroom = models.CharField(max_length=6)
+    class_code = models.CharField(max_length=6)
 
 
 class Item(models.Model):
     item_name = models.CharField(max_length=100)
     description = models.TextField()
     price = models.DecimalField(max_digits=5, decimal_places=2)
-    shop = models.IntegerField()
+    shop_id = models.IntegerField()
 
 class BoughtItems(models.Model):
     item_id = models.IntegerField()
