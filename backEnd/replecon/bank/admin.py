@@ -4,8 +4,8 @@ from .models import Bank, TransactionInterestRate
 # Register your models here.
 @admin.register(Bank)
 class BankModel(admin.ModelAdmin):
-    list_filter = ('classroom', 'interest_rate', 'payout_rate')
-    list_display = ('classroom', 'interest_rate', 'payout_rate')
+    list_filter = ('class_code', 'interest_rate', 'payout_rate')
+    list_display = ('class_code', 'interest_rate', 'payout_rate')
 
 @admin.register(TransactionInterestRate)
 class TransactionInterestRateModel(admin.ModelAdmin):

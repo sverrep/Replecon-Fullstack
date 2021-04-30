@@ -4,7 +4,7 @@ from .models import Bank, TransactionInterestRate
 class BankSerializer(serializers.ModelSerializer):
     class Meta:
         model = Bank
-        fields = ['id', 'classroom', 'interest_rate', 'payout_rate']
+        fields = ['id', 'class_code', 'interest_rate', 'payout_rate']
 
 
 class TransactionInterestRateSerializer(serializers.ModelSerializer):

@@ -2,7 +2,7 @@ from django.db import models
 
 # Create your models here.
 class Bank(models.Model):
-    classroom = models.CharField(max_length=6)
+    class_code = models.CharField(max_length=6)
     interest_rate = models.DecimalField(max_digits=6, decimal_places=2)
     payout_rate = models.IntegerField()
 

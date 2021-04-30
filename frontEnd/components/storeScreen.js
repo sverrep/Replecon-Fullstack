@@ -67,7 +67,7 @@ class StoreScreen extends Component {
   findShopName(shops){
     for (let i = 0; i<=Object.keys(shops).length -1;i++)
     {
-      if(shops[i].classroom==this.state.class_code)
+      if(shops[i].class_code==this.state.class_code)
       {
         this.setState({store_name:shops[i].shop_name})
         this.setState({store_id: shops[i].id})
@@ -90,7 +90,7 @@ class StoreScreen extends Component {
     var ar = []
     for(let i = 0; i<=Object.keys(allItems).length -1; i++)
     {
-      if(allItems[i].shop==this.state.store_id)
+      if(allItems[i].shop_id==this.state.store_id)
       {
         ar.push(allItems[i])
       }

@@ -4,8 +4,8 @@ from .models import Shop, Item, BoughtItems
 
 @admin.register(Shop)
 class ShopModel(admin.ModelAdmin):
-    list_filter = ('shop_name', 'classroom')
-    list_display = ('shop_name', 'classroom')
+    list_filter = ('shop_name', 'class_code')
+    list_display = ('shop_name', 'class_code')
 
 @admin.register(Item)
 class ItemModel(admin.ModelAdmin):

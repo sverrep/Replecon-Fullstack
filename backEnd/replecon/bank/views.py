@@ -46,7 +46,7 @@ class TransactionIntrestRateList(generics.GenericAPIView, mixins.ListModelMixin,
         logger = logging.getLogger(__name__)
         banks = Bank.objects.all()
         for bank in banks:
-            if (bank.classroom == request.data["class_code"]):
+            if (bank.class_code == request.data["class_code"]):
                 set_interest_rate = bank.interest_rate
                 logger.error(request.data)
                 transaction_id = request.data["transaction_id"]

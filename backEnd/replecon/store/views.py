@@ -63,15 +63,6 @@ class ItemDetails(generics.GenericAPIView, mixins.RetrieveModelMixin, mixins.Upd
     def delete(self, request, id):
         return self.destroy(request, id=id)
 
-class ItemFromShop(generics.GenericAPIView, mixins.ListModelMixin, mixins.RetrieveModelMixin):
-    queryset = Item.objects.all()
-    serializer_class = ItemSerializer
-
-    lookup_field = 'shop'
-
-    def get(self, request, shop):
-        return self.list(request, shop=shop)
-
 class ListBoughtItems(APIView):
 
     def get(self, request):
