@@ -549,40 +549,42 @@ setupIsValid(){
 
 setUpTax(){
     if(this.setupIsValid()){
-    axios.post(getIP()+'/taxes/', {
-        class_code: this.state.class_code,
-        sales_tax: this.state.current_sales_tax,
-        percentage_tax: this.state.current_percent_tax,
-        flat_tax: this.state.current_flat_tax,
-    })
-    .then(response => {
-        for(let i=0; i<=this.state.progAmount-1;i++){
-            axios.post(getIP()+'/progressivebrackets/', {
-                tax_id: response.data.id,
-                lower_bracket: this.state.arOfLows[i],
-                higher_bracket: this.state.arOfHighs[i],
-                percentage: this.state.arOfPer[i],
-            })
-            .then(response => {
+        axios.post(getIP()+'/taxes/', {
+            class_code: this.state.class_code,
+            sales_tax: this.state.current_sales_tax,
+            percentage_tax: this.state.current_percent_tax,
+            flat_tax: this.state.current_flat_tax,
+        })
+        .then(response => {
+            for(let i=0; i<=this.state.progAmount-1;i++){
+                axios.post(getIP()+'/progressivebrackets/', {
+                    tax_id: response.data.id,
+                    lower_bracket: this.state.arOfLows[i],
+                    higher_bracket: this.state.arOfHighs[i],
+                    percentage: this.state.arOfPer[i],
+                })
+                .then(response => {
                 
-            })
-            .catch(error => console.log(error))  
-        }
-        for(let i=0; i<=this.state.regAmount-1;i++){
-            axios.post(getIP()+'/regressivebrackets/', {
-                tax_id: response.data.id,
-                lower_bracket: this.state.regArOfLows[i],
-                higher_bracket: this.state.regArOfHighs[i],
-                percentage: this.state.regArOfPer[i],
-            })
-            .then(response => {
+                })
+                .catch(error => console.log(error))  
+            }
+            for(let i=0; i<=this.state.regAmount-1;i++){
+                axios.post(getIP()+'/regressivebrackets/', {
+                    tax_id: response.data.id,
+                    lower_bracket: this.state.regArOfLows[i],
+                    higher_bracket: this.state.regArOfHighs[i],
+                    percentage: this.state.regArOfPer[i],
+                })
+                .then(response => {
                 
-            })
-            .catch(error => console.log(error))
-        }
-    })
-    .catch(error => console.log(error))
+                })
+                .catch(error => console.log(error))
+            }
+        })
+        .catch(error => console.log(error))
+        this.getTaxes()
     }
+
 }
 
 

@@ -374,7 +374,8 @@ class TeacherStoreScreen extends Component {
                 class_code: this.state.class_code,
             })
             .then(response => {
-              this.setState({showCreateStore: false, classHasShop: true})
+              this.setState({showCreateStore: false, classHasShop: true, shop_id: response.data.id})
+              console.log(response.data)
             })
             .catch(error => console.log(error))
         }

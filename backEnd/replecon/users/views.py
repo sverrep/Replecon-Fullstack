@@ -144,6 +144,7 @@ class StudentBalance(APIView):
     def put(self, request):
         logger = logging.getLogger(__name__)
         isStudent = False
+        logger.error(request.data)
         students = Student.objects.all()
         for student in students:
             if(student.user.id == request.user.id):

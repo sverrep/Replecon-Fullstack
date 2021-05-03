@@ -14,6 +14,7 @@ class TeacherClassScreen extends Component {
         teacher_id: "",
         show: false,
         amount: "",
+        netAmount: "",
         selected_name: "",
         selected_balance: "",
         selected_id: "",
@@ -50,6 +51,7 @@ class TeacherClassScreen extends Component {
 
     onAmountChange(text) {
         this.setState({ amount: text });
+        this.setState({ netAmount: text })
         this.setState({showError: false})
       } 
 
@@ -105,7 +107,7 @@ class TeacherClassScreen extends Component {
     }   
 
     sendToStudent(){
-        if(this.amountIsValid(this.state.amount)){
+        if(this.amountIsValid(this.state.netAmount)){
         var payload = { user_id: this.state.selected_id, amount: this.state.amount }; 
         axios.put(getIP()+'/students/balance/', payload)
         .then(response => {
