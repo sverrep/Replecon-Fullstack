@@ -92,6 +92,10 @@ With the current working prototype we have, we want to continue working on the p
 about the student's purchases and balance. We would also want to rework the entire UI, with a more cohesive theme and better design. Furthermore, we'd like to expand on the 
 project as a whole by creating a webapp that could be used interchangably with the mobile app. 
 
+## Video of App Running
+
+https://drive.google.com/file/d/1exDgi1hZWhVAxAU6iBLqIkcye4KR_b9_/view?usp=sharing
+
 ## ERD
 
 https://github.com/steveno06/RepleconScreenShots/blob/main/Replecon_ERD_1.pdf
