@@ -91,3 +91,12 @@ Now your emulator or connected up mobile device should be running the applicatio
 With the current working prototype we have, we want to continue working on the project and expanding its features. One such feature is making the stats screen display information
 about the student's purchases and balance. We would also want to rework the entire UI, with a more cohesive theme and better design. Furthermore, we'd like to expand on the 
 project as a whole by creating a webapp that could be used interchangably with the mobile app. 
+
+## Backend Team Contribution
+
+- Bank App - Sverre & Steven
+- Classroom App - Steven
+- Store App - Steven
+- Tax App - Steven
+- Transaction App - Sverre
+- Users App - Sverre
