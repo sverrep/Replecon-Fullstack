@@ -58,12 +58,11 @@ class SignUpApp extends React.Component {
                     <form onSubmit={this.handleSubmit}>
                         {this.setUpCommonFields()}
                         {this.setUpUniqueFields()}
+                        <p>{this.state.error}</p>
                         <button>
                         SignUp
                         </button>
                     </form>
-                    <p>{this.state.error}</p>
-                    <br></br>
                     <button onClick={this.handleReturnRedirect}>
                     Already have an account? Log In
                     </button>
