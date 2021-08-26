@@ -2,18 +2,23 @@ import React from 'react';
 import { withRouter, Redirect } from "react-router-dom";
 import axios from 'axios';
 import getIP from '../../settings.js';
+import './ProfileApp.css';
 
 
 class Profile extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { email: '', password: '', name: '', user_id: '', class_code: '', redirect_login: false, redirect_profile: false };
+        this.state = { email: '', password: '', name: '', user_id: '', class_code: '', redirect_login: false, redirect_profile: false, balance: '', transactions: [],
+        bought_items: [] };
         this.handleLogOut = this.handleLogOut.bind(this)
     }
 
     componentDidMount(){
         axios.get(getIP()+'/students/current/')
         .then(response => {
+            this.getStudentBalance()
+            this.getStudentTransactions()
+            this.getBoughtItems()
             this.setState({name: response.data.first_name})
             this.setState({user_id: response.data.id})
             this.setState({email: response.data.username})
@@ -30,6 +35,44 @@ class Profile extends React.Component {
           .catch(error =>  console.log(error));
       }
 
+    getStudentBalance() {
+     axios.get(getIP()+'/students/balance/')
+    .then(response => {
+        const balance = response.data
+        this.setState({balance})
+    })
+    .catch(error =>  console.log(error));
+    }
+
+    getStudentTransactions(){
+        axios.get(getIP()+'/transactions/getAllStudentTransactions/')
+        .then(response =>{
+          this.setState({transactions: response.data})
+        })
+    .catch(error => console.log(error))
+    }
+
+    getBoughtItems(){
+        axios.get(getIP()+'/items/boughtitems/')
+        .then(response => {
+        this.setState({bought_items: response.data})
+        console.log(this.state.bought_items)
+        })
+        
+        .catch(error => console.log(error))
+    }
+
+    renderCard(item){
+        var transCard = 'From ' + item.name + " " +  item.symbol + item.amount
+        return(transCard)
+        
+    }
+
+    renderItemCard(item){
+        return item.item_name
+    }
+    
+
     render() {
         if(this.state.redirect_login){
             return(
@@ -39,16 +82,37 @@ class Profile extends React.Component {
         else{
             return (
                 <div>
-                    <h3>Student Profile {this.state.user_id}</h3>
+                    <h3>Welcome Back {this.state.name}</h3>
                     <p>
-                        {this.state.email}
-                        <br></br>
-                        {this.state.name}
-                        <br></br>
+                        Current Balance: {this.state.balance}  
                     </p>
                     <button onClick={this.handleLogOut}>
                         Log Out
                     </button>
+                    <div className='content'>
+                        <div className='transactions'>
+                            <h2>Transactions History</h2>
+                            <ul>
+                                {this.state.transactions.map(item => {
+                                    if(item.symbol === '+'){
+                                        return <li className='green'>{this.renderCard(item)}</li>;
+                                    }
+                                    else{
+                                        return <li className='red'>{this.renderCard(item)}</li>;
+                                    }
+                                })}
+                            </ul>   
+                        </div>
+
+                        <div className='boughtItems'>
+                            <h2>Bought Items</h2>
+                            <ul>
+                                {this.state.bought_items.map(item => {
+                                    return <li className='grey'>{this.renderItemCard(item)}</li>;
+                                })}
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             );
         }
