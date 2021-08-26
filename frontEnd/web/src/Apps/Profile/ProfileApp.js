@@ -1,8 +1,7 @@
 import React from 'react';
 import { withRouter, Redirect } from "react-router-dom";
 import axios from 'axios';
-
-const ip = "http://192.168.1.104:8000/"
+import getIP from '../../settings.js';
 
 
 class Profile extends React.Component {
@@ -13,7 +12,7 @@ class Profile extends React.Component {
     }
 
     componentDidMount(){
-        axios.get(ip+'/students/current/')
+        axios.get(getIP()+'/students/current/')
         .then(response => {
             this.setState({name: response.data.first_name})
             this.setState({user_id: response.data.id})
@@ -23,7 +22,7 @@ class Profile extends React.Component {
     }
 
     handleLogOut() {
-        axios.get(ip+'/auth/logout/')
+        axios.get(getIP()+'/auth/logout/')
           .then(response => {
             axios.defaults.headers.common.Authorization = null
             this.setState({ redirect_login : true})

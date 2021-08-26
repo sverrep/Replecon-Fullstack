@@ -1,8 +1,8 @@
 import React from 'react';
 import { withRouter, Redirect } from "react-router-dom";
 import axios from 'axios'
+import getIP from '../../settings.js';
 
-const ip = "http://192.168.1.104:8000/"
 
 class SignUpApp extends React.Component {
     constructor(props) {
@@ -190,11 +190,11 @@ validateData()
         {
             if (this.validateData()) {
                 const payload = { username: this.state.email, password: this.state.password, first_name: this.state.name } 
-                axios.post(ip+'/auth/register/', payload)
+                axios.post(getIP()+'/auth/register/', payload)
                 .then(response => {
                     const { token } = response.data;
                     axios.defaults.headers.common.Authorization = `Token ${token}`;
-                    axios.post(ip+'/students/create/', {class_code: this.state.class_code})
+                    axios.post(getIP()+'/students/create/', {class_code: this.state.class_code})
                     .then(response => {
                         this.setState({ redirect_profile : true})
                     })

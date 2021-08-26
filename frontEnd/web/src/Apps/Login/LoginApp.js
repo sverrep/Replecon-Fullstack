@@ -1,9 +1,8 @@
 import axios from 'axios';
 import React from 'react';
 import { Redirect } from "react-router-dom";
+import getIP from '../../settings.js';
 import './LoginApp.css';
-
-const ip = "http://192.168.1.104:8000/"
 
 export default class LoginApp extends React.Component {
   constructor(props) {
@@ -106,11 +105,11 @@ export default class LoginApp extends React.Component {
     e.preventDefault();
     if (this.validateData()) {
       const payload = { username: this.state.email, password: this.state.password } 
-      axios.post(ip+'/auth/login/', payload)
+      axios.post(getIP()+'/auth/login/', payload)
       .then(response => {
           const { token } = response.data;
           axios.defaults.headers.common.Authorization = `Token ${token}`;
-          axios.get(ip+'/teachers/isTeacher/')
+          axios.get(getIP()+'/teachers/isTeacher/')
           .then(response => {
             if(response.data === true) {
               this.setState({ redirect_teacher_profile : true})
