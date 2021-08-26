@@ -7,7 +7,7 @@ import getIP from '../../settings.js';
 class Profile extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { email: '', password: '', first_name: '', last_name: '', user_id: '', class_code: '', role: this.props.location.state.role, redirect_login: false, redirect_profile: false };
+        this.state = { email: '', password: '', first_name: '', last_name: '', user_id: '', teacher_id: '', class_code: '', role: this.props.location.state.role, redirect_login: false, redirect_profile: false };
         this.handleLogOut = this.handleLogOut.bind(this)
     }
 
@@ -20,7 +20,7 @@ class Profile extends React.Component {
             }
             else if(this.state.role === "Teacher")
             {
-                this.setState({first_name: response.data.user.first_name, last_name: response.data.teacher.last_name, user_id: response.data.user.id, email: response.data.user.username})
+                this.setState({first_name: response.data.user.first_name, last_name: response.data.teacher.last_name, user_id: response.data.user.id, email: response.data.user.username, teacher_id: response.data.teacher.id})
             }
             
         })
@@ -61,7 +61,7 @@ class Profile extends React.Component {
         else if (this.state.role === "Teacher"){
             return (
             <div>
-                <h3>Teacher Profile {this.state.user_id}</h3>
+                <h3>Teacher Profile {this.state.teacher_id}</h3>
                 <p>
                     {this.state.email}
                     <br></br>
