@@ -3,7 +3,7 @@ import { withRouter, Redirect } from "react-router-dom";
 import axios from 'axios';
 import getIP from '../../settings.js';
 import './ProfileApp.css';
-
+import NavBar from '../../Components/navbar/Navbar.js';
 
 class Profile extends React.Component {
     constructor(props) {
@@ -81,7 +81,8 @@ class Profile extends React.Component {
         }
         else{
             return (
-                <div>
+                <div className='wrapper'>
+                    <NavBar/>
                     <h3>Welcome Back {this.state.name}</h3>
                     <p>
                         Current Balance: {this.state.balance}  
