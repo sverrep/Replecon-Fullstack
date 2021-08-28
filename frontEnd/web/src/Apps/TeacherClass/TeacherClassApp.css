@@ -1,0 +1,56 @@
+
+.class-container{
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    position:absolute;
+    top:0;
+    bottom:0;
+    left:0;
+    right:0;
+}
+
+.header-row {
+    text-align: center;
+}
+
+.header-btn-row {
+    justify-content: center;
+}
+.back-btn {
+    width: 15%;
+    height: 15%;
+    margin-bottom: 10px;
+}
+
+.content-row {
+    height: 90%;
+}
+
+.amount-input{
+    margin-top: 2%;
+}
+
+.list-group{
+    max-height: 80%;
+    margin-bottom: 10px;
+    overflow-y:scroll;
+    -webkit-overflow-scrolling: touch;
+}
+
+.pay-btns {
+    margin-top: 5%;
+    width: 100%;
+}
+
+.taxes-row {
+    height: 30%;
+}
+
+.store-row {
+    height: 30%;
+}
+
+.bank-row {
+    height: 30%;
+}

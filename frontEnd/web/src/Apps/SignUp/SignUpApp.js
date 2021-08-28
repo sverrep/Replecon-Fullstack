@@ -45,7 +45,7 @@ class SignUpApp extends React.Component {
                 return(
                     <Redirect to={{
                         pathname: '/Profile', 
-                        state: { email: this.state.email, first_name: this.state.first_name, last_name: this.state.last_name, role: this.props.location.state.role }}}>
+                        state: { role: this.props.location.state.role }}}>
                     </Redirect>
                 );
             }

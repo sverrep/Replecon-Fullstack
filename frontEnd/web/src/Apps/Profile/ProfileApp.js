@@ -7,7 +7,7 @@ import getIP from '../../settings.js';
 class Profile extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { email: '', password: '', first_name: '', last_name: '', user_id: '', teacher_id: '', class_code: '', role: this.props.location.state.role, classes: [], redirect_login: false, redirect_profile: false };
+        this.state = { email: '', password: '', first_name: '', last_name: '', user_id: '', teacher_id: '', class_code: '', role: this.props.location.state.role, classes: [], redirect_login: false, redirect_class: false, selected_class: [] };
         this.handleLogOut = this.handleLogOut.bind(this)
     }
 
@@ -55,12 +55,21 @@ class Profile extends React.Component {
           })
           .catch(error =>  console.log(error));
       }
+      
+    handleClassRedirect(item){
+        this.setState({class_code: item.class_code, redirect_class: true, selected_class: item})
+      }
 
     render() {
         if(this.state.redirect_login){
             return(
                 <Redirect to={{pathname: '/Login'}}></Redirect>
             )
+        }
+        else if(this.state.redirect_class){
+            return(
+                <Redirect to={{pathname: `/Class/${this.state.class_code}`, state: {class: this.state.selected_class, teacher_id: this.state.teacher_id}}}></Redirect>
+            );
         }
         else if (this.state.role === "Student"){
             return (
@@ -85,7 +94,7 @@ class Profile extends React.Component {
                 
                 <h4>Your Classes</h4>
                     <ul>
-                        {this.state.classes.map((item,i) => <li key={i}>{item.class_name} {item.class_code}</li>)}
+                        {this.state.classes.map((item,i) => <li key={i}><button onClick={() => this.handleClassRedirect(item)}>{item.class_name} {item.class_code}</button></li>)}
                     </ul>
                 <button>
                     Create New Class
