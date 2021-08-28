@@ -4,6 +4,7 @@ import axios from 'axios';
 import getIP from '../../settings.js';
 import './ProfileApp.css';
 import NavBar from '../../Components/navbar/Navbar.js';
+import Button from 'react-bootstrap/Button';
 
 class Profile extends React.Component {
     constructor(props) {
@@ -87,9 +88,9 @@ class Profile extends React.Component {
                     <p>
                         Current Balance: {this.state.balance}  
                     </p>
-                    <button onClick={this.handleLogOut}>
+                    <Button variant='primary' onClick={this.handleLogOut}>
                         Log Out
-                    </button>
+                    </Button>
                     <div className='content'>
                         <div className='transactions'>
                             <h2>Transactions History</h2>
