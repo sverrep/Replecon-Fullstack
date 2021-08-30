@@ -1,0 +1,9 @@
+.student-list{
+    float: left;
+    width: 50%;
+}
+
+.transfer{
+    float: right;
+    width: 50%;
+}

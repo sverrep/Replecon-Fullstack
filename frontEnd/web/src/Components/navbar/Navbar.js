@@ -12,14 +12,12 @@ class NavBar extends Component {
     handleTarget(item){
         this.setState({redirect: item.url})
         this.setState({targetClicked: true})
-        console.log(item.url)
     }
 
     render(){
 
         if(this.state.targetClicked===true){
             this.setState({targetClicked: false})
-            console.log(this.state.redirect)
             return(
                 <Redirect to={{pathname: this.state.redirect}}></Redirect>
             )
