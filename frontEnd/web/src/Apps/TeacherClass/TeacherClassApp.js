@@ -24,11 +24,16 @@ class TeacherClassApp extends React.Component {
         selected_name: "",
         selected_balance: "",
         selected_id: "",
+        amount: '',
+        error: '',
         redirect_profile: false,
     };
     this.handleProfileRedirect = this.handleProfileRedirect.bind(this)
     this.studentClicked = this.studentClicked.bind(this)
     this.renderData = this.renderData.bind(this)
+    this.amountIsValid = this.amountIsValid.bind(this)
+    this.changeSelected = this.changeSelected.bind(this)
+    this.handleChange = this.handleChange.bind(this)
 
   }
 
@@ -111,6 +116,52 @@ class TeacherClassApp extends React.Component {
         )
       }
     }
+
+    handleChange(e) {
+      const field = e.target.id
+      this.setState({ [field] : e.target.value });
+    }
+
+    amountIsValid(amount){
+      if(isNaN(amount)){
+        this.setState({error: 'Make sure that amount is a number'})
+        return false
+      }
+      else{
+        if(Math.sign(amount) === 1){
+            return true
+        }
+        else{
+            this.setState({error: 'Make sure that amount is a positive number'})
+            return false
+        }
+      }
+  } 
+  
+  changeSelected(pay){
+    var selected_amount = this.state.amount 
+    if(this.amountIsValid(selected_amount)) {
+      if(!pay) {
+        selected_amount= "-" + this.state.amount
+      }
+      var selected = this.state.selected
+      for(let i = 0; i <= Object.keys(selected).length-1; i++)
+      {
+        var payload = { user_id: selected[i], amount: selected_amount }; 
+        axios.put(getIP()+'/students/balance/', payload)
+        .then(response => {
+            axios.post(getIP()+'/transactions/teacherPayStudents/', {"user_id": response.data.user, "amount": selected_amount})
+            .then(response => {
+              this.getClassStudents()
+              this.setState({selected: []})
+            })
+            .catch(error => console.log(error))
+        })
+        .catch(error => console.log(error))
+      }
+      this.setState({show:false})
+    }
+  }
     
 
   render() {
@@ -140,15 +191,22 @@ class TeacherClassApp extends React.Component {
                 </ListGroup>
                 <InputGroup className="amount-input">
                   <InputGroup.Text>$</InputGroup.Text>
-                  <FormControl aria-label="Amount (to the nearest dollar)" />
+                  <FormControl defaultValue="0" id='amount' onChange={this.handleChange} />
                 </InputGroup>
-                <Button className="pay-btns">Pay Selected Students</Button>
-                <Button className="pay-btns">Charge Selected Students</Button>
+                <p>{this.state.error}</p>
+                <Button className="pay-btns" onClick={() => this.changeSelected(true)}>Pay Selected Students</Button>
+                <Button className="pay-btns" onClick={() => this.changeSelected(false)}>Charge Selected Students</Button>
             </Col>
             <Col xs={7}>
-              <Row className="taxes-row"><p>Taxes</p></Row>
-              <Row className="store-row"><p>Store</p></Row>
-              <Row className="bank-row"><p>Bank</p></Row>
+              <Row className="taxes-row">
+                <p>Taxes</p>
+              </Row>
+              <Row className="store-row">
+                <p>Store</p>
+              </Row>
+              <Row className="bank-row">
+                <p>Bank</p>
+              </Row>
             </Col>
           </Row>
         </Container>
