@@ -10,6 +10,8 @@ import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import InputGroup from 'react-bootstrap/InputGroup'
 import FormControl from 'react-bootstrap/FormControl'
+import Modal from 'react-bootstrap/Modal'
+import FloatingLabel from 'react-bootstrap/FloatingLabel'
 
 
 class TeacherClassApp extends React.Component {
@@ -25,20 +27,31 @@ class TeacherClassApp extends React.Component {
         selected_balance: "",
         selected_id: "",
         amount: '',
+        bank_id: '',
+        interest_rate: "",
+        payout_rate: "",
+        student_savings: [],
+        banks: [],
         error: '',
+        bank_error: '',
+        classHasBank: false,
         redirect_profile: false,
+        bankModalShow: false,
+        updateBankModalShow: false,
     };
     this.handleProfileRedirect = this.handleProfileRedirect.bind(this)
     this.studentClicked = this.studentClicked.bind(this)
-    this.renderData = this.renderData.bind(this)
+    this.renderStudents = this.renderStudents.bind(this)
     this.amountIsValid = this.amountIsValid.bind(this)
     this.changeSelected = this.changeSelected.bind(this)
     this.handleChange = this.handleChange.bind(this)
+    this.createBankModal = this.createBankModal.bind(this)
 
   }
 
   componentDidMount(){
     this.getClassStudents()
+    this.getBanks()
   }
 
   studentClicked(student){
@@ -93,7 +106,7 @@ class TeacherClassApp extends React.Component {
     this.setState({students:newAr})
   }
   
-  renderData(student, x){
+  renderStudents(student, x){
     var select = false;
       for(let i = 0; i <= Object.keys(this.state.selected).length-1; i++)
       {
@@ -113,6 +126,15 @@ class TeacherClassApp extends React.Component {
       {
         return(
           <ListGroup.Item key={x} action onClick={() => this.studentClicked(student)}>{student.name} {student.balance}</ListGroup.Item>
+        )
+      }
+    }
+
+    renderStudentSavings(student, i){
+      if(student.active === true)
+      {
+        return(
+          <ListGroup.Item key={i}>{student.name}: {student.initial_amount} {'-->'}  {student.interest_rate}%  {'-->'}  ${student.final_amount} Pays out in: {student.payout_date}</ListGroup.Item>
         )
       }
     }
@@ -162,10 +184,232 @@ class TeacherClassApp extends React.Component {
       this.setState({show:false})
     }
   }
-    
+
+  getBanks(){
+    axios.get(getIP()+'/banks/')
+    .then(response => {
+      this.setState({banks: response.data})
+      this.checkForBank(response.data)
+    })
+    .catch(error => console.log(error))
+  }
+
+  checkForBank(banks){
+    for(let i = 0; i <= Object.keys(banks).length - 1; i++){
+      if(banks[i].class_code === this.state.class_code){
+        this.setState({classHasBank:true})
+        this.setState({bank_id: banks[i].id})
+        this.setState({interest_rate: banks[i].interest_rate})
+        this.setState({payout_rate: banks[i].payout_rate})
+      }
+    }
+    this.getStudentSavings()
+  }
+
+  getStudentSavings(){
+    axios.get(getIP()+'/transactioninterestrates/')
+    .then(response1 => {
+      for(let i = 0; i <= Object.keys(response1.data).length-1; i++)
+      {
+        axios.get(getIP()+'/transactions/' + response1.data[i].transaction_id)
+        .then(response2 => {
+          var initamount = parseFloat(response2.data.amount)
+          axios.get(getIP()+'/users/' + response2.data.sender_id + '/')
+          .then(userresponse => {
+            var intrate = parseFloat(response1.data[i].set_interest_rate)
+            var finalamount = initamount + (initamount*(intrate/100))
+            axios.get(getIP()+'/transactioninterestrates/payoutdate/' + response2.data.id)
+            .then(response => {
+              var payout_date = (((response.data / 60) / 60) / 24)
+              var tempdict = {
+                "id": i, 
+                "name": userresponse.data.first_name, 
+                "initial_amount": initamount, 
+                "interest_rate": intrate, 
+                "final_amount": finalamount, 
+                "payout_date": payout_date,
+                "active": response1.data[i].active
+              }
+              this.setState({student_savings: [...this.state.student_savings, tempdict]})
+              })
+              .catch(error => console.log(error))
+          })
+          .catch(error => console.log(error))
+        })
+        .catch(error => console.log(error))
+      }
+    })
+    .catch(error => console.log(error))
+  }
+
+  hasBank(){
+    return(
+      <Col>
+        <h4>Class Bank</h4>
+        <h6>Interest Rate: {this.state.interest_rate}</h6>
+        <h6>Payout Rate: {this.state.payout_rate}</h6>
+        <ListGroup>
+          {this.state.student_savings.map((student,i) => this.renderStudentSavings(student, i))}
+        </ListGroup>
+        <Button className="pay-btns" onClick={() => this.setState({updateBankModalShow: true})}>Update Bank Rates</Button>
+        {this.updateBankModal()}
+      </Col>
+    )
+  }
+
+  hasNoBank(){
+    return (
+      <Button variant="primary" onClick={() => this.setState({bankModalShow: true})}>
+        Create A Bank
+      </Button>
+    );
+  }
+
+  renderBankView(){
+    if(this.state.classHasBank === true)
+    {
+      return(
+          this.hasBank()
+      )
+    }
+
+    else{
+      return(
+          this.hasNoBank()
+      )
+    }
+  }
+
+  validateBank(){
+    if(this.state.interest_rate !== '')
+    {
+      if(this.state.payout_rate !== '')
+      {
+        if(!isNaN(this.state.interest_rate))
+        {
+          if(parseFloat(this.state.interest_rate) > 0 && parseFloat(this.state.interest_rate) < 100)
+          {
+            if(!isNaN(this.state.payout_rate))
+            {
+                return true
+            }
+            else
+            {
+                this.setState({bank_error: "Please enter a number for payout rate"})
+            }
+          }
+          else
+          {
+              this.setState({bank_error: "Please enter a valid interest rate percentage"})
+          }
+        }
+        else
+        {
+            this.setState({bank_error: "Please enter a valid interest rate"})
+        }
+      }
+      else
+      {
+          this.setState({bank_error: "Please enter a payout rate"})
+      }
+    }
+    else
+    {
+        this.setState({bank_error: "Please enter an interest rate"})
+    }
+  }
+
+  createNewBank(){
+    console.log("yo")
+    if(this.validateBank())
+    {
+      axios.post(getIP()+'/banks/', {
+        class_code: this.state.class_code,
+        interest_rate: this.state.interest_rate,
+        payout_rate: this.state.payout_rate,
+      })
+      .then(response => {
+        this.setState({bankModalShow: false})
+        this.getBanks()
+      })
+      .catch(error => console.log(error))
+    }
+  }
+
+  updateBankRates(){
+    if(this.validateBank())
+     {
+      axios.put(getIP()+'/banks/' + this.state.bank_id, {
+        class_code: this.state.class_code,
+        interest_rate: this.state.interest_rate,
+        payout_rate: this.state.payout_rate,
+      })
+      .then(response => {
+        this.setState({updateBankModalShow:false})
+      })
+      .catch(error => console.log(error))
+    }
+ }
+
+  createBankModal() {
+    return (
+      <Modal
+        show={this.state.bankModalShow}
+        onHide={() => this.setState({bankModalShow: false})}
+        size="lg"
+        centered
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>
+            Create A Bank
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <FloatingLabel label="Bank Interest Rate" className="bank-input">
+            <FormControl id='interest_rate' placeholder="Interest Rate" onChange={this.handleChange}/>
+          </FloatingLabel>
+          <FloatingLabel label="Bank Payout Rate in Weeks" className="bank-input">
+            <FormControl id='payout_rate' placeholder="Payout Rate" onChange={this.handleChange} />
+          </FloatingLabel>
+          <p>{this.state.bank_error}</p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button className="bank-btn" onClick={() => this.createNewBank()}>Create Bank</Button>
+        </Modal.Footer>
+      </Modal>
+    );
+  }
+
+  updateBankModal() {
+    return (
+      <Modal
+        show={this.state.updateBankModalShow}
+        onHide={() => this.setState({updateBankModalShow: false})}
+        size="lg"
+        centered
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>
+            Update Bank
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <FloatingLabel label="Bank Interest Rate" className="bank-input">
+            <FormControl id='interest_rate' placeholder="Interest Rate" defaultValue={this.state.interest_rate} onChange={this.handleChange}/>
+          </FloatingLabel>
+          <FloatingLabel label="Bank Payout Rate in Weeks" className="bank-input">
+            <FormControl id='payout_rate' placeholder="Payout Rate" defaultValue={this.state.payout_rate} onChange={this.handleChange} />
+          </FloatingLabel>
+          <p>{this.state.bank_error}</p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button className="bank-btn" onClick={() => this.updateBankRates()}>Update Bank</Button>
+        </Modal.Footer>
+      </Modal>
+    );
+  }
 
   render() {
-  
     if(this.state.redirect_profile){
       return(
         <Redirect to={{
@@ -187,7 +431,7 @@ class TeacherClassApp extends React.Component {
             <Col>
             <h4>Students</h4>
                 <ListGroup>
-                  {this.state.students.map((student,i) => this.renderData(student, i))}
+                  {this.state.students.map((student,i) => this.renderStudents(student, i))}
                 </ListGroup>
                 <InputGroup className="amount-input">
                   <InputGroup.Text>$</InputGroup.Text>
@@ -199,13 +443,14 @@ class TeacherClassApp extends React.Component {
             </Col>
             <Col xs={7}>
               <Row className="taxes-row">
-                <p>Taxes</p>
+                <p>Class Taxes</p>
               </Row>
               <Row className="store-row">
-                <p>Store</p>
+                <p>Class Store</p>
               </Row>
               <Row className="bank-row">
-                <p>Bank</p>
+                {this.renderBankView()}
+                {this.createBankModal()}
               </Row>
             </Col>
           </Row>
@@ -216,5 +461,4 @@ class TeacherClassApp extends React.Component {
 }
 
 
-
-  export default withRouter(TeacherClassApp)
+export default withRouter(TeacherClassApp)
