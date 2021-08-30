@@ -57,7 +57,6 @@ class Profile extends React.Component {
         axios.get(getIP()+'/items/boughtitems/')
         .then(response => {
         this.setState({bought_items: response.data})
-        console.log(this.state.bought_items)
         })
         
         .catch(error => console.log(error))

@@ -7,13 +7,13 @@ export const MenuItems = [
 
     {
         title: 'Store',
-        url: '#',
+        url: '',
         cName: 'nav-links'
     },
 
     {
         title: 'Bank',
-        url: '#',
+        url: '',
         cName: 'nav-links'
     },
 
