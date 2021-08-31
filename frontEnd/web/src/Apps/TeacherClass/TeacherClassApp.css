@@ -55,14 +55,17 @@
     height: 30%;
 }
 
-.bank-input{
+.modal-input{
     width: 100%
 }
 
-.bank-footer{
-    justify-content: center;
+.modal-btn{
+    width: 100%
 }
 
-.bank-btn{
-    width: 100%
+.small-group{
+    max-height: 35%;
+    margin-bottom: 10px;
+    overflow-y:scroll;
+    -webkit-overflow-scrolling: touch;
 }
