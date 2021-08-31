@@ -9,6 +9,8 @@ import LoginApp from "./Apps/Login/LoginApp";
 import ProfileApp from "./Apps/Profile/ProfileApp";
 import SignUpApp from "./Apps/SignUp/SignUpApp";
 import StudentClassApp from './Apps/StudentClassroom/StudentClassApp'
+import StudentStoreApp from './Apps/StudentStore/StudentStoreApp'
+import StudentBankApp from './Apps/StudentBank/StudentBankApp'
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 export default function App() {
@@ -29,6 +31,12 @@ export default function App() {
           </Route>
           <Route path="/StudentClass">
             <StudentClassApp />
+          </Route>
+          <Route path="/StudentStore">
+            <StudentStoreApp />
+          </Route>
+          <Route path="/StudentBank">
+            <StudentBankApp />
           </Route>
           <Route
             exactpath="/"
