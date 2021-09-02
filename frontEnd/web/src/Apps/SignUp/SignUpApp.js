@@ -45,7 +45,7 @@ class SignUpApp extends React.Component {
                 return(
                     <Redirect to={{
                         pathname: '/Profile', 
-                        state: { email: this.state.email, first_name: this.state.first_name, last_name: this.state.last_name, role: this.props.location.state.role }}}>
+                        state: { role: this.props.location.state.role }}}>
                     </Redirect>
                 );
             }
@@ -165,6 +165,7 @@ validateData()
                 else
                 {
                     this.setState({error: "Class Code needs to be 6 characters long", showError: true})
+                    return false
                 }
             }
             else
@@ -176,6 +177,7 @@ validateData()
     else
     {
         this.setState({error: "Email is invalid", showError: true})
+        return false
     } 
 }
     
@@ -208,7 +210,17 @@ validateData()
         }
         else if(this.props.location.state.role === "Teacher"){
             if (this.validateData()) {
-                this.setState({ redirect_profile : true})
+                const payload = { username: this.state.email, password: this.state.password, first_name: this.state.first_name } 
+                axios.post(getIP()+'/auth/register/', payload)
+                .then(response => {
+                    const { token } = response.data;
+                    axios.defaults.headers.common.Authorization = `Token ${token}`;
+                    axios.post(getIP()+'/teachers/create/', {last_name: this.state.last_name})
+                    .then(response => {
+                        this.setState({ redirect_profile : true})
+                    })
+                    .catch(error => console.log(error));
+                })            
                 return
             }
             else {
@@ -216,6 +228,7 @@ validateData()
             }
         }
     }
+    
     handleReturnRedirect(){
         this.setState({ redirect_login : true })
       }
