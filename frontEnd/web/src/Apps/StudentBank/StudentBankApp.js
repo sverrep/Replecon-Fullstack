@@ -1,5 +1,5 @@
 import React from 'react';
-import { withRouter, Redirect } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import axios from 'axios';
 import getIP from '../../settings.js';
 import NavBar from '../../Components/navbar/Navbar.js';
@@ -65,7 +65,7 @@ class StudentBank extends React.Component {
       getBankDetails(banks){
         for (let i = 0; i<=Object.keys(banks).length -1;i++)
         {
-          if(banks[i].class_code==this.state.class_code)
+          if(banks[i].class_code === this.state.class_code)
           {
             this.setState({interest_rate:banks[i].interest_rate})
             this.setState({payout_rate:banks[i].payout_rate})

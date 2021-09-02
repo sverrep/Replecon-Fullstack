@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import {MenuItems} from "./MenuItems"
 import './Navbar.css'
-import { withRouter, Redirect } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 class NavBar extends Component {
     state = { clicked: false }
 

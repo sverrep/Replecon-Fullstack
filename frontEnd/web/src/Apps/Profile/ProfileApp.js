@@ -128,10 +128,10 @@ class Profile extends React.Component {
                             <ul>
                                 {this.state.transactions.map(item => {
                                     if(item.symbol === '+'){
-                                        return <li className='green'>{this.renderCard(item)}</li>;
+                                        return <li key={item.id} className='green'>{this.renderCard(item)}</li>;
                                     }
                                     else{
-                                        return <li className='red'>{this.renderCard(item)}</li>;
+                                        return <li key={item.id} className='red'>{this.renderCard(item)}</li>;
                                     }
                                 })}
                             </ul>   
@@ -141,7 +141,7 @@ class Profile extends React.Component {
                             <h2>Bought Items</h2>
                             <ul>
                                 {this.state.bought_items.map(item => {
-                                    return <li className='grey'>{this.renderItemCard(item)}</li>;
+                                    return <li key={item.id} className='grey'>{this.renderItemCard(item)}</li>;
                                 })}
                             </ul>
                         </div>

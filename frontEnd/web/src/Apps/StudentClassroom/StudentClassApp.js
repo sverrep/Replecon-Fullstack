@@ -1,5 +1,5 @@
 import React from 'react';
-import { withRouter, Redirect } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import axios from 'axios';
 import getIP from '../../settings.js';
 import './StudentClassApp.css';

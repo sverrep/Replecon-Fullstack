@@ -3,13 +3,17 @@ import React from 'react';
 import { Redirect } from "react-router-dom";
 import getIP from '../../settings.js';
 import './LoginApp.css';
+import Container from 'react-bootstrap/Container'
+import Row from 'react-bootstrap/Row'
+import Form from 'react-bootstrap/Form'
+import Button from 'react-bootstrap/Button'
 
 export default class LoginApp extends React.Component {
   constructor(props) {
     super(props);
     this.state = { email: '', password: '', redirect_student_profile: false, redirect_student_signup: false, redirect_teacher_signup: false, error: '' };
     this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleLogin = this.handleLogin.bind(this);
     this.handleStudentSignUpRedirect = this.handleStudentSignUpRedirect.bind(this);
     this.handleTeacherSignUpRedirect = this.handleTeacherSignUpRedirect.bind(this);
   }
@@ -37,40 +41,35 @@ export default class LoginApp extends React.Component {
     }
     else{
       return (
-        <div>
-          <h3>Login</h3>
-          <form onSubmit={this.handleSubmit}>
-            <div className="inputfield">
-              <input
-                id="email"
-                type="text"
-                onChange={this.handleChange}
-                value={this.state.email}
-                placeholder="Email"
-              />
+
+        <Container className="login-container">
+          <div className="vertical-center">
+            <Row>
+              <h3 className="login-h3">Login</h3>
+            </Row>
+            <Row>
+              <Form.Group className="mb-3" controlId="email">
+                <Form.Label>Email address</Form.Label>
+                <Form.Control type="email" placeholder="Enter email" onChange={this.handleChange} />
+                <Form.Text className="text-muted">
+                  We'll never share your email with anyone else.
+                </Form.Text>
+              </Form.Group>
+              <Form.Group className="mb-3" controlId="password">
+                <Form.Label>Password</Form.Label>
+                <Form.Control type="password" placeholder="Password" onChange={this.handleChange}/>
+              </Form.Group>
+              <p>{this.state.error}</p>
+            </Row>
+            <div className="login-btns-row">
+              <Button variant="primary" className="login-btns" onClick={() => this.handleLogin()}> Login </Button>
             </div>
-            <div className="inputfield">
-              <input
-                id="password"
-                type="password"
-                onChange={this.handleChange}
-                value={this.state.password}
-                placeholder="Password"
-              />
+            <div className= "login-btns-row">
+              <Button variant="secondary" className="login-btns" onClick={this.handleStudentSignUpRedirect} disabled> Student Sign Up </Button>
+              <Button variant="secondary" className="login-btns" onClick={this.handleTeacherSignUpRedirect} disabled>Teacher Sign Up</Button>
             </div>
-            <p>{this.state.error}</p>
-            <button>
-              Login
-            </button>
-          </form>
-          <button onClick={this.handleStudentSignUpRedirect}>
-            Student Sign Up
-          </button>
-          <br></br>
-          <button onClick={this.handleTeacherSignUpRedirect}>
-            Teacher Sign Up
-          </button>
-        </div>
+          </div>
+        </Container>
       );
     }
   }
@@ -91,8 +90,10 @@ export default class LoginApp extends React.Component {
   validateData() 
   {
     var reg = /^\w+([-]?\w+)*@\w+([-]?\w+)*(\.\w\w+)+$/;
+    console.log(this.state.email)
     if (reg.test(this.state.email))
     {
+      console.log("yo3")
       if(this.state.password.length === 0){
           this.setState({error: "Password needs to be longer", showError: true})
       }
@@ -106,9 +107,10 @@ export default class LoginApp extends React.Component {
     } 
   }
 
-  handleSubmit(e) {
-    e.preventDefault();
+  handleLogin() {
+    console.log("yo")
     if (this.validateData()) {
+      console.log("yo2")
       const payload = { username: this.state.email, password: this.state.password } 
       axios.post(getIP()+'/auth/login/', payload)
       .then(response => {

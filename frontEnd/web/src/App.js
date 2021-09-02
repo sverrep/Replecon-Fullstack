@@ -38,6 +38,7 @@ export default function App() {
           </Route>
           <Route path="/StudentBank">
             <StudentBankApp />
+            </Route>
           <Route exact path="/Class/">
             <TeacherClassApp />
           </Route>
