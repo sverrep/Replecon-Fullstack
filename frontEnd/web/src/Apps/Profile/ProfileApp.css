@@ -1,0 +1,35 @@
+.wrapper{
+  font-family: 'Montserrat', sans-serif;
+}
+
+
+ul li {
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    transition: 0.3s;
+    padding: 3px 8px;
+    border-radius: 5px;
+    margin-top: 2px;
+    
+  }
+
+  .green{
+    background-color:rgb(49, 211, 49);
+  }
+
+  .red{
+    background-color:rgb(253, 63, 63);
+  }
+
+  .grey{
+    background-color:rgb(117, 117, 117);
+  }
+
+.transactions{
+    width: 50%;
+    float: left;
+}
+
+.boughtItems{
+    width: 50%;
+    float: right;
+}
