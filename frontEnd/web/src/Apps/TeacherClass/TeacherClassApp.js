@@ -19,39 +19,71 @@ class TeacherClassApp extends React.Component {
   constructor(props) {
     super(props);
     this.state = { 
-        class_code: this.props.location.state.class.class_code, 
-        class_name: this.props.location.state.class.class_name,
-        teacher_id:  this.props.location.state.teacher_id,
-        students: [],
-        selected: [],
-        selected_name: "",
-        selected_balance: "",
-        selected_id: "",
-        amount: '',
-        bank_id: '',
-        interest_rate: "",
-        payout_rate: "",
-        student_savings: [],
-        banks: [],
-        shops: [],
-        shop_id: 0,
-        classHasShop: false,
-        items: [],
-        showUpdateItem:false,
-        showAddItem:false,
-        showCreateStore: false,
-        item_name: '',
-        item_desc: '',
-        item_price: 0,
-        item_id: 0,
-        store_name: '',
-        error: '',
-        bank_error: '',
-        store_error: '',
-        classHasBank: false,
-        redirect_profile: false,
-        bankModalShow: false,
-        updateBankModalShow: false,
+      class_code: this.props.location.state.class.class_code, 
+      class_name: this.props.location.state.class.class_name,
+      teacher_id:  this.props.location.state.teacher_id,
+      students: [],
+      
+      selected: [],
+      selected_name: "",
+      selected_balance: "",
+      selected_id: "",
+      amount: '',
+
+      bank_id: '',
+      interest_rate: "",
+      payout_rate: "",
+      student_savings: [],
+      banks: [],
+
+      shops: [],
+      shop_id: 0,
+      classHasShop: false,
+      items: [],
+      showUpdateItem:false,
+      showAddItem:false,
+      showCreateStore: false,
+      item_name: '',
+      item_desc: '',
+      item_price: 0,
+      item_id: 0,
+      store_name: '',
+
+      classHasTaxes: false,
+      class_tax: {},
+      checked: '',
+      current_tax_type: '',
+      current_value: '',
+      showSimpleModal: false,
+      showCreateTaxes: false,
+      newSimpleValue: '',
+      progAmount: 0,
+      regAmount: 0,
+      current_low: '',
+      current_high: '',
+      current_per: '',
+      arOfLows: [],
+      arOfHighs: [],
+      arOfPer: [],
+      regArOfLows: [],
+      regArOfHighs:[],
+      regArOfPer:[],
+      current_bracket: {},
+      arOfBrackets: [],
+      current_sales_tax:'',
+      current_percent_tax:'',
+      current_flat_tax: '',
+      class_brackets:[],
+      class_regressive_brackets:[],
+
+      error: '',
+      bank_error: '',
+      store_error: '',
+      tax_error: '',
+      classHasBank: false,
+      redirect_profile: false,
+      bankModalShow: false,
+      updateBankModalShow: false,
     };
     this.handleProfileRedirect = this.handleProfileRedirect.bind(this)
     this.studentClicked = this.studentClicked.bind(this)
@@ -60,6 +92,7 @@ class TeacherClassApp extends React.Component {
     this.changeSelected = this.changeSelected.bind(this)
     this.handleChange = this.handleChange.bind(this)
     this.createBankModal = this.createBankModal.bind(this)
+    this.onUpdateLowChange = this.onUpdateLowChange.bind(this)
 
   }
 
@@ -67,6 +100,7 @@ class TeacherClassApp extends React.Component {
     this.getClassStudents()
     this.getBanks()
     this.getShops()
+    this.getTaxes()
   }
 
   studentClicked(student){
@@ -459,6 +493,204 @@ class TeacherClassApp extends React.Component {
     }
   }
 
+  getTaxes(){
+    axios.get(getIP()+'/taxes/')
+    .then(response => {
+      this.checkForClassTax(response.data)
+    })
+    .catch(error => console.log(error))
+  }
+
+  checkForClassTax(alltaxes){
+    for(let i = 0; i <= Object.keys(alltaxes).length -1; i++){
+      if(alltaxes[i].class_code === this.state.class_code){
+        this.setState({classHasTaxes: true})
+        this.setState({class_tax: alltaxes[i]})
+      }
+    }
+   }
+
+  renderTaxView(){
+    if(this.state.classHasTaxes)
+    {
+      return(
+        this.hasTaxes()
+      )
+    }
+
+    else{
+      return(
+        this.hasNoTaxes()
+      )
+    }
+  }
+
+  hasTaxes(){
+    return(
+      <div><p>yo</p></div>
+    );
+  }
+
+  hasNoTaxes(){
+    return (
+      <Col>
+        <h4>This class has no taxes</h4>
+        <Button variant="primary" onClick={() => this.setState({showCreateTaxes: true})}>
+          Set Up Taxes
+        </Button>
+        {this.createTaxesModal()}
+      </Col>
+    );
+  }
+
+  progBracketClicked(text){
+    if( text === 'plus'){
+      this.setState({progAmount: this.state.progAmount+1})
+    }
+    else if(text === 'minus'){
+      if(this.state.progAmount !== 0)
+      {
+        this.setState({progAmount: this.state.progAmount-1})
+      }
+    }
+  }
+
+  regBracketClicked(text){
+    if( text === 'plus'){
+      this.setState({regAmount: this.state.regAmount+1})
+    }
+    else if(text === 'minus'){
+      if(this.state.regAmount !== 0){
+        this.setState({regAmount: this.state.regAmount-1})
+      }
+    }
+  }
+
+  renderAmount(type){
+    var ar = []
+    if(type === 'prog'){
+      for (let i = 0; i<=this.state.progAmount-1; i++){
+        ar.push(this.renderBracket(i, type))
+      }
+    }
+    else if(type === 'reg'){
+      for (let i = 0; i<=this.state.regAmount-1; i++){
+        ar.push(this.renderBracket(i, type))
+      }
+    }
+    return ar
+  }
+
+  onUpdateLowChange(e, i, type){
+    var text = e.target.value
+    if(type === 'prog'){
+      var tempAr = this.state.arOfLows
+      tempAr[i] = text
+      this.setState({arOfLows:tempAr})
+      this.setState({ current_low: text });
+    }
+    else if(type === 'reg'){
+      tempAr = this.state.regArOfLows
+      tempAr[i] = text
+      this.setState({regArOfLows:tempAr})
+      this.setState({ current_low: text });
+    }
+  }
+
+  onUpdateHighChange(e, i, type){
+    var text = e.target.value
+    if(type === 'prog'){
+      var tempAr = this.state.arOfHighs
+      tempAr[i] = text
+      this.setState({arOfHighs:tempAr})
+      this.setState({ current_high: text });
+    }
+    else if(type === 'reg'){
+      tempAr = this.state.regArOfHighs
+      tempAr[i] = text
+      this.setState({regArOfHighs:tempAr})
+      this.setState({ current_high: text });
+    }
+  }
+
+  onUpdatePerChange(e, i, type){
+    var text = e.target.value
+    if(type === 'prog'){
+      var tempAr = this.state.arOfPer
+      tempAr[i] = text
+      this.setState({arOfPer:tempAr})
+      this.setState({ current_per: text });
+    }
+    else if(type === 'reg'){
+      tempAr = this.state.regArOfPer
+      tempAr[i] = text
+      this.setState({regArOfPer:tempAr})
+      this.setState({ current_per: text });
+    }  
+  }
+
+  setUpTax(){
+    if(this.setupIsValid()){
+      axios.post(getIP()+'/taxes/', {
+        class_code: this.state.class_code,
+        sales_tax: this.state.current_sales_tax,
+        percentage_tax: this.state.current_percent_tax,
+        flat_tax: this.state.current_flat_tax,
+      })
+      .then(response => {
+        for(let i=0; i<=this.state.progAmount-1;i++){
+          axios.post(getIP()+'/progressivebrackets/', {
+            tax_id: response.data.id,
+            lower_bracket: this.state.arOfLows[i],
+            higher_bracket: this.state.arOfHighs[i],
+            percentage: this.state.arOfPer[i],
+          })
+          .then(response => {
+            this.getTaxes()
+          })
+          .catch(error => console.log(error))
+        }
+        for(let i=0; i<=this.state.regAmount-1;i++){
+          axios.post(getIP()+'/regressivebrackets/', {
+            tax_id: response.data.id,
+            lower_bracket: this.state.regArOfLows[i],
+            higher_bracket: this.state.regArOfHighs[i],
+            percentage: this.state.regArOfPer[i],
+          })
+          .then(response => {
+            this.getTaxes()
+          })
+          .catch(error => console.log(error))
+        }
+        this.getTaxes()
+        this.setState({showCreateTaxes: false})
+      })
+      .catch(error => console.log(error))
+    }
+  }
+
+  renderBracket(i, type){
+    return(
+      <Row key={i} >
+        <Col xs={6} md={4}>
+          <FloatingLabel label="Low" className="modal-input">
+            <FormControl placeholder="Low" onChange={(e) => this.onUpdateLowChange(e, i, type)}/>
+          </FloatingLabel>
+        </Col>
+        <Col xs={6} md={4}>
+          <FloatingLabel label="High" className="modal-input">
+            <FormControl placeholder="High" onChange={(e) => this.onUpdateHighChange(e, i, type)}/>
+          </FloatingLabel>
+        </Col>
+        <Col xs={6} md={4}>
+          <FloatingLabel label="%" className="modal-input">
+            <FormControl placeholder="%" onChange={(e) => this.onUpdatePerChange(e, i, type)}/>
+          </FloatingLabel>
+        </Col>
+      </Row>
+    )
+  }
+
   validateItem(){
     if(this.state.item_name !== '')
     {
@@ -529,6 +761,130 @@ class TeacherClassApp extends React.Component {
     else
     {
         this.setState({bank_error: "Please enter an interest rate"})
+    }
+  }
+
+  setupIsValid(){
+    if(this.flat_tax_isValid(this.state.current_flat_tax)){
+      if(this.percentage_tax_isValid(this.state.current_percent_tax)){
+        if(this.sales_tax_isValid(this.state.current_sales_tax)){
+          if(this.regressive_taxes_isValid()){
+            if(this.progressive_taxes_isValid()){
+              return true
+            }
+          }
+        }
+      }
+    }
+  }
+
+  flat_tax_isValid(flat_tax){
+    if(isNaN(flat_tax)){
+      this.setState({tax_error: 'Make sure to that flat tax is a number'})
+      return false
+    }
+    else{
+      if(Math.sign(flat_tax) === 1){
+        return true
+      }
+      else{
+        this.setState({tax_error: 'Make sure to that flat tax is a positive number'})
+        return false
+      }
+    }
+  }
+
+  percentage_tax_isValid(percentage_tax){
+    if(isNaN(percentage_tax)){
+      this.setState({tax_error: 'Make sure to that percentage tax is a number'})
+      return false
+    }
+    else{
+      if( parseInt(percentage_tax)>100){
+        this.setState({tax_error: 'Make sure to that percentage tax is below 100'})
+        return false
+      }
+      else{
+        if(Math.sign(percentage_tax) === 1){
+          return true
+        }
+        else{
+          this.setState({tax_error: 'Make sure to that percentage tax is a positive number'})
+          return false
+        }
+      }
+    }
+  }
+
+  sales_tax_isValid(sale_tax){
+    if(isNaN(sale_tax)){
+      this.setState({tax_error: 'Make sure to that sales tax is a number'})    
+      return false
+    }
+    else{
+      if( parseInt(sale_tax)>100){
+        this.setState({tax_error: 'Make sure to that sales tax is below 100%'})
+        return false
+      }
+      else{
+        if(Math.sign(sale_tax) === 1){
+          return true
+        }
+        else{
+          this.setState({tax_error: 'Make sure to that sales tax is a positive number'})
+          return false
+        }
+      }
+    }
+  }
+
+  progressive_taxes_isValid(){
+    var status = true
+    for(let i = 0; i <= Object.keys(this.state.arOfLows).length-1; i++ ){
+        if (!this.checkIfNumValid(this.state.arOfLows[i])){
+          status = false
+        }
+
+        if (!this.checkIfNumValid(this.state.arOfHighs[i])){
+          status = false
+        }
+
+        if (!this.checkIfNumValid(this.state.arOfPer[i])){
+          status = false
+        }
+    }
+    return status
+}
+
+regressive_taxes_isValid(){
+  var status = true
+  for(let i = 0; i <= Object.keys(this.state.regArOfLows).length-1; i++ ){
+    if (!this.checkIfNumValid(this.state.regArOfLows[i])){
+      status = false
+    }
+    if (!this.checkIfNumValid(this.state.regArOfHighs[i])){
+      status = false
+    }
+    if (!this.checkIfNumValid(this.state.regArOfPer[i])){
+      status = false
+    }
+  }
+  return status
+  }
+
+  checkIfNumValid(num){
+    if(isNaN(num)){
+      this.setState({tax_error: 'Make sure to that brackets only include numbers'})
+      return false
+    }
+    else{
+      if(Math.sign(num) === 1){
+        return true
+      }
+      else{
+        this.setState({tax_error: 'Make sure to that the brackets only contain positive numbers'})
+        return false
+      }
     }
   }
 
@@ -733,6 +1089,72 @@ class TeacherClassApp extends React.Component {
     );
   }
 
+  createTaxesModal(){
+    return (
+      <Modal
+        show={this.state.showCreateTaxes}
+        onHide={() => this.setState({showCreateTaxes: false})}
+        size="lg"
+        centered
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>
+            Set Up Taxes
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Container>
+            <Row>
+              <Col xs={6} md={4}>
+                <FloatingLabel label="Flat Tax" className="modal-input">
+                  <FormControl id='current_flat_tax' placeholder="Flat Tax" onChange={this.handleChange}/>
+                </FloatingLabel>
+              </Col>
+              <Col xs={6} md={4}>
+                <FloatingLabel label="Percent Tax" className="modal-input">
+                  <FormControl id='current_percent_tax' placeholder="Percent Tax" onChange={this.handleChange}/>
+                </FloatingLabel>
+              </Col>
+              <Col xs={6} md={4}>
+                <FloatingLabel label="Sales Tax" className="modal-input">
+                  <FormControl id='current_sales_tax' placeholder="Sales Tax" onChange={this.handleChange}/>
+                </FloatingLabel>
+              </Col>
+            </Row>
+            <br></br>
+            <Row>
+              <Col>
+              <h5> Progressive Taxes </h5>
+              </Col>
+              <Col className="tax-btn-col">
+                <Button variant="outline-secondary" onClick={() => this.progBracketClicked("plus")}>+</Button>
+                &nbsp;
+                <Button variant="outline-secondary" onClick={() => this.progBracketClicked("minus")}>-</Button>
+              </Col>
+              {this.renderAmount('prog')}
+            </Row>
+            <br></br>
+            <Row>
+              <Col>
+              <h5> Regressive Taxes </h5>
+              </Col>
+              <Col className="tax-btn-col">
+                <Button variant="outline-secondary" onClick={() => this.regBracketClicked("plus")}>+</Button>
+                &nbsp;
+                <Button variant="outline-secondary" onClick={() => this.regBracketClicked("minus")}>-</Button>
+              </Col>
+              {this.renderAmount('reg')}
+            </Row>
+          </Container>
+          <p>{this.state.tax_error}</p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button className="modal-btn" onClick={() => {this.setUpTax()}}>Create Taxes</Button>
+        </Modal.Footer>
+      </Modal>
+    );
+  }
+
   render() {
     if(this.state.redirect_profile){
       return(
@@ -767,7 +1189,7 @@ class TeacherClassApp extends React.Component {
             </Col>
             <Col xs={7}>
               <Row className="taxes-row">
-                <p>Class Taxes</p>
+                {this.renderTaxView()}
               </Row>
               <Row className="store-row">
                 {this.renderShopView()}
@@ -783,5 +1205,21 @@ class TeacherClassApp extends React.Component {
   }
 }
 
+
+/*<Col xs={6} md={4}>
+                <FloatingLabel label="Flat Tax" className="modal-input">
+                  <FormControl id='current_flat_tax' placeholder="Flat Tax" onChange={this.handleChange}/>
+                </FloatingLabel>
+              </Col>
+              <Col xs={6} md={4}>
+                <FloatingLabel label="Percent Tax" className="modal-input">
+                  <FormControl id='current_percent_tax' placeholder="Percent Tax" onChange={this.handleChange}/>
+                </FloatingLabel>
+              </Col>
+              <Col xs={6} md={4}>
+                <FloatingLabel label="Sales Tax" className="modal-input">
+                  <FormControl id='current_sales_tax' placeholder="Sales Tax" onChange={this.handleChange}/>
+                </FloatingLabel>
+              </Col>*/
 
 export default withRouter(TeacherClassApp)

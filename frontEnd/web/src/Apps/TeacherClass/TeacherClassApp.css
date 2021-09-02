@@ -69,3 +69,7 @@
     overflow-y:scroll;
     -webkit-overflow-scrolling: touch;
 }
+
+.tax-btn-col{
+    text-align: end;
+}
