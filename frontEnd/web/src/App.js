@@ -8,6 +8,8 @@ import {
 import LoginApp from "./Apps/Login/LoginApp";
 import ProfileApp from "./Apps/Profile/ProfileApp";
 import SignUpApp from "./Apps/SignUp/SignUpApp";
+import TeacherClassApp from "./Apps/TeacherClass/TeacherClassApp";
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 export default function App() {
   return (
@@ -24,6 +26,12 @@ export default function App() {
           </Route>
           <Route path="/Profile">
             <ProfileApp />
+          </Route>
+          <Route exact path="/Class/">
+            <TeacherClassApp />
+          </Route>
+          <Route path="/Class/:code">
+            <TeacherClassApp />
           </Route>
           <Route
             exactpath="/"
