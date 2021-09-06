@@ -65,8 +65,8 @@ export default class LoginApp extends React.Component {
               <Button variant="primary" className="login-btns" onClick={() => this.handleLogin()}> Login </Button>
             </div>
             <div className= "login-btns-row">
-              <Button variant="secondary" className="login-btns" onClick={this.handleStudentSignUpRedirect} disabled> Student Sign Up </Button>
-              <Button variant="secondary" className="login-btns" onClick={this.handleTeacherSignUpRedirect} disabled>Teacher Sign Up</Button>
+              <Button variant="secondary" className="login-btns" onClick={this.handleStudentSignUpRedirect} > Student Sign Up </Button>
+              <Button variant="secondary" className="login-btns" onClick={this.handleTeacherSignUpRedirect} >Teacher Sign Up</Button>
             </div>
           </div>
         </Container>
