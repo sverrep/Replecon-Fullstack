@@ -123,9 +123,9 @@ else:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.mysql',
-            'NAME': 'replecon_db',
-            'USER': 'admin',
-            'PASSWORD': '5dcr8JrqKNdJuENs',
+            'NAME': 'replecondb',
+            'USER': 'root',
+            'PASSWORD': '12345',
             'HOST': 'localhost',
             'PORT': '3306',
     }

@@ -3,7 +3,14 @@ import { withRouter } from "react-router-dom";
 import axios from 'axios';
 import getIP from '../../settings.js';
 import NavBar from '../../Components/navbar/Navbar.js';
+import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
+import Form from 'react-bootstrap/Form';
+import Card from 'react-bootstrap/Card';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
 import './StudentBankApp.css';
+
 
 class StudentBank extends React.Component {
     constructor(props) {
@@ -12,22 +19,50 @@ class StudentBank extends React.Component {
             bank_name: '',
             class_name: '',
             classroom: '',
+            interest_rate:'',
+            payout_rate:'',
+            student_balance: '',
+            show:false,
+            value:'',
+            loggedin_student:{},
+
+            savings: [],
+
+
+
         }
         this.getClassroomDetails = this.getClassroomDetails.bind(this)
         this.findClassroom = this.findClassroom.bind(this)
         this.getClassStudents = this.getClassStudents.bind(this)
         this.getBanks = this.getBanks.bind(this)
+        this.getStudentBalance = this.getStudentBalance.bind(this)
     }
 
     componentDidMount(){
         this.getClassStudents()
+        this.getBanks()
+        this.getStudentBalance()
+
+    }
+
+    getStudentBalance(){
+    axios.get(getIP()+'/students/balance/')
+    .then(response => {
+      this.setState({student_balance: response.data})
+    })
+    .catch(error => console.log(error))
     }
     //Retrieving the class name
     getClassStudents() {
         axios.get(getIP()+'/students/class_code/')
         .then(response => {
             this.setState({ classroom: response.data[0].class_code })
+            this.getBanks(response.data[0].class_code)
             this.getClassroomDetails()
+            axios.get(getIP()+'/students/current/')
+              .then(response => {
+                this.setState({loggedin_student: response.data}, () => {this.getStudentSavings()})
+              })
         })
         .catch(error => console.log(error))
     }
@@ -46,26 +81,25 @@ class StudentBank extends React.Component {
           if (classrooms[i].class_code === this.state.classroom)
           {
             this.setState({ class_name: classrooms[i].class_name });
-            console.log(classrooms[i].class_name)
           }
         }
     }
     
     //Getting the inrest rate
 
-    getBanks(){
+    getBanks(class_code){
         axios.get(getIP()+'/banks/')
         .then(response => {
           this.setState({banks: response.data})
-          this.getBankDetails(response.data)
+          this.getBankDetails(response.data, class_code)
         })
         .catch(error => console.log(error))
       }
     
-      getBankDetails(banks){
-        for (let i = 0; i<=Object.keys(banks).length -1;i++)
+      getBankDetails(banks, class_code){
+        for (let i = 0; i<=banks.length -1;i++)
         {
-          if(banks[i].class_code === this.state.class_code)
+          if(banks[i].class_code === class_code)
           {
             this.setState({interest_rate:banks[i].interest_rate})
             this.setState({payout_rate:banks[i].payout_rate})
@@ -73,16 +107,176 @@ class StudentBank extends React.Component {
         }
       }
 
+      //Insert Savings
+      setStudentSavings(){
+          axios.post(getIP()+'/transactions/banksavings/', {"amount": this.state.value, "done": false})
+          .then(response => {
+            var transaction_id = response.data["id"]
+            axios.post(getIP()+'/transactioninterestrates/', {"class_code": this.state.classroom, "transaction_id": transaction_id})
+            .then(response => {
+              axios.get(getIP()+'/students/bank/')
+              .then(response => {
+                axios.put(getIP()+'/students/balance/', { amount: this.state.value, user_id: response.data, recipient: false })
+                .then(response => {
+                  this.setState({show:false})
+                  //this.getStudentSavings()
+                })
+                .catch(error => console.log(error))
+              })
+              .catch(error => console.log(error))
+            })
+            .catch(error => console.log(error))
+          })
+          .catch(error => console.log(error))
+      }
+      //Start Saving Modal
+      openModal(){
+        this.setState({show:true})
+      }
+
+      closeModal(){
+        this.setState({show:false})
+      }
+
+
+
+      renderModal(){
+          return(
+            <Modal
+            show={this.state.show}
+            backdrop="static"
+            keyboard={false}
+            >
+                <Modal.Header>
+                    <Modal.Title>Start Saving</Modal.Title>
+                </Modal.Header>
+
+                <Modal.Body>
+                    <Form>
+                    <Form.Group className="mb-3" controlId="formBasicEmail">
+                        
+                        <Form.Control onChange={e => this.setState({value: e.target.value})} type="number" placeholder="Enter the amount to save" />
+                    </Form.Group>
+                    </Form>
+                </Modal.Body>
+
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={() => this.closeModal()}>Cancel</Button>
+                    <Button variant="primary" onClick={() => this.setStudentSavings()}>Confirm Saving</Button>
+                </Modal.Footer>
+            </Modal>
+        )
+      }
+
+
+      //Get Savings
+      getStudentSavings(){
+        this.setState({savings: []})
+        axios.get(getIP()+'/transactioninterestrates/')
+        .then(response1 => {
+            for(let i = 0; i <= response1.data.length-1; i++)
+            {
+                axios.get(getIP()+'/transactions/' + response1.data[i].transaction_id)
+                .then(response2 => {
+                    var initamount = parseFloat(response2.data.amount)
+                    if(this.state.loggedin_student.id === response2.data.sender_id)
+                    {
+                        var intrate = parseFloat(response1.data[i].set_interest_rate)
+                        var finalamount = initamount + (initamount*(intrate/100))
+                        axios.get(getIP()+'/transactioninterestrates/payoutdate/' + response2.data.id)
+                        .then(response => {
+                          var payout_date = (((response.data / 60) / 60) / 24)
+                          var tempdict = {
+                            "id": i, 
+                            "initial_amount": initamount, 
+                            "interest_rate": intrate, 
+                            "final_amount": finalamount, 
+                            "transaction_id": response2.data.id, 
+                            "payout_date": payout_date, 
+                            "active": response1.data[i].active
+                          }
+                          this.setState({savings: [...this.state.savings, tempdict]})
+                        })
+                        .catch(error => console.log(error))
+                    }
+                })
+                .catch(error => console.log(error))
+            }
+        })
+        .catch(error => console.log(error))
+      }
+
+      renderSavings(item){
+        if(item.active === true)
+    {
+        return(
+          <Card style={{ width: '15rem' }}>
+              <Card.Body>
+                  <Card.Title>Amount: {item.initial_amount}</Card.Title>
+                  <Card.Text>
+                      Payout of {item.final_amount}$ in {item.payout_date} days
+                  </Card.Text>
+                  <Button variant="primary" onClick={() => this.claimSavings(item)}>Claim Savings</Button>
+              </Card.Body>
+          </Card>
+      )
+      }
+    }
+        claimSavings(item){
+          
+          if(item.payout_date === 0)
+          {
+            console.log(item)
+            axios.post(getIP()+'/transactions/banksavings/', {"amount": item.final_amount, "done": true})
+            .then(response => {
+              console.log(response.data)
+              axios.put(getIP()+'/transactioninterestrates/', {active: false, class_code: this.state.classroom, transaction_id: item.transaction_id})
+              .then(response => {
+                console.log(response.data)
+                axios.get(getIP()+'/students/bank/')
+                .then(response => {
+                  console.log(response.data)
+                  axios.put(getIP()+'/students/balance/', { amount: item.final_amount, user_id: response.data, recipient: true })
+                  .then(response => {
+                    console.log(response.data)
+                    this.getStudentSavings()
+                  })
+                  .catch(error => console.log(error))
+                })
+                .catch(error => console.log(error))
+              })
+              .catch(error => console.log(error))
+            })
+            .catch(error => console.log(error))
+          }
+        }
+
     render(){
         return(
         <div>
             <NavBar/>
             <div className='bank-info'>
                 <h1>Bank of {this.state.class_name}</h1>
-                <h3>Current Intrest Rate: </h3>
+                <h3>Current Intrest Rate: {this.state.interest_rate} %</h3>
+                <h3>Current Payout Rate: {this.state.payout_rate} week</h3>
+                <h3>Current Balance: {this.state.student_balance}$</h3>
+
+                <Button onClick={() => this.openModal()}>
+                  Start Saving
+                </Button>
+                {this.renderModal()}
             </div>
             <div>
                 <h2>My Savings</h2>
+                <div className="savings_cards">
+                    <Container>
+                        <Row xs="auto" md={2}>
+                    {this.state.savings.map(item => {
+                            return(this.renderSavings(item))
+                        })}
+                        </Row>
+                    </Container>
+                </div>
             </div>
         </div>
         )

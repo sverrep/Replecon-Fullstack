@@ -140,7 +140,7 @@ class StudentStore extends React.Component {
                 <NavBar/>
                 <div>
                     <h1>{this.state.store_name}</h1>
-                    <h>Your current balance: {this.state.student_balance} </h>
+                    <h2>Your current balance: {this.state.student_balance} </h2>
                 </div>
                 <div className="item_cards">
                     <Container>

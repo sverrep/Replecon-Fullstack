@@ -18,15 +18,24 @@ class NavBar extends Component {
 
         if(this.state.targetClicked===true){
             this.setState({targetClicked: false})
-            return(
-                <Redirect to={{pathname: this.state.redirect}}></Redirect>
-            )
+            if(this.state.redirect==='/Profile'){
+                return(
+                    <Redirect to={{pathname: this.state.redirect, state: {role: "Student"}}}></Redirect>
+                )
+            }
+            else{
+                return(
+                    <Redirect to={{pathname: this.state.redirect}}></Redirect>
+                )
+            }
+            
+            
         }
         else{
         return(
             <nav className='NavbarItems'>
                 <h1 className='navbar-logo'>Replecon</h1>
-                <div className='menu-icon' onClick={this.handleClick}>
+                <div className='menu-icon' onClick={() => this.handleClick}>
                     <i className={this.state.clicked ? 'fas fa-times' : 'fas fa-bars'}></i>
                 </div>
                 <ul className={this.state.clicked ? 'nav-menu active' : 'nav-menu'}>
