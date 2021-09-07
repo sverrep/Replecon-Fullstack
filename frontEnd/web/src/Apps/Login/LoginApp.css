@@ -1,3 +1,8 @@
+.logo-h1{
+  text-align: center;
+  color:#0d6efd;
+  padding-bottom: 2%;
+}
 
 .login-container{
   display: flex;

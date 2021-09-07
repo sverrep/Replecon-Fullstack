@@ -45,22 +45,20 @@ export default class LoginApp extends React.Component {
         <Container className="login-container">
           <div className="vertical-center">
             <Row>
+              <h1 className="logo-h1">REPLECON</h1>
               <h3 className="login-h3">Login</h3>
             </Row>
             <Row>
               <Form.Group className="mb-3" controlId="email">
                 <Form.Label>Email address</Form.Label>
                 <Form.Control type="email" placeholder="Enter email" onChange={this.handleChange} />
-                <Form.Text className="text-muted">
-                  We'll never share your email with anyone else.
-                </Form.Text>
               </Form.Group>
               <Form.Group className="mb-3" controlId="password">
                 <Form.Label>Password</Form.Label>
                 <Form.Control type="password" placeholder="Password" onChange={this.handleChange}/>
               </Form.Group>
-              <p>{this.state.error}</p>
             </Row>
+            <p className="error-message">{this.state.error}</p>
             <div className="login-btns-row">
               <Button variant="primary" className="login-btns" onClick={() => this.handleLogin()}> Login </Button>
             </div>
@@ -90,10 +88,8 @@ export default class LoginApp extends React.Component {
   validateData() 
   {
     var reg = /^\w+([-]?\w+)*@\w+([-]?\w+)*(\.\w\w+)+$/;
-    console.log(this.state.email)
     if (reg.test(this.state.email))
     {
-      console.log("yo3")
       if(this.state.password.length === 0){
           this.setState({error: "Password needs to be longer", showError: true})
       }
@@ -108,28 +104,27 @@ export default class LoginApp extends React.Component {
   }
 
   handleLogin() {
-    console.log("yo")
     if (this.validateData()) {
-      console.log("yo2")
       const payload = { username: this.state.email, password: this.state.password } 
       axios.post(getIP()+'/auth/login/', payload)
       .then(response => {
-          const { token } = response.data;
-          axios.defaults.headers.common.Authorization = `Token ${token}`;
-          axios.get(getIP()+'/teachers/isTeacher/')
-          .then(response => {
-            if(response.data === true) {
-              this.setState({ redirect_teacher_profile : true})
-              return
-            }
-            else {
-              this.setState({ redirect_student_profile : true})
-              return
-            }
-          })
-          .catch(error => console.log(error));
+        const { token } = response.data;
+        axios.defaults.headers.common.Authorization = `Token ${token}`;
+        axios.get(getIP()+'/teachers/isTeacher/')
+        .then(response => {
+          if(response.data === true) {
+            this.setState({ redirect_teacher_profile : true})
+            return
+          }
+          else {
+            this.setState({ redirect_student_profile : true})
+            return
+          }
+        })
+        .catch(error => console.log(error));
       })
       .catch(error => console.log(error));
+      this.setState({error: "User Not Found"})
       return
     }
     else {

@@ -5,12 +5,37 @@ import getIP from '../../settings.js';
 import './ProfileApp.css';
 import NavBar from '../../Components/navbar/Navbar.js';
 import Button from 'react-bootstrap/Button';
+import Container from 'react-bootstrap/Container'
+import Row from 'react-bootstrap/Row'
+import ListGroup from 'react-bootstrap/ListGroup'
+import Modal from 'react-bootstrap/Modal'
+import FormControl from 'react-bootstrap/FormControl'
+import FloatingLabel from 'react-bootstrap/FloatingLabel'
 
 class Profile extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { email: '', password: '', first_name: '', last_name: '', user_id: '', teacher_id: '', class_code: '', balance: '', transactions: [],  bought_items: [], role: this.props.location.state.role, classes: [], redirect_login: false, redirect_class: false, selected_class: [] };
+        this.state = { 
+            email: '', 
+            password: '', 
+            first_name: '', 
+            last_name: '', 
+            user_id: '', 
+            teacher_id: '', 
+            class_code: '', 
+            balance: '',
+            new_class_name: '',
+            transactions: [],  
+            bought_items: [], 
+            role: this.props.location.state.role, 
+            classes: [], 
+            redirect_login: false, 
+            redirect_class: false, 
+            selected_class: [],
+            showCreateClass: false,
+        };
         this.handleLogOut = this.handleLogOut.bind(this)
+        this.handleChange = this.handleChange.bind(this)
     }
 
     componentDidMount(){
@@ -30,6 +55,11 @@ class Profile extends React.Component {
             }
         })
         .catch(error => console.log(error))
+    }
+
+    handleChange(e) {
+        const field = e.target.id
+        this.setState({ [field] : e.target.value });
     }
 
     getTeacherClasses(){
@@ -89,6 +119,50 @@ class Profile extends React.Component {
         .catch(error => console.log(error))
     }
 
+    createClass(){
+        axios.get(getIP()+'/classrooms/')
+        .then(response => {
+          this.setState({new_class_code: this.makeClassCode(response.data)}, () => {
+            const payload = {class_name: this.state.new_class_name, teacher_id: this.state.teacher_id, class_code: this.state.new_class_code}
+            axios.post(getIP()+'/classrooms/', payload)
+            .then(response => {
+              this.setState({showCreateClass: false}, () => {
+                this.setState({ classes: [...this.state.classes, response.data] });
+              })
+            })
+            .catch(error => console.log(error))
+         })
+        })
+       .catch(error => console.log(error))
+     }
+
+     
+    makeClassCode(classrooms) {
+        var result = []
+        var characters = 'ABCDEFGHIJKLMNPQRSTUVWXYZ123456789'
+        var code_length = 6
+        var alreadyExists = false
+        
+        for ( let i = 0; i < code_length;i++){
+            result.push(characters.charAt(Math.floor(Math.random() * characters.length)));
+        }
+        for (let k = 0; k<=Object.keys(classrooms).length -1;k++)
+        {
+        if(classrooms[k].class_code === result)
+        {
+            alreadyExists = true
+        }
+        }
+
+        if (alreadyExists === false){
+            return result.join('')
+        }
+        else{
+            this.makeClassCode(classrooms)
+        }
+    }
+
+
     renderCard(item){
         var transCard = 'From ' + item.name + " " +  item.symbol + item.amount
         return(transCard)
@@ -98,6 +172,31 @@ class Profile extends React.Component {
     renderItemCard(item){
         return item.item_name
     }
+
+    createClassModal() {
+        return (
+          <Modal
+            show={this.state.showCreateClass}
+            onHide={() => this.setState({showCreateClass: false})}
+            size="lg"
+            centered
+          >
+            <Modal.Header closeButton>
+              <Modal.Title>
+                Create A Class
+              </Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <FloatingLabel label="Class Name">
+                <FormControl id='new_class_name' placeholder="Class Name" onChange={this.handleChange}/>
+              </FloatingLabel>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button className="modal-btn" onClick={() => this.createClass()}>Create Class</Button>
+            </Modal.Footer>
+          </Modal>
+        );
+      }
     
 
     render() {
@@ -151,21 +250,24 @@ class Profile extends React.Component {
         }
         else if (this.state.role === "Teacher"){
             return (
-            <div>
-                <h3>Teacher Profile {this.state.teacher_id}</h3>
-                
-                <h4>Your Classes</h4>
-                    <ul>
-                        {this.state.classes.map((item,i) => <li key={i}><button onClick={() => this.handleClassRedirect(item)}>{item.class_name} {item.class_code}</button></li>)}
-                    </ul>
-                <button>
-                    Create New Class
-                </button>
-                <br></br>
-                <button onClick={this.handleLogOut}>
-                    Log Out
-                </button>
-            </div>
+            <Container className="teacher-container">
+                <Row>
+                    <h3 className="teacher-h3">Welcome Back {this.state.last_name}</h3>
+                    <h4>Your Classes</h4>
+                        {this.state.classes.map((item,i) => <ListGroup.Item key={i} className="class-list" action onClick={() => this.handleClassRedirect(item)}>{item.class_name} {item.class_code}</ListGroup.Item>)}
+                    <div className="teacher-btns-row">
+                        <Button variant="outline-primary" className="teacher-btns" onClick={() => this.setState({showCreateClass: true})}>
+                            Create New Class
+                        </Button>
+                    </div>
+                    <div className="teacher-btns-row">
+                        <Button variant="outline-secondary" className="teacher-btns" onClick={this.handleLogOut}>
+                            Log Out
+                        </Button>
+                    </div>
+                </Row>
+                {this.createClassModal()}
+            </Container>
             );
         }
             
