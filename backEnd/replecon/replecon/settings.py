@@ -31,8 +31,8 @@ ALLOWED_HOSTS=['*']
 CORS_ORIGIN_ALLOW_ALL = False
 CORS_ORIGIN_WHITELIST = (
     'http://localhost:3000',
-    'https://replecon.com'
-    'https://www.replecon.com'
+    'https://replecon.com',
+    'https://www.replecon.com',
 )
 
 
@@ -125,9 +125,9 @@ else:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.mysql',
-            'NAME': 'replecon_db',
-            'USER': 'admin',
-            'PASSWORD': '5dcr8JrqKNdJuENs',
+            'NAME': 'replecondb',
+            'USER': 'root',
+            'PASSWORD': '12345',
             'HOST': 'localhost',
             'PORT': '3306',
     }

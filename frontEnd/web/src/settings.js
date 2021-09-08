@@ -1,5 +1,5 @@
 export default function getIP() {
-    const ip = "https://mythical-mason-324813.ey.r.appspot.com/";
+    const ip = "http://192.168.0.6:8000";
     return ip;
 };
 
