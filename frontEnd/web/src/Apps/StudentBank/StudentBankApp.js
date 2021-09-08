@@ -7,7 +7,6 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import Card from 'react-bootstrap/Card';
-import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import './StudentBankApp.css';
 
@@ -119,7 +118,7 @@ class StudentBank extends React.Component {
                 axios.put(getIP()+'/students/balance/', { amount: this.state.value, user_id: response.data, recipient: false })
                 .then(response => {
                   this.setState({show:false})
-                  //this.getStudentSavings()
+                  this.getStudentSavings()
                 })
                 .catch(error => console.log(error))
               })
@@ -210,7 +209,7 @@ class StudentBank extends React.Component {
         if(item.active === true)
     {
         return(
-          <Card style={{ width: '15rem' }}>
+          <Card style={{ width: '15rem' }} className='cards'>
               <Card.Body>
                   <Card.Title>Amount: {item.initial_amount}</Card.Title>
                   <Card.Text>
@@ -227,7 +226,7 @@ class StudentBank extends React.Component {
           if(item.payout_date === 0)
           {
             console.log(item)
-            axios.post(getIP()+'/transactions/banksavings/', {"amount": item.final_amount, "done": true})
+            axios.post(getIP()+'/transactions/banksavings/', {"amount": Math.round(item.final_amount * 10) / 10, "done": true})
             .then(response => {
               console.log(response.data)
               axios.put(getIP()+'/transactioninterestrates/', {active: false, class_code: this.state.classroom, transaction_id: item.transaction_id})
@@ -235,8 +234,7 @@ class StudentBank extends React.Component {
                 console.log(response.data)
                 axios.get(getIP()+'/students/bank/')
                 .then(response => {
-                  console.log(response.data)
-                  axios.put(getIP()+'/students/balance/', { amount: item.final_amount, user_id: response.data, recipient: true })
+                  axios.put(getIP()+'/students/balance/', { amount: (Math.round(item.final_amount * 10) / 10).toString(), user_id: response.data, recipient: true })
                   .then(response => {
                     console.log(response.data)
                     this.getStudentSavings()
@@ -253,29 +251,29 @@ class StudentBank extends React.Component {
 
     render(){
         return(
-        <div>
+        <div className='wrapper'>
             <NavBar/>
-            <div className='bank-info'>
-                <h1>Bank of {this.state.class_name}</h1>
-                <h3>Current Intrest Rate: {this.state.interest_rate} %</h3>
-                <h3>Current Payout Rate: {this.state.payout_rate} week</h3>
-                <h3>Current Balance: {this.state.student_balance}$</h3>
-
+            <div className='title'>
+                <h3>Bank of {this.state.class_name}</h3>
+                <h6>Current Intrest Rate: {this.state.interest_rate} %</h6>
+                <h6>Current Payout Rate: {this.state.payout_rate} week</h6>
+                <h6>Current Balance: {this.state.student_balance}$</h6>
                 <Button onClick={() => this.openModal()}>
                   Start Saving
                 </Button>
+                
                 {this.renderModal()}
             </div>
-            <div>
+            <div className='con'>
                 <h2>My Savings</h2>
                 <div className="savings_cards">
-                    <Container>
-                        <Row xs="auto" md={2}>
+                    <div className='bank-cards'>
+                        <Row xs="auto" md={2} className='override'>
                     {this.state.savings.map(item => {
                             return(this.renderSavings(item))
                         })}
                         </Row>
-                    </Container>
+                      </div>
                 </div>
             </div>
         </div>

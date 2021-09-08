@@ -5,3 +5,16 @@
     padding: 10px;
     text-align: center;
 }
+
+.wrapper{
+    font-family: 'Montserrat', sans-serif;
+}
+
+.con{
+    margin-left: 40px;
+    margin-top: 20px;
+}
+
+.bank-cards{
+    margin-top: 20px;
+}

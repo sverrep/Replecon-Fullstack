@@ -30,3 +30,13 @@
   justify-content: center;
   width: 100%;
 }
+.footerlog {
+  position: fixed;
+  text-align: center;
+  padding: 5px 5px 0px 5px;
+  bottom: 0;
+  width: 100%;
+  /* Height of the footer*/ 
+  height: 30px;
+  background: rgb(235, 235, 235);
+}

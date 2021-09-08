@@ -23,10 +23,10 @@ export const MenuItems = [
         cName: 'nav-links'
     },
 
-    {
-        title: 'Stats',
-        url: '#',
-        cName: 'nav-links'
-    },
+    //{
+        //title: 'Stats',
+        //url: '#',
+        //cName: 'nav-links'
+    //},
 
 ]

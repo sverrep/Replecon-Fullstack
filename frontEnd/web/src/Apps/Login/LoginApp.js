@@ -41,7 +41,7 @@ export default class LoginApp extends React.Component {
     }
     else{
       return (
-
+        <div>
         <Container className="login-container">
           <div className="vertical-center">
             <Row>
@@ -68,8 +68,13 @@ export default class LoginApp extends React.Component {
               <Button variant="secondary" className="login-btns" onClick={this.handleStudentSignUpRedirect} > Student Sign Up </Button>
               <Button variant="secondary" className="login-btns" onClick={this.handleTeacherSignUpRedirect} >Teacher Sign Up</Button>
             </div>
+            
           </div>
         </Container>
+        <div className='footerlog'>
+          <p>SPSO Solutions ©</p>
+        </div>
+        </div>
       );
     }
   }
@@ -90,10 +95,8 @@ export default class LoginApp extends React.Component {
   validateData() 
   {
     var reg = /^\w+([-]?\w+)*@\w+([-]?\w+)*(\.\w\w+)+$/;
-    console.log(this.state.email)
     if (reg.test(this.state.email))
     {
-      console.log("yo3")
       if(this.state.password.length === 0){
           this.setState({error: "Password needs to be longer", showError: true})
       }
@@ -108,9 +111,7 @@ export default class LoginApp extends React.Component {
   }
 
   handleLogin() {
-    console.log("yo")
     if (this.validateData()) {
-      console.log("yo2")
       const payload = { username: this.state.email, password: this.state.password } 
       axios.post(getIP()+'/auth/login/', payload)
       .then(response => {

@@ -2,8 +2,13 @@ import React, { Component } from 'react';
 import {MenuItems} from "./MenuItems"
 import './Navbar.css'
 import { Redirect } from "react-router-dom";
+import Button from 'react-bootstrap/Button';
 class NavBar extends Component {
-    state = { clicked: false }
+    state = { 
+        clicked: false,
+        current_click: '',
+    
+    }
 
     handleClick = () =>{
         this.setState({clicked: !this.state.clicked, redirect:'', targetClicked: false})
@@ -12,6 +17,7 @@ class NavBar extends Component {
     handleTarget(item){
         this.setState({redirect: item.url})
         this.setState({targetClicked: true})
+        this.setState({current_click:item.url})
     }
 
     render(){
@@ -40,9 +46,19 @@ class NavBar extends Component {
                 </div>
                 <ul className={this.state.clicked ? 'nav-menu active' : 'nav-menu'}>
                     {MenuItems.map((item, index)=>{
-                        return(
-                            <li key={index}><a className={item.cName} onClick={() => this.handleTarget(item)}>{item.title}</a></li>
-                        )
+                        if(window.location.href.includes(item.url)){
+                            return(
+                                <li key={index}><Button variant="secondary" className='but-sd'  onClick={() => this.handleTarget(item)}>{item.title}</Button></li>
+                            )
+                        }
+
+                        else{
+                            return(
+                                <li key={index}><Button variant="light" className='but-sd'  onClick={() => this.handleTarget(item)}>{item.title}</Button></li>
+                            )
+                        }
+                        
+                        
                     })}
 
                     

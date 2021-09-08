@@ -5,9 +5,8 @@ import getIP from '../../settings.js';
 import NavBar from '../../Components/navbar/Navbar.js';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
-import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
-
+import './StudentStoreApp.css';
 class StudentStore extends React.Component {
     constructor(props) {
         
@@ -83,7 +82,6 @@ class StudentStore extends React.Component {
         }
         }
         this.setState({items:ar})
-        console.log(ar)
         }
 
     //Student Balance
@@ -98,7 +96,7 @@ class StudentStore extends React.Component {
 
     renderCard(item){
         return(
-            <Card style={{ width: '15rem' }}>
+            <Card style={{ width: '15rem', padding: '10px' }} className='cards'>
                 <Card.Body>
                     <Card.Title>{item.item_name}</Card.Title>
                     <Card.Text>
@@ -136,20 +134,20 @@ class StudentStore extends React.Component {
     }
     render(){
         return(
-            <div>
+            <div className='wrapper'>
                 <NavBar/>
-                <div>
-                    <h1>{this.state.store_name}</h1>
-                    <h2>Your current balance: {this.state.student_balance} </h2>
+                <div className='title'>
+                    <h3>{this.state.store_name}</h3>
+                    <h5>Your current balance: {this.state.student_balance} </h5>
                 </div>
-                <div className="item_cards">
-                    <Container>
+                <div className="item-cards">
+                    <div className='override'>
                         <Row xs="auto" md={2}>
                     {this.state.items.map(item => {
                             return(this.renderCard(item))
                         })}
                         </Row>
-                    </Container>
+                    </div>
                 </div>
             </div>
 
