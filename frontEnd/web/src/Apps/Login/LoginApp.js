@@ -41,7 +41,7 @@ export default class LoginApp extends React.Component {
     }
     else{
       return (
-
+        <div>
         <Container className="login-container">
           <div className="vertical-center">
             <Row>
@@ -66,8 +66,13 @@ export default class LoginApp extends React.Component {
               <Button variant="secondary" className="login-btns" onClick={this.handleStudentSignUpRedirect} > Student Sign Up </Button>
               <Button variant="secondary" className="login-btns" onClick={this.handleTeacherSignUpRedirect} >Teacher Sign Up</Button>
             </div>
+            
           </div>
         </Container>
+        <div className='footerlog'>
+          <p>SPSO Solutions ©</p>
+        </div>
+        </div>
       );
     }
   }

@@ -44,9 +44,9 @@ class Profile extends React.Component {
             if(this.state.role === "Student")
             {
                 this.setState({first_name: response.data.first_name, user_id: response.data.id, email: response.data.username})
-              this.getStudentBalance()
-              this.getStudentTransactions()
-              this.getBoughtItems()
+                this.getStudentBalance()
+                this.getStudentTransactions()
+                this.getBoughtItems()
             }
             else if(this.state.role === "Teacher")
             {
@@ -164,10 +164,19 @@ class Profile extends React.Component {
 
 
     renderCard(item){
-        var transCard = 'From ' + item.name + " " +  item.symbol + item.amount
-        return(transCard)
+        if(item.symbol === '+'){
+            var transCardplus = 'From ' + item.name + " " +  item.symbol + item.amount +"$"
+            return(transCardplus)
+        }
+        else{
+            var transCardminus = 'To ' + item.name + " " +  item.symbol + item.amount +"$"
+            return(transCardminus)
+        }
+        }
         
-    }
+        
+        
+    
 
     renderItemCard(item){
         return item.item_name
@@ -214,23 +223,25 @@ class Profile extends React.Component {
             return (
                 <div className='wrapper'>
                     <NavBar/>
+                    <div className='title'>
                     <h3>Welcome Back {this.state.first_name}</h3>
                     <p>
-                        Current Balance: {this.state.balance}  
+                        Current Balance: {this.state.balance}$  
                     </p>
                     <Button variant='primary' onClick={this.handleLogOut}>
                         Log Out
                     </Button>
+                    </div>
                     <div className='content'>
                         <div className='transactions'>
                             <h2>Transactions History</h2>
                             <ul>
                                 {this.state.transactions.map(item => {
                                     if(item.symbol === '+'){
-                                        return <li key={item.id} className='green'>{this.renderCard(item)}</li>;
+                                        return <li key={item.id} className='green cardb'>{this.renderCard(item)}</li>;
                                     }
                                     else{
-                                        return <li key={item.id} className='red'>{this.renderCard(item)}</li>;
+                                        return <li key={item.id} className='red cardb'>{this.renderCard(item)}</li>;
                                     }
                                 })}
                             </ul>   
@@ -240,7 +251,7 @@ class Profile extends React.Component {
                             <h2>Bought Items</h2>
                             <ul>
                                 {this.state.bought_items.map(item => {
-                                    return <li key={item.id} className='grey'>{this.renderItemCard(item)}</li>;
+                                    return <li key={item.id} className='grey cardb'>{this.renderItemCard(item)}</li>;
                                 })}
                             </ul>
                         </div>

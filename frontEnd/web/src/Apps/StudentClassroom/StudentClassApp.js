@@ -25,6 +25,7 @@ class StudentClass extends React.Component {
             value:'',
             sender_id: '',
             recipient_id: '',
+            current_user_name:'',
 
         }
         this.alertClicked = this.alertClicked.bind(this)
@@ -35,6 +36,12 @@ class StudentClass extends React.Component {
     }
     
     componentDidMount(){
+        axios.get(getIP()+'/students/current/')
+        .then(response => { 
+            this.setState({current_user_name: response.data.first_name})
+        })
+        .catch(error => console.log(error))
+        
         this.getClassStudents()
         this.getStudentBalance()
     }
@@ -126,9 +133,14 @@ class StudentClass extends React.Component {
     }
 
     alertClicked(item){
-        this.setState({clicked: item})
-        this.setState({active: true})
-        this.setState({name: item.name})
+        if(this.state.current_user_name === item.name){
+        }
+        else{
+            this.setState({clicked: item})
+            this.setState({active: true})
+            this.setState({name: item.name})
+        }
+        
     }
 
     renderModal(){
@@ -164,27 +176,32 @@ class StudentClass extends React.Component {
     }
 
     sendTransfer(){
-        console.log(this.state.value)
         this.createTransaction()
     }
 
     render(){
         return(
-            <div>
+            <div className='wrapper'>
                 <NavBar/>
+                <div className='title'>
+                    <h3>{this.state.class_name} - Mr.{this.state.teacher}</h3>
+                </div>
                 
-                <h3>{this.state.class_name} - Mr.{this.state.teacher}</h3>
                 <div className="student-list">
                     <ListGroup>
                     {this.state.students.map(item => {
                         return(this.renderCards(item))
                     })}
                     </ListGroup>
-                    <p>Your classroom: {this.state.classroom}</p>
+                    
                 </div>
                 <div className='transfer'>
                     {this.renderModal()}
                 </div>
+                <div className='footer'>
+                    <p>Your classroom: {this.state.classroom}</p>
+                </div>
+                
             </div>
         )
     }
