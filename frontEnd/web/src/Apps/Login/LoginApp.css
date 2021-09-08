@@ -44,6 +44,7 @@
   /* Height of the footer*/ 
   height: 30px;
   background: rgb(235, 235, 235);
+}
 
 .error-message{
   text-align: center;
