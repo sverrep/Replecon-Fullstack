@@ -45,4 +45,33 @@ ul li {
 
 .cardb{
   margin-top: 5px;
+
+.teacher-container{
+  display: flex;
+  justify-content: center;
+  width: 50%;
+  text-align: center;
+}
+
+.teacher-h3{
+  text-align: center;
+}
+
+.teacher-btns{
+  margin-right: 5px;
+  margin-left: 5px;
+  margin-bottom: 10px;
+  width: 30%;
+}
+
+.teacher-btns-row{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-content: center;
+  width: 100%;
+}
+
+.class-list{
+  font-size: large;
 }

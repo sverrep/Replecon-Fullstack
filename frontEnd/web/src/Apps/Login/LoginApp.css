@@ -1,3 +1,8 @@
+.logo-h1{
+  text-align: center;
+  color:#0d6efd;
+  padding-bottom: 2%;
+}
 
 .login-container{
   display: flex;
@@ -39,4 +44,8 @@
   /* Height of the footer*/ 
   height: 30px;
   background: rgb(235, 235, 235);
+
+.error-message{
+  text-align: center;
+  color:red;
 }

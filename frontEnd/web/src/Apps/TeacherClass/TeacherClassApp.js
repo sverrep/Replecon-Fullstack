@@ -54,8 +54,6 @@ class TeacherClassApp extends React.Component {
       checked: '',
       current_tax_type: '',
       current_value: '',
-      showSimpleModal: false,
-      showCreateTaxes: false,
       newSimpleValue: '',
       progAmount: 0,
       regAmount: 0,
@@ -73,8 +71,11 @@ class TeacherClassApp extends React.Component {
       current_sales_tax:'',
       current_percent_tax:'',
       current_flat_tax: '',
-      class_brackets:[],
-      class_regressive_brackets:[],
+      form_id: '',
+      class_prog_brackets:[],
+      class_reg_brackets:[],
+      progArOfId:[],
+      regArOfId: [],
 
       error: '',
       bank_error: '',
@@ -84,6 +85,8 @@ class TeacherClassApp extends React.Component {
       redirect_profile: false,
       bankModalShow: false,
       updateBankModalShow: false,
+      showCreateTaxes: false,
+      showUpdateTax: false,
     };
     this.handleProfileRedirect = this.handleProfileRedirect.bind(this)
     this.studentClicked = this.studentClicked.bind(this)
@@ -193,7 +196,7 @@ class TeacherClassApp extends React.Component {
         <Card key={i}>
           <Card.Body>
             <Card.Title> {item.item_name} {item.price} </Card.Title>
-            <Card.Text> {item.description} <Button variant="primary" onClick={() => this.clickedItem(item.item_name, item.price, item.description, item.id)}>Update Item</Button> </Card.Text>
+            <Card.Text> {item.description} <Button variant="primary" onClick={() => this.storeClickedItem(item.item_name, item.price, item.description, item.id)}>Update Item</Button> </Card.Text>
           </Card.Body>
         </Card>
       )
@@ -334,7 +337,7 @@ class TeacherClassApp extends React.Component {
     }
   }
 
-  clickedItem(name, price, description, id){
+  storeClickedItem(name, price, description, id){
     this.setState({showUpdateItem:true})
     this.setState({item_name:name})
     this.setState({item_price:price})
@@ -510,6 +513,67 @@ class TeacherClassApp extends React.Component {
     }
    }
 
+   taxClickedItem(tax_type){
+    this.getAllBrackets()
+    this.setState({current_tax_type:tax_type})
+    if(tax_type === 'Flat Tax'){
+      this.setState({showUpdateTax:true})
+      this.setState({current_value:this.state.class_tax.flat_tax})
+      this.setState({form_id: "current_flat_tax"})
+    }
+    else if(tax_type === 'Percentage Tax'){
+      this.setState({showUpdateTax:true})
+      this.setState({current_value:this.state.class_tax.percentage_tax})
+      this.setState({form_id: "current_percent_tax"})
+    }
+    else if(tax_type === "Progressive Tax"){
+      this.setState({showUpdateTax:true})
+    }
+    else if(tax_type === "Regressive Tax"){
+      this.setState({showUpdateTax:true})
+    }
+  }
+
+  updateEasyTax(tax_type){
+    var payload = {}
+    if(tax_type === 'Flat Tax'){
+      if(this.flat_tax_isValid(this.state.current_flat_tax)){
+        
+        payload = {
+          class_code: this.state.class_tax.class_code,
+          flat_tax: this.state.current_flat_tax,
+          percentage_tax: this.state.class_tax.percentage_tax,
+          sales_tax: this.state.class_tax.sales_tax,
+          id: this.state.class_tax.id,
+        }
+        axios.put(getIP()+'/taxes/'+ this.state.class_tax.id, payload )
+        .then(response => {
+        })
+        .catch(error => console.log(error))
+        this.setState({class_tax: payload})
+        this.setState({showUpdateTax:false})
+    }
+  }
+
+  else if(tax_type === 'Percentage Tax'){
+    if(this.percentage_tax_isValid(this.state.current_percent_tax)){
+      payload = {
+        class_code: this.state.class_tax.class_code,
+        flat_tax: this.state.class_tax.flat_tax,
+        percentage_tax: this.state.current_percent_tax,
+        sales_tax: this.state.class_tax.sales_tax,
+        id: this.state.class_tax.id,
+      }
+      axios.put(getIP()+'/taxes/'+ this.state.class_tax.id, payload )
+      .then(response => {
+      })
+      .catch(error => console.log(error))
+      this.setState({class_tax: payload})
+      this.setState({showUpdateTax:false})
+      } 
+    }
+  } 
+
   renderTaxView(){
     if(this.state.classHasTaxes)
     {
@@ -527,7 +591,16 @@ class TeacherClassApp extends React.Component {
 
   hasTaxes(){
     return(
-      <div><p>yo</p></div>
+      <Col>
+        <h4>{this.state.class_name} Taxes {this.state.class_tax.id}</h4>
+        <ListGroup>
+          <ListGroup.Item key={1} action onClick={() => this.taxClickedItem("Flat Tax")}>Flat Tax {this.state.class_tax.flat_tax}</ListGroup.Item>
+          <ListGroup.Item key={2} action onClick={() => this.taxClickedItem("Percentage Tax")}>Percentage Tax {this.state.class_tax.percentage_tax}</ListGroup.Item>
+          <ListGroup.Item key={3} action onClick={() => this.taxClickedItem("Progressive Tax")}>Progressive Tax</ListGroup.Item>
+          <ListGroup.Item key={4} action onClick={() => this.taxClickedItem("Regressive Tax")}>Regressive Tax</ListGroup.Item>
+        </ListGroup>
+        {this.renderUpdateEasyTax()}
+      </Col>
     );
   }
 
@@ -595,6 +668,7 @@ class TeacherClassApp extends React.Component {
       this.setState({regArOfLows:tempAr})
       this.setState({ current_low: text });
     }
+    
   }
 
   onUpdateHighChange(e, i, type){
@@ -674,21 +748,168 @@ class TeacherClassApp extends React.Component {
       <Row key={i} >
         <Col xs={6} md={4}>
           <FloatingLabel label="Low" className="modal-input">
-            <FormControl placeholder="Low" onChange={(e) => this.onUpdateLowChange(e, i, type)}/>
+            <FormControl placeholder="Low" defaultValue={this.defaultLowValue(i, type)} onChange={(e) => this.onUpdateLowChange(e, i, type)}/>
           </FloatingLabel>
         </Col>
         <Col xs={6} md={4}>
           <FloatingLabel label="High" className="modal-input">
-            <FormControl placeholder="High" onChange={(e) => this.onUpdateHighChange(e, i, type)}/>
+            <FormControl placeholder="High" defaultValue={this.defaultHighValue(i, type)} onChange={(e) => this.onUpdateHighChange(e, i, type)}/>
           </FloatingLabel>
         </Col>
         <Col xs={6} md={4}>
           <FloatingLabel label="%" className="modal-input">
-            <FormControl placeholder="%" onChange={(e) => this.onUpdatePerChange(e, i, type)}/>
+            <FormControl placeholder="%" defaultValue = {this.defaultPerValue(i, type)} onChange={(e) => this.onUpdatePerChange(e, i, type)}/>
           </FloatingLabel>
         </Col>
       </Row>
     )
+  }
+
+  defaultLowValue(i, type){
+    if(type === "prog")
+    {
+      return this.state.arOfLows[i]
+    }
+    else if(type === "reg")
+    {
+      return this.state.regArOfLows[i]
+    }
+  }
+
+  defaultHighValue(i, type){
+    if(type === "prog")
+    {
+      return this.state.arOfHighs[i]
+    }
+    else if(type === "reg")
+    {
+      return this.state.regArOfHighs[i]
+    }
+  }
+
+  defaultPerValue(i, type){
+    if(type === "prog")
+    {
+      return this.state.arOfPer[i]
+    }
+    else if(type === "reg")
+    {
+      return this.state.regArOfPer[i]
+    }
+  }
+
+  getAllBrackets(){
+    axios.get(getIP()+'/progressivebrackets/')
+    .then(response => {
+        this.getClassProgressiveBrackets(response.data)
+        axios.get(getIP()+'/regressivebrackets/')
+        .then(response => {
+          this.getClassRegressiveBrackets(response.data)
+        })
+        .catch(error => console.log(error))  
+    })
+    .catch(error => console.log(error))  
+  }
+
+  getClassProgressiveBrackets(brackets){
+    var tempar = []
+    for(let i = 0; i<=Object.keys(brackets).length -1; i++){
+      if(brackets[i].tax_id === this.state.class_tax.id){
+        tempar.push(brackets[i])
+      }
+    }
+    this.progArraySetUp(tempar)
+    this.setState({class_prog_brackets: tempar})
+    this.setState({progAmount: tempar.length})
+  }
+
+  getClassRegressiveBrackets(brackets){
+    var tempar = []
+    for(let i = 0; i<=Object.keys(brackets).length -1; i++){
+      if(brackets[i].tax_id === this.state.class_tax.id){
+        tempar.push(brackets[i])
+      }
+    }
+    this.regArraySetUp(tempar)
+    this.setState({class_reg_brackets: tempar})
+    this.setState({regAmount: tempar.length})
+  }
+
+  progArraySetUp(ar){
+    for(let i =0; i <= Object.keys(ar).length -1;i++){
+      var tempHighAr = this.state.arOfHighs
+      tempHighAr[i] = ar[i].higher_bracket
+      this.setState({arOfHighs:tempHighAr})
+
+      var tempLowAr = this.state.arOfLows
+      tempLowAr[i] = ar[i].lower_bracket
+      this.setState({arOfLows:tempLowAr})
+
+      var tempPerAr = this.state.arOfPer
+      tempPerAr = ar[i].percentage
+      this.setState({arOfPer: [...this.state.arOfPer, tempPerAr]})
+
+      var tempIdAr = this.state.progArOfId
+      tempIdAr[i] = ar[i].id
+      this.setState({progArOfId:tempIdAr})
+    }
+  }
+
+  regArraySetUp(ar){
+    for(let i =0; i <= Object.keys(ar).length -1;i++){
+      var tempHighAr = this.state.arOfHighs
+      tempHighAr[i] = ar[i].higher_bracket
+      this.setState({arOfHighs:tempHighAr})
+
+      var tempLowAr = this.state.arOfLows
+      tempLowAr[i] = ar[i].lower_bracket
+      this.setState({arOfLows:tempLowAr})
+
+      var tempPerAr = this.state.arOfPer
+      tempPerAr = ar[i].percentage
+      this.setState({arOfPer: [...this.state.arOfPer, tempPerAr]})
+
+      var tempIdAr = this.state.regArOfId
+      tempIdAr[i] = ar[i].id
+      this.setState({regArOfId:tempIdAr})
+    }
+  }
+
+  updateBrackets(tax_type){
+    if(tax_type === "Progressive Tax")
+    {
+      if(this.progressive_taxes_isValid()){
+        for(let i = 0; i<= Object.keys(this.state.progArOfId).length-1; i++){
+          axios.put(getIP()+'/progressivebrackets/'+ this.state.progArOfId[i], {
+            tax_id: this.state.class_tax.id,
+            lower_bracket: this.state.arOfLows[i],
+            higher_bracket: this.state.arOfHighs[i],
+            percentage: this.state.arOfPer[i], 
+          })
+          .then(response => {
+            this.setState({showUpdateTax: false})
+          })
+          .catch(error => console.log(error))  
+        }
+      }
+    }
+    else if(tax_type === "Regressive Tax")
+    {
+      if(this.regressive_taxes_isValid()){
+        for(let i = 0; i<= Object.keys(this.state.regArOfId).length-1; i++){
+          axios.put(getIP()+'/regressivebrackets/'+ this.state.regArOfId[i], {
+            tax_id: this.state.class_tax.id,
+            lower_bracket: this.state.regArOfLows[i],
+            higher_bracket: this.state.regArOfHighs[i],
+            percentage: this.state.regArOfPer[i], 
+          })
+          .then(response => {
+            this.setState({showUpdateTax: false})
+          })
+          .catch(error => console.log(error))  
+        }
+      }
+    }
   }
 
   validateItem(){
@@ -1155,6 +1376,101 @@ regressive_taxes_isValid(){
     );
   }
 
+  renderUpdateEasyTax(){
+    if(this.state.current_tax_type === "Flat Tax" || this.state.current_tax_type === "Percentage Tax")
+    {
+      return (
+        <Modal
+          show={this.state.showUpdateTax}
+          onHide={() => this.setState({showUpdateTax: false})}
+          size="lg"
+          centered
+        >
+          <Modal.Header closeButton>
+            <Modal.Title>
+              Update {this.state.current_tax_type}
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <FloatingLabel label={this.state.current_tax_type} className="modal-input">
+              <FormControl id={this.state.form_id} placeholder={this.state.current_tax_type} defaultValue={this.state.current_value} onChange={this.handleChange}/>
+            </FloatingLabel>
+            <p>{this.state.tax_error}</p>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button className="modal-btn" onClick={() => this.updateEasyTax(this.state.current_tax_type)}>Update Tax</Button>
+          </Modal.Footer>
+        </Modal>
+      );
+    }
+    else if(this.state.current_tax_type === "Progressive Tax")
+    {
+      return(
+        <Modal
+          show={this.state.showUpdateTax}
+          onHide={() => this.setState({showUpdateTax: false})}
+          size="lg"
+          centered
+        >
+          <Modal.Header closeButton>
+            <Modal.Title>
+              Update {this.state.current_tax_type}
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+              <Row>
+                <Col>
+                <h5> Progressive Taxes </h5>
+                </Col>
+                <Col className="tax-btn-col">
+                  <Button variant="outline-secondary" onClick={() => this.progBracketClicked("plus")}>+</Button>
+                  &nbsp;
+                  <Button variant="outline-secondary" onClick={() => this.progBracketClicked("minus")}>-</Button>
+                </Col>
+                {this.renderAmount('prog')}
+              </Row>
+              </Modal.Body>
+          <Modal.Footer>
+            <Button className="modal-btn" onClick={() => this.updateBrackets(this.state.current_tax_type)}>Update Tax</Button>
+          </Modal.Footer>
+        </Modal>
+      );
+    }
+    else if(this.state.current_tax_type === "Regressive Tax")
+    {
+      return(
+        <Modal
+          show={this.state.showUpdateTax}
+          onHide={() => this.setState({showUpdateTax: false})}
+          size="lg"
+          centered
+        >
+          <Modal.Header closeButton>
+            <Modal.Title>
+              Update {this.state.current_tax_type}
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+          <Row>
+            <Col>
+            <h5> Regressive Taxes </h5>
+            </Col>
+            <Col className="tax-btn-col">
+              <Button variant="outline-secondary" onClick={() => this.regBracketClicked("plus")}>+</Button>
+              &nbsp;
+              <Button variant="outline-secondary" onClick={() => this.regBracketClicked("minus")}>-</Button>
+            </Col>
+            {this.renderAmount('reg')}
+          </Row>
+              </Modal.Body>
+          <Modal.Footer>
+            <Button className="modal-btn" onClick={() => this.updateBrackets(this.state.current_tax_type)}>Update Tax</Button>
+          </Modal.Footer>
+        </Modal>
+      );
+    }
+  }
+
   render() {
     if(this.state.redirect_profile){
       return(
@@ -1204,22 +1520,5 @@ regressive_taxes_isValid(){
     }
   }
 }
-
-
-/*<Col xs={6} md={4}>
-                <FloatingLabel label="Flat Tax" className="modal-input">
-                  <FormControl id='current_flat_tax' placeholder="Flat Tax" onChange={this.handleChange}/>
-                </FloatingLabel>
-              </Col>
-              <Col xs={6} md={4}>
-                <FloatingLabel label="Percent Tax" className="modal-input">
-                  <FormControl id='current_percent_tax' placeholder="Percent Tax" onChange={this.handleChange}/>
-                </FloatingLabel>
-              </Col>
-              <Col xs={6} md={4}>
-                <FloatingLabel label="Sales Tax" className="modal-input">
-                  <FormControl id='current_sales_tax' placeholder="Sales Tax" onChange={this.handleChange}/>
-                </FloatingLabel>
-              </Col>*/
 
 export default withRouter(TeacherClassApp)
