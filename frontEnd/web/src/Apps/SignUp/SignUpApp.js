@@ -28,6 +28,7 @@ class SignUpApp extends React.Component {
         this.handleChange = this.handleChange.bind(this)
         this.handleSignup = this.handleSignup.bind(this)
         this.handleReturnRedirect = this.handleReturnRedirect.bind(this)
+        this.checkClassCode = this.checkClassCode.bind(this)
     }
 
     render() {
@@ -131,75 +132,101 @@ class SignUpApp extends React.Component {
         }
     }
 
-validateData() 
-{
-    var reg = /^\w+([-]?\w+)*@\w+([-]?\w+)*(\.\w\w+)+$/;
-    if (reg.test(this.state.email))
+    async validateData() 
     {
-        if(this.state.password.length === 0){
-            this.setState({error: "Password needs to be longer", showError: true})
-        }
-        else{
-            if (this.props.location.state.role === "Student")
-            {
-                if(this.state.name === '')
-                {
-                    this.setState({error: "Please enter a name"})
-                    return false
-                }
-                else
-                {
-                    if(this.state.class_code.length === 6)
-                    {
-                        return true
-                    }
-                    else
-                    {
-                        this.setState({error: "Class Code needs to be 6 characters long", showError: true})
-                        return false
-                    }
-                }
-                
+        var reg = /^\w+([-]?\w+)*@\w+([-]?\w+)*(\.\w\w+)+$/;
+        if (reg.test(this.state.email))
+        {
+            if(this.state.password.length === 0){
+                this.setState({error: "Password needs to be longer", showError: true})
             }
-            else if (this.props.location.state.role === "Teacher")
-            {
-                if(this.state.first_name === '')
+            else{
+                if (this.props.location.state.role === "Student")
                 {
-                    this.setState({error: "Please enter a first name"})
-                    return false
-                }
-                else
-                {
-                    if(this.state.last_name === '')
+                    if(this.state.name === '')
                     {
-                        this.setState({error: "Please enter a last name"})
+                        this.setState({error: "Please enter a name"})
                         return false
                     }
                     else
                     {
-                        return true
+                        if(this.state.class_code.length === 6)
+                        {
+                            var check = await this.checkClassCode(this.state.class_code)
+                            if(check)
+                            {
+                                return true
+                            }
+                            else
+                            {
+                                this.setState({error: "Please enter an existing class code"})
+                                return false
+                            }        
+                        }
+                        else
+                        {
+                            this.setState({error: "Class Code needs to be 6 characters long", showError: true})
+                            return false
+                        }
+                    }
+                    
+                }
+                else if (this.props.location.state.role === "Teacher")
+                {
+                    if(this.state.first_name === '')
+                    {
+                        this.setState({error: "Please enter a first name"})
+                        return false
+                    }
+                    else
+                    {
+                        if(this.state.last_name === '')
+                        {
+                            this.setState({error: "Please enter a last name"})
+                            return false
+                        }
+                        else
+                        {
+                            return true
+                        }
                     }
                 }
-            }
 
+            }
         }
+        else
+        {
+            this.setState({error: "Email is invalid", showError: true})
+            return false
+        } 
     }
-    else
-    {
-        this.setState({error: "Email is invalid", showError: true})
-        return false
-    } 
-}
+
+    async checkClassCode(class_code){
+        var found = false
+        await axios.get(getIP()+'/classrooms/')
+        .then(response => {
+            var classrooms = response.data
+            for (let i = 0; i <= Object.keys(classrooms).length-1; i++)
+            {
+                if (classrooms[i].class_code === class_code)
+                {
+                    found = true
+                }
+            }
+        })
+        .catch(error => console.log(error))
+        return found
+    }
     
     handleChange(e) {
         const field = e.target.id
         this.setState({ [field] : e.target.value });
       }
     
-    handleSignup() {
+    async handleSignup() {
         if(this.props.location.state.role === "Student")
         {
-            if (this.validateData()) {
+            if (await this.validateData()) {
                 const payload = { username: this.state.email, password: this.state.password, first_name: this.state.name } 
                 axios.post(getIP()+'/auth/register/', payload)
                 .then(response => {
@@ -218,7 +245,7 @@ validateData()
             }
         }
         else if(this.props.location.state.role === "Teacher"){
-            if (this.validateData()) {
+            if (await this.validateData()) {
                 const payload = { username: this.state.email, password: this.state.password, first_name: this.state.first_name } 
                 axios.post(getIP()+'/auth/register/', payload)
                 .then(response => {
