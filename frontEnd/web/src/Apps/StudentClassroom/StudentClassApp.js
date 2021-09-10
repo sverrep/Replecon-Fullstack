@@ -83,6 +83,7 @@ class StudentClass extends React.Component {
                 this.setState({variant:'success'})
                 this.setState({message:'Money Sent'})
                 this.setState({showAlert:true})
+                this.setState({active:false})
                 return true
             }
         }
