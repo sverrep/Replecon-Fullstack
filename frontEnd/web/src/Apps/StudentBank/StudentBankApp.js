@@ -274,21 +274,35 @@ class StudentBank extends React.Component {
 
     
     validateSavings(){
-      if(this.state.value>this.state.student_balance){
-        this.setState({variant:'danger'})
-        this.setState({message:'You dont have that amount of money'})
-        this.setState({showAlert:true})
-        this.closeModal()
-        return false
-      }
-      else{
-        this.setState({variant:'success'})
-        this.setState({message:'Money saved successfully'})
-        this.setState({showAlert:true})
-        return true
-      }
-      
-      
+        if(isNaN(this.state.value)){
+          this.setState({variant:'danger'})
+          this.setState({message:'Please enter a vaild number'})
+          this.setState({showAlert:true})
+          this.closeModal()
+          return false
+        }
+        else if(Math.sign(this.state.value)<0 || this.state.value === '0'){
+            this.setState({variant:'danger'})
+            this.setState({message:'Please enter a postive number'})
+            this.setState({showAlert:true})
+            this.closeModal()
+            return false
+        }
+        else{
+            if(this.state.value>this.state.student_balance){
+              this.setState({variant:'danger'})
+              this.setState({message:'You dont have that amount of money'})
+              this.setState({showAlert:true})
+              this.closeModal()
+              return false
+            }
+            else{
+              this.setState({variant:'success'})
+              this.setState({message:'Money saved successfully'})
+              this.setState({showAlert:true})
+              return true
+            }
+        }
     }
     renderAlert(variant, message){
       if(this.state.showAlert){

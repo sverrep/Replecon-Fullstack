@@ -8,6 +8,7 @@ import Button from 'react-bootstrap/Button';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
+import Alert from 'react-bootstrap/Alert';
 
 class StudentClass extends React.Component {
     constructor(props) {
@@ -26,6 +27,10 @@ class StudentClass extends React.Component {
             sender_id: '',
             recipient_id: '',
             current_user_name:'',
+
+            showAlert: false,
+            variant: '',
+            message: '',
 
         }
         this.alertClicked = this.alertClicked.bind(this)
@@ -54,7 +59,38 @@ class StudentClass extends React.Component {
                 .catch(error => console.log(error))
     }
 
+    validateTransfer(){
+        if(isNaN(this.state.value)){
+            this.setState({variant:'danger'})
+            this.setState({message:'Please enter a vaild number'})
+            this.setState({showAlert:true})
+            return false
+        }
+        else if(Math.sign(this.state.value)<0 || this.state.value === '0'){
+            this.setState({variant:'danger'})
+            this.setState({message:'Please enter a postive number'})
+            this.setState({showAlert:true})
+            return false
+        }
+        else{
+            if(this.state.balance<this.state.value){
+                this.setState({variant:'danger'})
+                this.setState({message:'You dont have that amount of money'})
+                this.setState({showAlert:true})
+                return false
+            }
+            else{
+                this.setState({variant:'success'})
+                this.setState({message:'Money Sent'})
+                this.setState({showAlert:true})
+                return true
+            }
+        }
+        
+    }
+
     createTransaction(){
+        if(this.validateTransfer()){
         for (let i = 0; i <= this.state.students.length-1; i++)
         {
             if (this.state.students[i].name === this.state.name)
@@ -69,6 +105,7 @@ class StudentClass extends React.Component {
                     .then(response => {
                         axios.post(getIP()+'/transactions/', transaction_payload)
                         .then(response => {
+                            this.getStudentBalance()
                         })
                         .catch(error => console.log(error))
                     })
@@ -81,6 +118,7 @@ class StudentClass extends React.Component {
                 break;
             }
         }
+    }
 }
 
     getClassStudents() {
@@ -179,12 +217,25 @@ class StudentClass extends React.Component {
         this.createTransaction()
     }
 
+    renderAlert(variant, message){
+        if(this.state.showAlert){
+          return(
+          <Alert show={this.state.showAlert} variant={variant} onClose={() => this.setState({showAlert:false})} dismissible>
+              <p>
+                  {message}
+              </p>
+          </Alert>
+          )
+          }
+      }
+
     render(){
         return(
             <div className='wrapper'>
                 <NavBar/>
                 <div className='title'>
                     <h3>{this.state.class_name} - Mr.{this.state.teacher}</h3>
+                    <h6>Current Balance: {this.state.balance}</h6>
                 </div>
                 
                 <div className="student-list">
@@ -196,6 +247,7 @@ class StudentClass extends React.Component {
                     
                 </div>
                 <div className='transfer'>
+                    {this.renderAlert(this.state.variant, this.state.message)}
                     {this.renderModal()}
                 </div>
                 <div className='footer'>
