@@ -79,6 +79,10 @@ class TeacherClassApp extends React.Component {
       class_reg_brackets:[],
       progArOfId:[],
       regArOfId: [],
+      tax_import_class_code: '',
+      tax_import_taxes: [],
+      tax_import_prog: [],
+      tax_import_reg: [],
 
       error: '',
       bank_error: '',
@@ -91,6 +95,7 @@ class TeacherClassApp extends React.Component {
       showCreateTaxes: false,
       showUpdateTax: false,
       showImportItems: false,
+      showImportTaxes: false,
     };
     this.handleProfileRedirect = this.handleProfileRedirect.bind(this)
     this.studentClicked = this.studentClicked.bind(this)
@@ -107,7 +112,7 @@ class TeacherClassApp extends React.Component {
     this.getClassStudents()
     this.getBanks()
     this.getShops()
-    this.getTaxes()
+    this.getTaxes("local")
   }
 
   studentClicked(student){
@@ -338,7 +343,6 @@ class TeacherClassApp extends React.Component {
       this.setState({item_import_list:ar})
       return true
     }
-    
   }
 
   createNewStore(){
@@ -587,25 +591,99 @@ class TeacherClassApp extends React.Component {
     }
   }
 
-  getTaxes(){
-    axios.get(getIP()+'/taxes/')
-    .then(response => {
-      this.checkForClassTax(response.data)
+  async getTaxes(type){
+    await axios.get(getIP()+'/taxes/')
+    .then(async (response) => {
+      return await this.checkForClassTax(response.data, type)
     })
     .catch(error => console.log(error))
   }
 
-  checkForClassTax(alltaxes){
-    for(let i = 0; i <= Object.keys(alltaxes).length -1; i++){
-      if(alltaxes[i].class_code === this.state.class_code){
-        this.setState({classHasTaxes: true})
-        this.setState({class_tax: alltaxes[i]})
+  async checkForClassTax(alltaxes, type){
+    if(type === "local")
+    {
+      for(let i = 0; i <= Object.keys(alltaxes).length -1; i++){
+        if(alltaxes[i].class_code === this.state.class_code){
+          this.setState({classHasTaxes: true})
+          this.setState({class_tax: alltaxes[i]})
+          return true
+        }
+      }
+    }
+    else if(type === "import")
+    {
+      for(let i = 0; i <= Object.keys(alltaxes).length -1; i++){
+        if(alltaxes[i].class_code === this.state.tax_import_class_code){
+          this.setState({tax_import_taxes: alltaxes[i]})
+          return true
+        }
       }
     }
    }
 
+  importTaxes(){
+    axios.get(getIP()+'/classrooms/')
+    .then(async (response) => {
+      for(let i = 0; i <= Object.keys(response.data).length - 1; i++){
+        if(this.state.tax_import_class_code === response.data[i].class_code)
+        {
+          await this.getTaxes("import")
+          await this.getAllBrackets("import")
+          axios.post(getIP()+'/taxes/', {
+            class_code: this.state.class_code,
+            sales_tax: this.state.tax_import_taxes.sales_tax,
+            percentage_tax: this.state.tax_import_taxes.percentage_tax,
+            flat_tax: this.state.tax_import_taxes.flat_tax,
+          })
+          .then(async (response) => {
+            for(let i=0; i<=this.state.tax_import_prog.length-1;i++){
+              console.log("prog")
+              await axios.post(getIP()+'/progressivebrackets/', {
+                tax_id: response.data.id,
+                lower_bracket: this.state.arOfLows[i],
+                higher_bracket: this.state.arOfHighs[i],
+                percentage: this.state.arOfPer[i],
+              })
+              .then(response => {
+                console.log(response.data)
+                this.getTaxes("local")
+              })
+              .catch(error => console.log(error))
+            }
+            for(let i=0; i<=this.state.tax_import_reg.length-1;i++){
+              console.log("reg")
+              await axios.post(getIP()+'/regressivebrackets/', {
+                tax_id: response.data.id,
+                lower_bracket: this.state.regArOfLows[i],
+                higher_bracket: this.state.regArOfHighs[i],
+                percentage: this.state.regArOfPer[i],
+              })
+              .then(async (response) => {
+                console.log(response.data)
+                this.getTaxes("local")
+              })
+              .catch(error => console.log(error))
+            }
+            this.getTaxes("local")
+            this.setState({showImportTaxes: false})
+          
+          })
+        }
+      }
+    })
+    .catch(error => console.log(error))
+  }
+
+
+
+
+
+  
+
+
+
    taxClickedItem(tax_type){
-    this.getAllBrackets()
+    this.getAllBrackets("local")
     this.setState({current_tax_type:tax_type})
     if(tax_type === 'Flat Tax'){
       this.setState({showUpdateTax:true})
@@ -702,7 +780,11 @@ class TeacherClassApp extends React.Component {
         <Button variant="primary" onClick={() => this.setState({showCreateTaxes: true})}>
           Set Up Taxes
         </Button>
+        <Button variant="primary" className = "tax-import-btn" onClick={() => this.setState({showImportTaxes: true})}>
+          Import Taxes from Another Class
+        </Button>
         {this.createTaxesModal()}
+        {this.importTaxModal()}
       </Col>
     );
   }
@@ -811,7 +893,7 @@ class TeacherClassApp extends React.Component {
             percentage: this.state.arOfPer[i],
           })
           .then(response => {
-            this.getTaxes()
+            this.getTaxes("local")
           })
           .catch(error => console.log(error))
         }
@@ -823,11 +905,11 @@ class TeacherClassApp extends React.Component {
             percentage: this.state.regArOfPer[i],
           })
           .then(response => {
-            this.getTaxes()
+            this.getTaxes("local")
           })
           .catch(error => console.log(error))
         }
-        this.getTaxes()
+        this.getTaxes("local")
         this.setState({showCreateTaxes: false})
       })
       .catch(error => console.log(error))
@@ -889,41 +971,68 @@ class TeacherClassApp extends React.Component {
     }
   }
 
-  getAllBrackets(){
-    axios.get(getIP()+'/progressivebrackets/')
-    .then(response => {
-        this.getClassProgressiveBrackets(response.data)
-        axios.get(getIP()+'/regressivebrackets/')
+  async getAllBrackets(type){
+    await axios.get(getIP()+'/progressivebrackets/')
+    .then(async (response) => {
+        this.getClassProgressiveBrackets(response.data, type)
+        await axios.get(getIP()+'/regressivebrackets/')
         .then(response => {
-          this.getClassRegressiveBrackets(response.data)
+          this.getClassRegressiveBrackets(response.data, type)
         })
         .catch(error => console.log(error))  
     })
     .catch(error => console.log(error))  
   }
 
-  getClassProgressiveBrackets(brackets){
+  getClassProgressiveBrackets(brackets, type){
     var tempar = []
-    for(let i = 0; i<=Object.keys(brackets).length -1; i++){
-      if(brackets[i].tax_id === this.state.class_tax.id){
-        tempar.push(brackets[i])
+    if (type === "local")
+    {
+      for(let i = 0; i<=Object.keys(brackets).length -1; i++){
+        if(brackets[i].tax_id === this.state.class_tax.id){
+          tempar.push(brackets[i])
+        }
       }
+      this.progArraySetUp(tempar)
+      this.setState({class_prog_brackets: tempar})
+      this.setState({progAmount: tempar.length})
     }
-    this.progArraySetUp(tempar)
-    this.setState({class_prog_brackets: tempar})
-    this.setState({progAmount: tempar.length})
+    else if (type === "import")
+    {
+      for(let i = 0; i<=Object.keys(brackets).length -1; i++){
+        if(brackets[i].tax_id === this.state.tax_import_taxes.id){
+          tempar.push(brackets[i])
+        }
+      }
+      this.progArraySetUp(tempar)
+      this.setState({tax_import_prog: tempar})
+    }
+    
   }
 
-  getClassRegressiveBrackets(brackets){
+  getClassRegressiveBrackets(brackets, type){
     var tempar = []
-    for(let i = 0; i<=Object.keys(brackets).length -1; i++){
-      if(brackets[i].tax_id === this.state.class_tax.id){
-        tempar.push(brackets[i])
+    if (type === "local")
+    {
+      for(let i = 0; i<=Object.keys(brackets).length -1; i++){
+        if(brackets[i].tax_id === this.state.class_tax.id){
+          tempar.push(brackets[i])
+        }
       }
+      this.regArraySetUp(tempar)
+      this.setState({class_reg_brackets: tempar})
+      this.setState({regAmount: tempar.length})
     }
-    this.regArraySetUp(tempar)
-    this.setState({class_reg_brackets: tempar})
-    this.setState({regAmount: tempar.length})
+    else if (type === "import")
+    {
+      for(let i = 0; i<=Object.keys(brackets).length -1; i++){
+        if(brackets[i].tax_id === this.state.tax_import_taxes.id){
+          tempar.push(brackets[i])
+        }
+      }
+      this.regArraySetUp(tempar)
+      this.setState({tax_import_reg: tempar})
+    }
   }
 
   progArraySetUp(ar){
@@ -1588,8 +1697,32 @@ regressive_taxes_isValid(){
     }
   }
 
-
-
+  importTaxModal(){
+    return (
+      <Modal
+        show={this.state.showImportTaxes}
+        onHide={() => this.setState({showImportTaxes: false})}
+        size="lg"
+        centered
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>
+            Import Taxes from Another Class
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <FloatingLabel label="Class Code" className="modal-input">
+            <FormControl id='tax_import_class_code' placeholder="Class Code" onChange={this.handleChange}/>
+          </FloatingLabel>
+          <p>{this.state.store_error}</p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button className="modal-btn" onClick={() => this.importTaxes()}>Import Taxes</Button>
+        </Modal.Footer>
+      </Modal>
+    );
+  }
+  
   render() {
     if(this.state.redirect_profile){
       return(
