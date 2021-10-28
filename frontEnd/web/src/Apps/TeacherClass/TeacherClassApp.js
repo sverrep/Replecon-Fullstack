@@ -48,6 +48,9 @@ class TeacherClassApp extends React.Component {
       item_price: 0,
       item_id: 0,
       store_name: '',
+      item_import_class_code: '',
+      item_import_store: [],
+      item_import_list: [],
 
       classHasTaxes: false,
       class_tax: {},
@@ -76,6 +79,10 @@ class TeacherClassApp extends React.Component {
       class_reg_brackets:[],
       progArOfId:[],
       regArOfId: [],
+      tax_import_class_code: '',
+      tax_import_taxes: [],
+      tax_import_prog: [],
+      tax_import_reg: [],
 
       error: '',
       bank_error: '',
@@ -87,6 +94,8 @@ class TeacherClassApp extends React.Component {
       updateBankModalShow: false,
       showCreateTaxes: false,
       showUpdateTax: false,
+      showImportItems: false,
+      showImportTaxes: false,
     };
     this.handleProfileRedirect = this.handleProfileRedirect.bind(this)
     this.studentClicked = this.studentClicked.bind(this)
@@ -103,7 +112,7 @@ class TeacherClassApp extends React.Component {
     this.getClassStudents()
     this.getBanks()
     this.getShops()
-    this.getTaxes()
+    this.getTaxes("local")
   }
 
   studentClicked(student){
@@ -274,27 +283,67 @@ class TeacherClassApp extends React.Component {
         this.setState({classHasShop:true, store_name: shops[i].shop_name, shop_id: shops[i].id})
       }
     }
-    this.getItems()
+    this.getItems("local")
   }
 
-  getItems(){
-    axios.get(getIP()+'/items/')
-    .then(response => {
-      this.getShopItems(response.data)
+  async importHasShop(){
+    var completed = false
+    await axios.get(getIP()+'/shops/')
+    .then(async (response) => {
+      for(let i = 0; i <= Object.keys(response.data).length - 1; i++){
+        if(response.data[i].class_code === this.state.item_import_class_code){
+          this.setState({item_import_store: response.data[i]})
+          await this.getItems("import")
+          completed = true
+        }
+      }
+    })
+    .catch(error => console.log(error))
+    if(completed)
+    {
+      return true
+    }
+    else
+    {
+      return false
+    }
+  }
+
+   async getItems(type){
+    await axios.get(getIP()+'/items/')
+    .then(async (response) => {
+      return await this.getShopItems(response.data, type)
     })
     .catch(error => console.log(error))
   }
 
-  getShopItems(allItems){
+   async getShopItems(allItems, type){
     var ar = []
-    for(let i = 0; i<=Object.keys(allItems).length -1; i++)
+    if(type === "local")
     {
-      if(allItems[i].shop_id === this.state.shop_id)
+      for(let i = 0; i<=Object.keys(allItems).length -1; i++)
       {
-        ar.push(allItems[i])
+        if(allItems[i].shop_id === this.state.shop_id)
+        {
+          ar.push(allItems[i])
+        }
       }
+      this.setState({items:ar})
+      return true
     }
-    this.setState({items:ar})
+    else if(type === "import")
+    {
+      for(let i = 0; i<=Object.keys(allItems).length -1; i++)
+      {
+        if(allItems[i].shop_id === this.state.item_import_store.id)
+        {
+          ar.push(allItems[i])
+        }
+      }
+      this.setState({item_import_list:ar})
+      return true
+    }
+    
   }
 
   createNewStore(){
@@ -342,7 +391,7 @@ class TeacherClassApp extends React.Component {
       })
       .then(response => {
         this.setState({showUpdateItem: false, items: []})
-        this.getItems()
+        this.getItems("local")
       })
       .catch(error => console.log(error))
     }
@@ -360,10 +409,39 @@ class TeacherClassApp extends React.Component {
     axios.delete(getIP()+'/items/'+ this.state.item_id)
     .then(response => {
       this.setState({showUpdateItem: false, items: []})
-      this.getItems()
+      this.getItems("local")
     })
     .catch(error => console.log(error))
-}
+  }
+  
+  importStoreItems(){
+    axios.get(getIP()+'/classrooms/')
+    .then(async (response) => {
+      for(let i = 0; i <= Object.keys(response.data).length - 1; i++){
+        if(this.state.item_import_class_code === response.data[i].class_code)
+        {
+          var passed = await this.importHasShop()
+          if(passed)
+          {
+            for(i = 0; i<Object.keys(this.state.item_import_list).length; i++)
+            {
+              axios.post(getIP()+'/items/', {
+                item_name: this.state.item_import_list[i].item_name,
+                description: this.state.item_import_list[i].description,
+                price: this.state.item_import_list[i].price,
+                shop_id: this.state.shop_id,
+              })
+              .then(response => {
+                this.setState({showImportItems: false, items: [...this.state.items, response.data]})
+              })
+              .catch(error => console.log(error))
+            }   
+          }
+        }
+      }
+    })
+    .catch(error => console.log(error))
+  }
 
   getBanks(){
     axios.get(getIP()+'/banks/')
@@ -477,8 +555,12 @@ class TeacherClassApp extends React.Component {
         <Button variant="primary" className="pay-btns" onClick={() => this.setState({showAddItem: true})}>
           Add Item
         </Button>
+        <Button variant="primary" className="pay-btns" onClick={() => this.setState({showImportItems: true})}>
+          Import Store Items
+        </Button>
         {this.addItemModal()}
         {this.updateItemModal()}
+        {this.importStoreItemsModal()}
       </Col>
     );
   }
@@ -510,25 +592,99 @@ class TeacherClassApp extends React.Component {
     }
   }
 
-  getTaxes(){
-    axios.get(getIP()+'/taxes/')
-    .then(response => {
-      this.checkForClassTax(response.data)
+  async getTaxes(type){
+    await axios.get(getIP()+'/taxes/')
+    .then(async (response) => {
+      return await this.checkForClassTax(response.data, type)
     })
     .catch(error => console.log(error))
   }
 
-  checkForClassTax(alltaxes){
-    for(let i = 0; i <= Object.keys(alltaxes).length -1; i++){
-      if(alltaxes[i].class_code === this.state.class_code){
-        this.setState({classHasTaxes: true})
-        this.setState({class_tax: alltaxes[i]})
+  async checkForClassTax(alltaxes, type){
+    if(type === "local")
+    {
+      for(let i = 0; i <= Object.keys(alltaxes).length -1; i++){
+        if(alltaxes[i].class_code === this.state.class_code){
+          this.setState({classHasTaxes: true})
+          this.setState({class_tax: alltaxes[i]})
+          return true
+        }
+      }
+    }
+    else if(type === "import")
+    {
+      for(let i = 0; i <= Object.keys(alltaxes).length -1; i++){
+        if(alltaxes[i].class_code === this.state.tax_import_class_code){
+          this.setState({tax_import_taxes: alltaxes[i]})
+          return true
+        }
       }
     }
    }
 
+  importTaxes(){
+    axios.get(getIP()+'/classrooms/')
+    .then(async (response) => {
+      for(let i = 0; i <= Object.keys(response.data).length - 1; i++){
+        if(this.state.tax_import_class_code === response.data[i].class_code)
+        {
+          await this.getTaxes("import")
+          await this.getAllBrackets("import")
+          axios.post(getIP()+'/taxes/', {
+            class_code: this.state.class_code,
+            sales_tax: this.state.tax_import_taxes.sales_tax,
+            percentage_tax: this.state.tax_import_taxes.percentage_tax,
+            flat_tax: this.state.tax_import_taxes.flat_tax,
+          })
+          .then(async (response) => {
+            for(let i=0; i<=this.state.tax_import_prog.length-1;i++){
+              console.log("prog")
+              await axios.post(getIP()+'/progressivebrackets/', {
+                tax_id: response.data.id,
+                lower_bracket: this.state.arOfLows[i],
+                higher_bracket: this.state.arOfHighs[i],
+                percentage: this.state.arOfPer[i],
+              })
+              .then(response => {
+                console.log(response.data)
+                this.getTaxes("local")
+              })
+              .catch(error => console.log(error))
+            }
+            for(let i=0; i<=this.state.tax_import_reg.length-1;i++){
+              console.log("reg")
+              await axios.post(getIP()+'/regressivebrackets/', {
+                tax_id: response.data.id,
+                lower_bracket: this.state.regArOfLows[i],
+                higher_bracket: this.state.regArOfHighs[i],
+                percentage: this.state.regArOfPer[i],
+              })
+              .then(async (response) => {
+                console.log(response.data)
+                this.getTaxes("local")
+              })
+              .catch(error => console.log(error))
+            }
+            this.getTaxes("local")
+            this.setState({showImportTaxes: false})
+          
+          })
+        }
+      }
+    })
+    .catch(error => console.log(error))
+  }
+
+
+
+
+
+  
+
+
+
    taxClickedItem(tax_type){
-    this.getAllBrackets()
+    this.getAllBrackets("local")
     this.setState({current_tax_type:tax_type})
     if(tax_type === 'Flat Tax'){
       this.setState({showUpdateTax:true})
@@ -625,7 +781,11 @@ class TeacherClassApp extends React.Component {
         <Button variant="primary" onClick={() => this.setState({showCreateTaxes: true})}>
           Set Up Taxes
         </Button>
+        <Button variant="primary" className = "tax-import-btn" onClick={() => this.setState({showImportTaxes: true})}>
+          Import Taxes from Another Class
+        </Button>
         {this.createTaxesModal()}
+        {this.importTaxModal()}
       </Col>
     );
   }
@@ -734,7 +894,7 @@ class TeacherClassApp extends React.Component {
             percentage: this.state.arOfPer[i],
           })
           .then(response => {
-            this.getTaxes()
+            this.getTaxes("local")
           })
           .catch(error => console.log(error))
         }
@@ -746,11 +906,11 @@ class TeacherClassApp extends React.Component {
             percentage: this.state.regArOfPer[i],
           })
           .then(response => {
-            this.getTaxes()
+            this.getTaxes("local")
           })
           .catch(error => console.log(error))
         }
-        this.getTaxes()
+        this.getTaxes("local")
         this.setState({showCreateTaxes: false})
       })
       .catch(error => console.log(error))
@@ -812,41 +972,68 @@ class TeacherClassApp extends React.Component {
     }
   }
 
-  getAllBrackets(){
-    axios.get(getIP()+'/progressivebrackets/')
-    .then(response => {
-        this.getClassProgressiveBrackets(response.data)
-        axios.get(getIP()+'/regressivebrackets/')
+  async getAllBrackets(type){
+    await axios.get(getIP()+'/progressivebrackets/')
+    .then(async (response) => {
+        this.getClassProgressiveBrackets(response.data, type)
+        await axios.get(getIP()+'/regressivebrackets/')
         .then(response => {
-          this.getClassRegressiveBrackets(response.data)
+          this.getClassRegressiveBrackets(response.data, type)
         })
         .catch(error => console.log(error))  
     })
     .catch(error => console.log(error))  
   }
 
-  getClassProgressiveBrackets(brackets){
+  getClassProgressiveBrackets(brackets, type){
     var tempar = []
-    for(let i = 0; i<=Object.keys(brackets).length -1; i++){
-      if(brackets[i].tax_id === this.state.class_tax.id){
-        tempar.push(brackets[i])
+    if (type === "local")
+    {
+      for(let i = 0; i<=Object.keys(brackets).length -1; i++){
+        if(brackets[i].tax_id === this.state.class_tax.id){
+          tempar.push(brackets[i])
+        }
       }
+      this.progArraySetUp(tempar)
+      this.setState({class_prog_brackets: tempar})
+      this.setState({progAmount: tempar.length})
     }
-    this.progArraySetUp(tempar)
-    this.setState({class_prog_brackets: tempar})
-    this.setState({progAmount: tempar.length})
+    else if (type === "import")
+    {
+      for(let i = 0; i<=Object.keys(brackets).length -1; i++){
+        if(brackets[i].tax_id === this.state.tax_import_taxes.id){
+          tempar.push(brackets[i])
+        }
+      }
+      this.progArraySetUp(tempar)
+      this.setState({tax_import_prog: tempar})
+    }
+    
   }
 
-  getClassRegressiveBrackets(brackets){
+  getClassRegressiveBrackets(brackets, type){
     var tempar = []
-    for(let i = 0; i<=Object.keys(brackets).length -1; i++){
-      if(brackets[i].tax_id === this.state.class_tax.id){
-        tempar.push(brackets[i])
+    if (type === "local")
+    {
+      for(let i = 0; i<=Object.keys(brackets).length -1; i++){
+        if(brackets[i].tax_id === this.state.class_tax.id){
+          tempar.push(brackets[i])
+        }
       }
+      this.regArraySetUp(tempar)
+      this.setState({class_reg_brackets: tempar})
+      this.setState({regAmount: tempar.length})
     }
-    this.regArraySetUp(tempar)
-    this.setState({class_reg_brackets: tempar})
-    this.setState({regAmount: tempar.length})
+    else if (type === "import")
+    {
+      for(let i = 0; i<=Object.keys(brackets).length -1; i++){
+        if(brackets[i].tax_id === this.state.tax_import_taxes.id){
+          tempar.push(brackets[i])
+        }
+      }
+      this.regArraySetUp(tempar)
+      this.setState({tax_import_reg: tempar})
+    }
   }
 
   progArraySetUp(ar){
@@ -1232,7 +1419,7 @@ regressive_taxes_isValid(){
           <p>{this.state.store_error}</p>
         </Modal.Body>
         <Modal.Footer>
-          <Button className="modal-btn" onClick={() => this.createNewStore()}>Create Bank</Button>
+          <Button className="modal-btn" onClick={() => this.createNewStore()}>Create Store</Button>
         </Modal.Footer>
       </Modal>
     );
@@ -1319,6 +1506,32 @@ regressive_taxes_isValid(){
         <Modal.Footer>
           <Button className="modal-btn" onClick={() => this.updateItem()}>Update Item</Button>
           <Button className="modal-btn" onClick={() => this.deleteItem()}>Delete Item</Button>
+        </Modal.Footer>
+      </Modal>
+    );
+  }
+
+  importStoreItemsModal(){
+    return (
+      <Modal
+        show={this.state.showImportItems}
+        onHide={() => this.setState({showImportItems: false})}
+        size="lg"
+        centered
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>
+            Import Items from Another Class Store
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <FloatingLabel label="Class Code" className="modal-input">
+            <FormControl id='item_import_class_code' placeholder="Class Code" onChange={this.handleChange}/>
+          </FloatingLabel>
+          <p>{this.state.store_error}</p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button className="modal-btn" onClick={() => this.importStoreItems()}>Import Items</Button>
         </Modal.Footer>
       </Modal>
     );
@@ -1485,6 +1698,34 @@ regressive_taxes_isValid(){
     }
   }
 
+  importTaxModal(){
+    return (
+      <Modal
+        show={this.state.showImportTaxes}
+        onHide={() => this.setState({showImportTaxes: false})}
+        size="lg"
+        centered
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>
+            Import Taxes from Another Class
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <FloatingLabel label="Class Code" className="modal-input">
+            <FormControl id='tax_import_class_code' placeholder="Class Code" onChange={this.handleChange}/>
+          </FloatingLabel>
+          <p>{this.state.store_error}</p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button className="modal-btn" onClick={() => this.importTaxes()}>Import Taxes</Button>
+        </Modal.Footer>
+      </Modal>
+    );
+  }
+
+
+
   render() {
     if(this.state.redirect_profile){
       return(
@@ -1505,17 +1746,17 @@ regressive_taxes_isValid(){
           </Row>
           <Row className="content-row">
             <Col>
-            <h4>Students</h4>
-                <ListGroup>
-                  {this.state.students.map((student,i) => this.renderStudents(student, i))}
-                </ListGroup>
-                <InputGroup className="amount-input">
-                  <InputGroup.Text>$</InputGroup.Text>
-                  <FormControl defaultValue="0" id='amount' onChange={this.handleChange} />
-                </InputGroup>
-                <p>{this.state.error}</p>
-                <Button className="pay-btns" onClick={() => this.changeSelected(true)}>Pay Selected Students</Button>
-                <Button className="pay-btns" onClick={() => this.changeSelected(false)}>Charge Selected Students</Button>
+              <h4>Students</h4>
+              <ListGroup>
+                {this.state.students.map((student,i) => this.renderStudents(student, i))}
+              </ListGroup>
+              <InputGroup className="amount-input">
+                <InputGroup.Text>$</InputGroup.Text>
+                <FormControl defaultValue="0" id='amount' onChange={this.handleChange} />
+              </InputGroup>
+              <p>{this.state.error}</p>
+              <Button className="pay-btns" onClick={() => this.changeSelected(true)}>Pay Selected Students</Button>
+              <Button className="pay-btns" onClick={() => this.changeSelected(false)}>Charge Selected Students</Button>
             </Col>
             <Col xs={7}>
               <Row className="taxes-row">
