@@ -8,6 +8,7 @@
     left:0;
     right:0;
     font-family: 'Montserrat', sans-serif;
+    overflow: visible;
 }
 
 .header-row {
@@ -22,9 +23,9 @@
     height: 15%;
     margin-bottom: 10px;
 }
-
 .content-row {
     height: 90%;
+    flex-wrap: nowrap !important;
 }
 
 .amount-input{
@@ -33,26 +34,33 @@
 
 .list-group{
     max-height: 80%;
-    margin-bottom: 10px;
     overflow-y:scroll;
     -webkit-overflow-scrolling: touch;
 }
 
 .pay-btns {
-    margin-top: 5%;
+    margin-top: 2%;
     width: 100%;
 }
 
 .taxes-row {
-    height: 30%;
+    height: 25%;
 }
 
 .store-row {
-    height: 30%;
+    height: 40%;
+}
+
+.store-col {
+    height: 100%;
 }
 
 .bank-row {
-    height: 30%;
+    height: 35%;
+}
+
+.bank-col {
+    height: 85%;
 }
 
 .modal-input{
@@ -64,8 +72,7 @@
 }
 
 .small-group{
-    max-height: 35%;
-    margin-bottom: 10px;
+    max-height: 55%;
     overflow-y:scroll;
     -webkit-overflow-scrolling: touch;
 }

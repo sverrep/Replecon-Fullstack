@@ -157,6 +157,17 @@ class TeacherClassApp extends React.Component {
     }
     this.setState({students:newAr})
   }
+
+  isStudentInClass(student_name){
+    for (let i = 0; i<Object.keys(this.state.students).length;i++)
+    {
+      if(student_name === this.state.students[i].name)
+      {
+        return true
+      }
+    }
+    return false
+  }
   
   renderStudents(student, x){
     var select = false;
@@ -171,13 +182,13 @@ class TeacherClassApp extends React.Component {
       if (select === true)
       {
         return(
-          <ListGroup.Item key={x} active action onClick={() => this.studentClicked(student)}>{student.name} {student.balance}</ListGroup.Item>
+          <ListGroup.Item key={x} active action onClick={() => this.studentClicked(student)}>{student.name} {"---------- Balance:"}  {student.balance}</ListGroup.Item>
         )
       }
       else if (select === false)
       {
         return(
-          <ListGroup.Item key={x} action onClick={() => this.studentClicked(student)}>{student.name} {student.balance}</ListGroup.Item>
+          <ListGroup.Item key={x} action onClick={() => this.studentClicked(student)}>{student.name} {"---------- Balance:"} {student.balance}</ListGroup.Item>
         )
       }
     }
@@ -195,7 +206,7 @@ class TeacherClassApp extends React.Component {
       return(
         <Card key={i}>
           <Card.Body>
-            <Card.Title> {item.item_name} {item.price} </Card.Title>
+            <Card.Title> {item.item_name} {"------"} {item.price} </Card.Title>
             <Card.Text> {item.description} <Button variant="primary" onClick={() => this.storeClickedItem(item.item_name, item.price, item.description, item.id)}>Update Item</Button> </Card.Text>
           </Card.Body>
         </Card>
@@ -385,23 +396,26 @@ class TeacherClassApp extends React.Component {
           var initamount = parseFloat(response2.data.amount)
           axios.get(getIP()+'/users/' + response2.data.sender_id + '/')
           .then(userresponse => {
-            var intrate = parseFloat(response1.data[i].set_interest_rate)
-            var finalamount = initamount + (initamount*(intrate/100))
-            axios.get(getIP()+'/transactioninterestrates/payoutdate/' + response2.data.id)
-            .then(response => {
-              var payout_date = (((response.data / 60) / 60) / 24)
-              var tempdict = {
-                "id": i, 
-                "name": userresponse.data.first_name, 
-                "initial_amount": initamount, 
-                "interest_rate": intrate, 
-                "final_amount": finalamount, 
-                "payout_date": payout_date,
-                "active": response1.data[i].active
-              }
-              this.setState({student_savings: [...this.state.student_savings, tempdict]})
-              })
-              .catch(error => console.log(error))
+            if(this.isStudentInClass(userresponse.data.first_name))
+            {
+              var intrate = parseFloat(response1.data[i].set_interest_rate)
+              var finalamount = initamount + (initamount*(intrate/100))
+              axios.get(getIP()+'/transactioninterestrates/payoutdate/' + response2.data.id)
+              .then(response => {
+                var payout_date = (((response.data / 60) / 60) / 24)
+                var tempdict = {
+                  "id": i, 
+                  "name": userresponse.data.first_name, 
+                  "initial_amount": initamount, 
+                  "interest_rate": intrate, 
+                  "final_amount": finalamount, 
+                  "payout_date": payout_date,
+                  "active": response1.data[i].active
+                }
+                this.setState({student_savings: [...this.state.student_savings, tempdict]})
+                })
+                .catch(error => console.log(error))
+            }
           })
           .catch(error => console.log(error))
         })
@@ -413,7 +427,7 @@ class TeacherClassApp extends React.Component {
 
   hasBank(){
     return(
-      <Col>
+      <Col className="bank-col">
         <h4>{this.state.class_name} Bank</h4>
         <h6>Interest Rate: {this.state.interest_rate}</h6>
         <h6>Payout Rate: {this.state.payout_rate}</h6>
@@ -455,7 +469,7 @@ class TeacherClassApp extends React.Component {
 
   hasShop(){
     return (
-      <Col>
+      <Col className="store-col">
         <h4>{this.state.store_name} Store</h4>
         <ListGroup className="small-group">
           {this.state.items.map((item,i) => this.renderStoreItems(item, i))}
@@ -846,8 +860,8 @@ class TeacherClassApp extends React.Component {
       this.setState({arOfLows:tempLowAr})
 
       var tempPerAr = this.state.arOfPer
-      tempPerAr = ar[i].percentage
-      this.setState({arOfPer: [...this.state.arOfPer, tempPerAr]})
+      tempPerAr[i] = ar[i].percentage
+      this.setState({arOfPer: tempPerAr})
 
       var tempIdAr = this.state.progArOfId
       tempIdAr[i] = ar[i].id
@@ -857,17 +871,17 @@ class TeacherClassApp extends React.Component {
 
   regArraySetUp(ar){
     for(let i =0; i <= Object.keys(ar).length -1;i++){
-      var tempHighAr = this.state.arOfHighs
+      var tempHighAr = this.state.regArOfHighs
       tempHighAr[i] = ar[i].higher_bracket
-      this.setState({arOfHighs:tempHighAr})
+      this.setState({regArOfHighs:tempHighAr})
 
-      var tempLowAr = this.state.arOfLows
+      var tempLowAr = this.state.regArOfLows
       tempLowAr[i] = ar[i].lower_bracket
-      this.setState({arOfLows:tempLowAr})
+      this.setState({regArOfLows:tempLowAr})
 
-      var tempPerAr = this.state.arOfPer
-      tempPerAr = ar[i].percentage
-      this.setState({arOfPer: [...this.state.arOfPer, tempPerAr]})
+      var tempPerAr = this.state.regArOfPer
+      tempPerAr[i] = ar[i].percentage
+      this.setState({regArOfPer: tempPerAr})
 
       var tempIdAr = this.state.regArOfId
       tempIdAr[i] = ar[i].id
