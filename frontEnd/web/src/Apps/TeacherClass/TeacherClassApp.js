@@ -48,6 +48,9 @@ class TeacherClassApp extends React.Component {
       item_price: 0,
       item_id: 0,
       store_name: '',
+      item_import_class_code: '',
+      item_import_store: [],
+      item_import_list: [],
 
       classHasTaxes: false,
       class_tax: {},
@@ -87,6 +90,7 @@ class TeacherClassApp extends React.Component {
       updateBankModalShow: false,
       showCreateTaxes: false,
       showUpdateTax: false,
+      showImportItems: false,
     };
     this.handleProfileRedirect = this.handleProfileRedirect.bind(this)
     this.studentClicked = this.studentClicked.bind(this)
@@ -274,27 +278,67 @@ class TeacherClassApp extends React.Component {
         this.setState({classHasShop:true, store_name: shops[i].shop_name, shop_id: shops[i].id})
       }
     }
-    this.getItems()
+    this.getItems("local")
   }
 
-  getItems(){
-    axios.get(getIP()+'/items/')
-    .then(response => {
-      this.getShopItems(response.data)
+  async importHasShop(){
+    var completed = false
+    await axios.get(getIP()+'/shops/')
+    .then(async (response) => {
+      for(let i = 0; i <= Object.keys(response.data).length - 1; i++){
+        if(response.data[i].class_code === this.state.item_import_class_code){
+          this.setState({item_import_store: response.data[i]})
+          await this.getItems("import")
+          completed = true
+        }
+      }
+    })
+    .catch(error => console.log(error))
+    if(completed)
+    {
+      return true
+    }
+    else
+    {
+      return false
+    }
+  }
+
+   async getItems(type){
+    await axios.get(getIP()+'/items/')
+    .then(async (response) => {
+      return await this.getShopItems(response.data, type)
     })
     .catch(error => console.log(error))
   }
 
-  getShopItems(allItems){
+   async getShopItems(allItems, type){
     var ar = []
-    for(let i = 0; i<=Object.keys(allItems).length -1; i++)
+    if(type === "local")
     {
-      if(allItems[i].shop_id === this.state.shop_id)
+      for(let i = 0; i<=Object.keys(allItems).length -1; i++)
       {
-        ar.push(allItems[i])
+        if(allItems[i].shop_id === this.state.shop_id)
+        {
+          ar.push(allItems[i])
+        }
       }
+      this.setState({items:ar})
+      return true
     }
-    this.setState({items:ar})
+    else if(type === "import")
+    {
+      for(let i = 0; i<=Object.keys(allItems).length -1; i++)
+      {
+        if(allItems[i].shop_id === this.state.item_import_store.id)
+        {
+          ar.push(allItems[i])
+        }
+      }
+      this.setState({item_import_list:ar})
+      return true
+    }
+    
   }
 
   createNewStore(){
@@ -342,7 +386,7 @@ class TeacherClassApp extends React.Component {
       })
       .then(response => {
         this.setState({showUpdateItem: false, items: []})
-        this.getItems()
+        this.getItems("local")
       })
       .catch(error => console.log(error))
     }
@@ -360,10 +404,39 @@ class TeacherClassApp extends React.Component {
     axios.delete(getIP()+'/items/'+ this.state.item_id)
     .then(response => {
       this.setState({showUpdateItem: false, items: []})
-      this.getItems()
+      this.getItems("local")
     })
     .catch(error => console.log(error))
-}
+  }
+  
+  importStoreItems(){
+    axios.get(getIP()+'/classrooms/')
+    .then(async (response) => {
+      for(let i = 0; i <= Object.keys(response.data).length - 1; i++){
+        if(this.state.item_import_class_code === response.data[i].class_code)
+        {
+          var passed = await this.importHasShop()
+          if(passed)
+          {
+            for(i = 0; i<Object.keys(this.state.item_import_list).length; i++)
+            {
+              axios.post(getIP()+'/items/', {
+                item_name: this.state.item_import_list[i].item_name,
+                description: this.state.item_import_list[i].description,
+                price: this.state.item_import_list[i].price,
+                shop_id: this.state.shop_id,
+              })
+              .then(response => {
+                this.setState({showImportItems: false, items: [...this.state.items, response.data]})
+              })
+              .catch(error => console.log(error))
+            }   
+          }
+        }
+      }
+    })
+    .catch(error => console.log(error))
+  }
 
   getBanks(){
     axios.get(getIP()+'/banks/')
@@ -477,8 +550,12 @@ class TeacherClassApp extends React.Component {
         <Button variant="primary" className="pay-btns" onClick={() => this.setState({showAddItem: true})}>
           Add Item
         </Button>
+        <Button variant="primary" className="pay-btns" onClick={() => this.setState({showImportItems: true})}>
+          Import Store Items
+        </Button>
         {this.addItemModal()}
         {this.updateItemModal()}
+        {this.importStoreItemsModal()}
       </Col>
     );
   }
@@ -1232,7 +1309,7 @@ regressive_taxes_isValid(){
           <p>{this.state.store_error}</p>
         </Modal.Body>
         <Modal.Footer>
-          <Button className="modal-btn" onClick={() => this.createNewStore()}>Create Bank</Button>
+          <Button className="modal-btn" onClick={() => this.createNewStore()}>Create Store</Button>
         </Modal.Footer>
       </Modal>
     );
@@ -1319,6 +1396,32 @@ regressive_taxes_isValid(){
         <Modal.Footer>
           <Button className="modal-btn" onClick={() => this.updateItem()}>Update Item</Button>
           <Button className="modal-btn" onClick={() => this.deleteItem()}>Delete Item</Button>
+        </Modal.Footer>
+      </Modal>
+    );
+  }
+
+  importStoreItemsModal(){
+    return (
+      <Modal
+        show={this.state.showImportItems}
+        onHide={() => this.setState({showImportItems: false})}
+        size="lg"
+        centered
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>
+            Import Items from Another Class Store
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <FloatingLabel label="Class Code" className="modal-input">
+            <FormControl id='item_import_class_code' placeholder="Class Code" onChange={this.handleChange}/>
+          </FloatingLabel>
+          <p>{this.state.store_error}</p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button className="modal-btn" onClick={() => this.importStoreItems()}>Import Items</Button>
         </Modal.Footer>
       </Modal>
     );
@@ -1485,6 +1588,8 @@ regressive_taxes_isValid(){
     }
   }
 
+
+
   render() {
     if(this.state.redirect_profile){
       return(
@@ -1505,17 +1610,17 @@ regressive_taxes_isValid(){
           </Row>
           <Row className="content-row">
             <Col>
-            <h4>Students</h4>
-                <ListGroup>
-                  {this.state.students.map((student,i) => this.renderStudents(student, i))}
-                </ListGroup>
-                <InputGroup className="amount-input">
-                  <InputGroup.Text>$</InputGroup.Text>
-                  <FormControl defaultValue="0" id='amount' onChange={this.handleChange} />
-                </InputGroup>
-                <p>{this.state.error}</p>
-                <Button className="pay-btns" onClick={() => this.changeSelected(true)}>Pay Selected Students</Button>
-                <Button className="pay-btns" onClick={() => this.changeSelected(false)}>Charge Selected Students</Button>
+              <h4>Students</h4>
+              <ListGroup>
+                {this.state.students.map((student,i) => this.renderStudents(student, i))}
+              </ListGroup>
+              <InputGroup className="amount-input">
+                <InputGroup.Text>$</InputGroup.Text>
+                <FormControl defaultValue="0" id='amount' onChange={this.handleChange} />
+              </InputGroup>
+              <p>{this.state.error}</p>
+              <Button className="pay-btns" onClick={() => this.changeSelected(true)}>Pay Selected Students</Button>
+              <Button className="pay-btns" onClick={() => this.changeSelected(false)}>Charge Selected Students</Button>
             </Col>
             <Col xs={7}>
               <Row className="taxes-row">
