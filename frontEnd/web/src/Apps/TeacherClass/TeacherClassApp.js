@@ -343,7 +343,6 @@ class TeacherClassApp extends React.Component {
       this.setState({item_import_list:ar})
       return true
     }
-    
   }
 
   createNewStore(){
@@ -1723,9 +1722,7 @@ regressive_taxes_isValid(){
       </Modal>
     );
   }
-
-
-
+  
   render() {
     if(this.state.redirect_profile){
       return(
