@@ -1,0 +1,52 @@
+.teacher-navbar{
+    background-color: #546F99;
+}
+
+.wrapper{
+    font-family: 'Montserrat', sans-serif;
+}
+
+.taxes-header{
+    text-align: center;
+}
+
+.taxes-container{
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    padding-top: 3%;
+    font-family: 'Montserrat', sans-serif;
+    overflow: visible;
+}
+
+.taxes-col{
+    display: flex;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+}
+
+.tax-btns {
+    margin-top: 2%;
+    width: 60%;
+    margin-right: 5px;
+    margin-left: 5px;
+    background-color: #546F99 !important;
+    border-color: #546F99 !important;
+    border-radius: 12px !important;
+}
+
+.tax-btns:hover {
+    background-color: #3a4d6b !important;
+}
+
+.list-group{
+    max-height: 80%;
+    width: 40%;
+    overflow-y:hidden;
+    -webkit-overflow-scrolling: touch;
+}
+
+.modal-footer{
+    flex-wrap: nowrap;
+}
