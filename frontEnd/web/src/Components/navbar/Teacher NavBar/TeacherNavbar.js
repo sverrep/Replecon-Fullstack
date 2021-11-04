@@ -16,7 +16,7 @@ export default function navbar(htext, current_class, teacher_id){
                 <Button variant="light" className="navbar-btn"><Link className="navbar-link" to={{pathname: `/Class/${current_class.class_code}/students`, state: {class: current_class, teacher_id: teacher_id}}}>Students</Link></Button>
                 <Button variant="light" className="navbar-btn"><Link className="navbar-link" to={{pathname: `/Class/${current_class.class_code}/taxes`, state: {class: current_class, teacher_id: teacher_id}}}>Taxes</Link></Button>
                 <Button variant="light" className="navbar-btn"><Link className="navbar-link" to={{pathname: `/Class/${current_class.class_code}/store`, state: {class: current_class, teacher_id: teacher_id}}}>Store</Link></Button>
-                <Button variant="light" className="navbar-btn"><Link className="navbar-link" to={{pathname: `/Class/${current_class.class_code}/features`, state: {class: current_class, teacher_id: teacher_id}}}>Bank</Link></Button>
+                <Button variant="light" className="navbar-btn"><Link className="navbar-link" to={{pathname: `/Class/${current_class.class_code}/bank`, state: {class: current_class, teacher_id: teacher_id}}}>Bank</Link></Button>
                 <Button variant="secondary-outline" className="navbar-btn-class-list"><Link className="navbar-link" to={{pathname: `/Profile/`, state: {role: "Teacher"}}}>Class List</Link></Button>
             </Nav>
         </Container>
