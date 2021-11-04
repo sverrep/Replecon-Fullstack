@@ -1,0 +1,70 @@
+.teacher-navbar{
+    background-color: #546F99;
+}
+
+.wrapper{
+    font-family: 'Montserrat', sans-serif;
+}
+
+.store-container{
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    padding-top: 1%;
+    font-family: 'Montserrat', sans-serif;
+    overflow: visible;
+}
+
+.store-row{
+    display: flex;
+}
+
+.store-btns {
+    margin-top: 2%;
+    width: 60%;
+    margin-right: 5px;
+    margin-left: 5px;
+    background-color: #546F99 !important;
+    border-color: #546F99 !important;
+    border-radius: 12px !important;
+}
+
+.card-btns {
+    width: 70%;
+    background-color: #546F99 !important;
+    border-color: #546F99 !important;
+    border-radius: 12px !important;
+}
+
+.store-btns:hover {
+    background-color: #3a4d6b !important;
+}
+
+.list-group{
+    max-height: 80%;
+    width: 100%;
+    overflow-y:scroll;
+    -webkit-overflow-scrolling: touch;
+}
+
+.store-cards{
+    height: 90%;
+    max-height: 90%;
+    overflow-y: scroll;
+    -ms-overflow-style: none;
+}
+
+.card-body{
+    height:10%;
+}
+
+.store-cards::-webkit-scrollbar {
+    display: none;
+}
+
+.store-btn-row{
+    display:flex;
+    flex-wrap: nowrap;
+    width: 80%;
+    padding-bottom: 1%;
+}

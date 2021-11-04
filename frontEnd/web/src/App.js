@@ -15,6 +15,7 @@ import TeacherClassApp from "./Apps/TeacherClass/TeacherClassApp";
 import TeacherStudents from "./Apps/TeacherStudents/TeacherStudents";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import TeacherTaxes from "./Apps/TeacherTaxes/TeacherTaxes";
+import TeacherStore from "./Apps/TeacherStore/TeacherStore";
 
 export default function App() {
   return (
@@ -49,6 +50,9 @@ export default function App() {
           </Route>
           <Route path="/Class/:code/taxes">
             <TeacherTaxes />
+          </Route>
+          <Route path="/Class/:code/store">
+            <TeacherStore />
           </Route>
           <Route
             exactpath="/"
