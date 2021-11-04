@@ -473,7 +473,7 @@ class TeacherStore extends React.Component {
     render(){
         return(
             <div className="wrapper">
-                {navbar("Econ12", {class_code: this.state.class_code, class_name: this.state.class_name}, this.state.teacher_id)}
+                {navbar(this.state.class_name, {class_code: this.state.class_code, class_name: this.state.class_name}, this.state.teacher_id)}
                 <Container className="store-container">
                     <Row className="content-row">
                         {this.renderShopView()}
