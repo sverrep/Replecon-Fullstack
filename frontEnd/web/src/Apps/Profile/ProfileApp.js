@@ -267,12 +267,12 @@ class Profile extends React.Component {
                     <h4>Your Classes</h4>
                         {this.state.classes.map((item,i) => <ListGroup.Item key={i} className="class-list" action onClick={() => this.handleClassRedirect(item)}>{item.class_name} {item.class_code}</ListGroup.Item>)}
                     <div className="teacher-btns-row">
-                        <Button variant="outline-primary" className="teacher-btns" onClick={() => this.setState({showCreateClass: true})}>
+                        <Button variant="primary" className="teacher-btn-create" onClick={() => this.setState({showCreateClass: true})}>
                             Create New Class
                         </Button>
                     </div>
                     <div className="teacher-btns-row">
-                        <Button variant="outline-secondary" className="teacher-btns" onClick={this.handleLogOut}>
+                        <Button variant="outline-secondary" className="teacher-btn-logout" onClick={this.handleLogOut}>
                             Log Out
                         </Button>
                     </div>
