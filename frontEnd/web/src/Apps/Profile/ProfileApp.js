@@ -113,7 +113,7 @@ class Profile extends React.Component {
     getBoughtItems(){
         axios.get(getIP()+'/items/boughtitems/')
         .then(response => {
-        this.setState({bought_items: response.data})
+            this.setState({bought_items: response.data})
         })
         
         .catch(error => console.log(error))
@@ -216,7 +216,7 @@ class Profile extends React.Component {
         }
         else if(this.state.redirect_class){
             return(
-                <Redirect to={{pathname: `/Class/${this.state.class_code}`, state: {class: this.state.selected_class, teacher_id: this.state.teacher_id}}}></Redirect>
+                <Redirect to={{pathname: `/Class/${this.state.class_code}/students`, state: {class: this.state.selected_class, teacher_id: this.state.teacher_id}}}></Redirect>
             );
         }
         else if (this.state.role === "Student"){

@@ -87,3 +87,14 @@ class ListBoughtItems(APIView):
             bought_item_serializer.save()
             return Response(bought_item_serializer.data, status=status.HTTP_201_CREATED)
         return Response(bought_item_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ListAllBoughtItems(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
+    queryset = BoughtItems.objects.all()
+    serializer_class = BoughtItemsSerializer
+
+    def get(self, request):
+        return self.list(request)
+
+    def post(self, request):
+        return self.create(request)
