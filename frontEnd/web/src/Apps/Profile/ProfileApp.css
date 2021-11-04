@@ -52,17 +52,37 @@ ul li {
   justify-content: center;
   width: 50%;
   text-align: center;
+  padding-top: 3%;
 }
 
 .teacher-h3{
   text-align: center;
 }
 
-.teacher-btns{
+.teacher-btn-create{
   margin-right: 5px;
   margin-left: 5px;
   margin-bottom: 10px;
-  width: 30%;
+  width: 20%;
+  background-color: #546F99 !important;
+  border-color: #546F99 !important;
+  border-radius: 12px !important;
+}
+
+.teacher-btn-create:hover{
+  background-color: #3a4d6b !important;
+}
+
+.teacher-btn-logout{
+  margin-right: 5px;
+  margin-left: 5px;
+  margin-bottom: 10px;
+  width: 20%;
+  border-radius: 12px !important;
+}
+
+.teacher-btn-logout:hover{
+  background-color: #767676 !important;
 }
 
 .teacher-btns-row{
@@ -70,7 +90,6 @@ ul li {
   align-items: center;
   justify-content: center;
   align-content: center;
-  width: 100%;
 }
 
 .class-list{
