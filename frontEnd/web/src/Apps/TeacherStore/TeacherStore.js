@@ -14,8 +14,6 @@ import FormControl from 'react-bootstrap/FormControl'
 import FloatingLabel from 'react-bootstrap/FloatingLabel'
 import Modal from 'react-bootstrap/Modal'
 import Card from 'react-bootstrap/Card'
-import CardGroup from 'react-bootstrap/CardGroup'
-
 
 
 class TeacherStore extends React.Component {
@@ -229,18 +227,6 @@ class TeacherStore extends React.Component {
         })
         .catch(error => console.log(error))
     }
-
-  /*  renderStoreItems(item, i){
-            return(
-                <Card className="store-cards" key={i}>
-                    <Card.Body>
-                    <Card.Title> {item.item_name} {"------"} {item.price} </Card.Title>
-                    <Card.Text> {item.description} <Button variant="primary" onClick={() => this.storeClickedItem(item.item_name, item.price, item.description, item.id)}>Update Item</Button> </Card.Text>
-                </Card.Body>
-            </Card>
-            {this.state.items.map((item,i) => this.renderStoreItems(item, i))}
-            )
-    }*/
 
     renderStoreItems2(){
         return(

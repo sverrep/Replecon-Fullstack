@@ -1,0 +1,53 @@
+.teacher-navbar{
+    background-color: #546F99;
+}
+
+.wrapper{
+    font-family: 'Montserrat', sans-serif;
+}
+
+.bank-header{
+    text-align: center;
+    padding-top: 5%;
+}
+
+.bank-container{
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    padding-top: 1%;
+    font-family: 'Montserrat', sans-serif;
+    overflow: visible;
+}
+
+.bank-btns {
+    width: 70%;
+    background-color: #546F99 !important;
+    border-color: #546F99 !important;
+    border-radius: 12px !important;
+}
+
+.bank-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.bank-row {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+}
+
+.modal-footer{
+    justify-content: center;
+}
+
+.list-group{
+    overflow-y: scroll;
+    -ms-overflow-style: none;
+}
+
+.list-group::-webkit-scrollbar {
+    display: none;
+}
