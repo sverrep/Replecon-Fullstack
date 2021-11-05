@@ -102,7 +102,7 @@ class StudentStore extends React.Component {
                     <Card.Text>
                         {item.description} 
                     </Card.Text>
-                    <Button className= "store-btns" variant="primary" onClick={() => this.buyItem(item)}>Purchase</Button>
+                    <Button variant="primary" className='store-button' onClick={() => this.buyItem(item)}>Purchase</Button>
                 </Card.Body>
             </Card>
         )
