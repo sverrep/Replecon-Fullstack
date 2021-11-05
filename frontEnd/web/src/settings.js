@@ -1,5 +1,5 @@
 export default function getIP() {
-    const ip = "http://192.168.0.6:8000";
+    const ip = "http://192.168.0.54:8000";
     return ip;
 };
 
