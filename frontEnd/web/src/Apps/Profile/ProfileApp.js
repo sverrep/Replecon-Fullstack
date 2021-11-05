@@ -9,6 +9,7 @@ import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import ListGroup from 'react-bootstrap/ListGroup'
 import Modal from 'react-bootstrap/Modal'
+import Form from 'react-bootstrap/Form'
 import FormControl from 'react-bootstrap/FormControl'
 import FloatingLabel from 'react-bootstrap/FloatingLabel'
 
@@ -33,9 +34,13 @@ class Profile extends React.Component {
             redirect_class: false, 
             selected_class: [],
             showCreateClass: false,
+
+            showInven:false,
         };
         this.handleLogOut = this.handleLogOut.bind(this)
         this.handleChange = this.handleChange.bind(this)
+        this.openInven = this.openInven.bind(this)
+        this.closeInven = this.closeInven.bind(this)
     }
 
     componentDidMount(){
@@ -207,7 +212,41 @@ class Profile extends React.Component {
         );
       }
     
+    openInven(){
+        this.setState({showInven:true})
+    }
+    closeInven(){
+        this.setState({showInven:false})
+    }
+    renderInventoryModal(){
+        return(
+            <Modal
+            show={this.state.showInven}
+            backdrop="static"
+            keyboard={false}
+            >
+                <Modal.Header>
+                    <Modal.Title>My Inventory</Modal.Title>
+                </Modal.Header>
 
+                <Modal.Body>
+                    <Form>
+                    <div className='boughtItems'>
+                            <ul>
+                                {this.state.bought_items.map(item => {
+                                    return <li key={item.id} className='grey cardb'>{this.renderItemCard(item)}</li>;
+                                })}
+                            </ul>
+                        </div>
+                    </Form>
+                </Modal.Body>
+
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={() => this.closeInven()}>Close</Button>
+                </Modal.Footer>
+            </Modal>
+        )
+    }
     render() {
         if(this.state.redirect_login){
             return(
@@ -228,20 +267,21 @@ class Profile extends React.Component {
                         <div className='profile-name'><h3>{this.state.first_name}</h3></div>
                         
                         <div className='profile-balance'>
-                            <Button variant='primary' onClick={this.handleLogOut}>
+                            <Button variant='primary' className='profile-button' onClick={this.handleLogOut}>
                             Log Out
                             </Button>
 
-                            <Button variant='primary' className='inventory-button' onClick={this.handleLogOut}>
+                            <Button variant='primary' className='inventory-button' onClick={this.openInven}>
                             Inventory
                             </Button>
+                            
                         </div>
                         
-                    
+                    {this.renderInventoryModal()}
                     </div>
                     <h3>${this.state.balance}</h3>
                     <div className='content'>
-                        <div className='transactions'>
+                        <div>
                             <ul>
                                 {this.state.transactions.map(item => {
                                     if(item.symbol === '+'){
