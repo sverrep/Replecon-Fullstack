@@ -222,11 +222,12 @@ class Profile extends React.Component {
         return(
             <Modal
             show={this.state.showInven}
-            backdrop="static"
+            
             keyboard={false}
             >
                 <Modal.Header>
                     <Modal.Title>My Inventory</Modal.Title>
+                    <Button variant="secondary" onClick={() => this.closeInven()}>Close</Button>
                 </Modal.Header>
 
                 <Modal.Body>
@@ -240,10 +241,6 @@ class Profile extends React.Component {
                         </div>
                     </Form>
                 </Modal.Body>
-
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={() => this.closeInven()}>Close</Button>
-                </Modal.Footer>
             </Modal>
         )
     }
