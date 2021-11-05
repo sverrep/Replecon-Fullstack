@@ -8,7 +8,7 @@ ul li {
     padding: 3px 8px;
     border-radius: 5px;
     margin-top: 2px;
-    
+
   }
 
   .green{
@@ -24,24 +24,37 @@ ul li {
   }
 
 .transactions{
-    width: 49.5%;
-    float: left;
+
 }
 
 .boughtItems{
-    width: 49.5%;
-    float: right;
+
 }
 
-.title{
-  margin-left: 40px;
+.profile-title{
+    display: flex;
+    flex-direction: row;
+    margin-top: 20px;
 }
 
-.content{
+.profile-name{
+  text-align: left;
+}
+
+.profile-balance{
+  float: right;
+  margin-left:auto;
+}
+
+.profile-content{
+    margin: 0 auto;
+    width: 1080px;
+}
+
+.inventory-button{
   margin-left: 10px;
-  margin-right: 10px;
-  margin-top: 20px;
 }
+
 
 .cardb{
   margin-top: 5px;

@@ -223,18 +223,25 @@ class Profile extends React.Component {
             return (
                 <div className='wrapper'>
                     <NavBar/>
-                    <div className='title'>
-                    <h3>Welcome Back {this.state.first_name}</h3>
-                    <p>
-                        Current Balance: {this.state.balance}$  
-                    </p>
-                    <Button variant='primary' onClick={this.handleLogOut}>
-                        Log Out
-                    </Button>
+                    <div className='profile-content'>
+                    <div className='profile-title'>
+                        <div className='profile-name'><h3>{this.state.first_name}</h3></div>
+                        
+                        <div className='profile-balance'>
+                            <Button variant='primary' onClick={this.handleLogOut}>
+                            Log Out
+                            </Button>
+
+                            <Button variant='primary' className='inventory-button' onClick={this.handleLogOut}>
+                            Inventory
+                            </Button>
+                        </div>
+                        
+                    
                     </div>
+                    <h3>${this.state.balance}</h3>
                     <div className='content'>
                         <div className='transactions'>
-                            <h2>Transactions History</h2>
                             <ul>
                                 {this.state.transactions.map(item => {
                                     if(item.symbol === '+'){
@@ -247,14 +254,8 @@ class Profile extends React.Component {
                             </ul>   
                         </div>
 
-                        <div className='boughtItems'>
-                            <h2>Bought Items</h2>
-                            <ul>
-                                {this.state.bought_items.map(item => {
-                                    return <li key={item.id} className='grey cardb'>{this.renderItemCard(item)}</li>;
-                                })}
-                            </ul>
-                        </div>
+                        
+                    </div>
                     </div>
                 </div>
             );
