@@ -18,3 +18,28 @@
 .bank-cards{
     margin-top: 20px;
 }
+
+.bank-content{
+    margin: 0 auto;
+    width: 1080px;
+}
+
+.bank-title{
+    display: flex;
+    flex-direction: row;
+    margin-top: 20px;
+}
+
+.title-bank{
+    text-align: left;
+}
+
+.title-balance{
+    float: right;
+    margin-left:auto;
+}
+
+.bank-button{
+    background-color: #546F99 !important;
+    border-color: #546F99 !important;
+}
