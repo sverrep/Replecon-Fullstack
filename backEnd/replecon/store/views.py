@@ -80,8 +80,7 @@ class ListBoughtItems(APIView):
     def post(self, request):
         logger = logging.getLogger(__name__)
         user_id = request.user.id
-        bought_item = Item.objects.get(item_name = request.data["item_name"])
-        data = {"item_id": bought_item.id, "user_id": user_id}
+        data = {"item_id": request.data["item_id"], "user_id": user_id}
         bought_item_serializer = BoughtItemsSerializer(data = data)
         if bought_item_serializer.is_valid():
             bought_item_serializer.save()

@@ -112,7 +112,8 @@ class StudentStore extends React.Component {
     //Purchasing of Item
 
     buyItem(item){
-        axios.post(getIP()+'/items/boughtitems/', { item_name: item.item_name })
+        console.log(item.id)
+        axios.post(getIP()+'/items/boughtitems/', { item_id: item.id })
             .then(response => {
                 axios.get(getIP()+'/students/store/')
                     .then(response => {
