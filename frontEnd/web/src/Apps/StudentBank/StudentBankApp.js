@@ -8,6 +8,7 @@ import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import Card from 'react-bootstrap/Card';
 import Row from 'react-bootstrap/Row';
+import Alert from 'react-bootstrap/Alert'
 import './StudentBankApp.css';
 
 
@@ -26,6 +27,10 @@ class StudentBank extends React.Component {
             loggedin_student:{},
 
             savings: [],
+
+            showAlert: false,
+            variant: '',
+            message: '',
 
 
 
@@ -108,6 +113,7 @@ class StudentBank extends React.Component {
 
       //Insert Savings
       setStudentSavings(){
+        if(this.validateSavings()){
           axios.post(getIP()+'/transactions/banksavings/', {"amount": this.state.value, "done": false})
           .then(response => {
             var transaction_id = response.data["id"]
@@ -119,6 +125,7 @@ class StudentBank extends React.Component {
                 .then(response => {
                   this.setState({show:false})
                   this.getStudentSavings()
+                  this.getStudentBalance()
                 })
                 .catch(error => console.log(error))
               })
@@ -127,6 +134,7 @@ class StudentBank extends React.Component {
             .catch(error => console.log(error))
           })
           .catch(error => console.log(error))
+        }
       }
       //Start Saving Modal
       openModal(){
@@ -221,9 +229,24 @@ class StudentBank extends React.Component {
       )
       }
     }
+
+    validateClaim(item){
+      if(item.payout_date === 0){
+        this.setState({variant:'success'})
+        this.setState({message:'Money claimed successfully'})
+        this.setState({showAlert:true})
+        return true
+      }
+      else{
+        this.setState({variant:'danger'})
+        this.setState({message:'That money is not ready to be claimed'})
+        this.setState({showAlert:true})
+        return false
+      }
+    }
         claimSavings(item){
           
-          if(item.payout_date === 0)
+          if(this.validateClaim(item))
           {
             console.log(item)
             axios.post(getIP()+'/transactions/banksavings/', {"amount": Math.round(item.final_amount * 10) / 10, "done": true})
@@ -249,6 +272,50 @@ class StudentBank extends React.Component {
           }
         }
 
+    
+    validateSavings(){
+        if(isNaN(this.state.value)){
+          this.setState({variant:'danger'})
+          this.setState({message:'Please enter a vaild number'})
+          this.setState({showAlert:true})
+          this.closeModal()
+          return false
+        }
+        else if(Math.sign(this.state.value)<0 || this.state.value === '0'){
+            this.setState({variant:'danger'})
+            this.setState({message:'Please enter a postive number'})
+            this.setState({showAlert:true})
+            this.closeModal()
+            return false
+        }
+        else{
+            if(this.state.value>this.state.student_balance){
+              this.setState({variant:'danger'})
+              this.setState({message:'You dont have that amount of money'})
+              this.setState({showAlert:true})
+              this.closeModal()
+              return false
+            }
+            else{
+              this.setState({variant:'success'})
+              this.setState({message:'Money saved successfully'})
+              this.setState({showAlert:true})
+              return true
+            }
+        }
+    }
+    renderAlert(variant, message){
+      if(this.state.showAlert){
+        return(
+        <Alert show={this.state.showAlert} variant={variant} onClose={() => this.setState({showAlert:false})} dismissible>
+            <p>
+                {message}
+            </p>
+        </Alert>
+        )
+        }
+    }
+        
     render(){
         return(
         <div className='wrapper'>
@@ -273,6 +340,9 @@ class StudentBank extends React.Component {
                 
                 
                 {this.renderModal()}
+            </div>
+            <div className='alert'>
+                {this.renderAlert(this.state.variant, this.state.message)}
             </div>
             <div className='con'>
                 <h2>My Savings</h2>

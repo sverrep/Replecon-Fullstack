@@ -6,6 +6,7 @@ import NavBar from '../../Components/navbar/Navbar.js';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import Row from 'react-bootstrap/Row';
+import Alert from 'react-bootstrap/Alert';
 import './StudentStoreApp.css';
 class StudentStore extends React.Component {
     constructor(props) {
@@ -19,6 +20,10 @@ class StudentStore extends React.Component {
             shops:[],
             students: [],
             items: [],
+
+            showAlert: false,
+            variant: '',
+            message: '',
 
         }
         this.getStudentBalance = this.getStudentBalance.bind(this)
@@ -109,11 +114,30 @@ class StudentStore extends React.Component {
     }
 
 
+
+
+    validatePurchase(item){
+        if(this.state.student_balance >= item.price)
+    {
+        this.setState({variant:'success'})
+        this.setState({message:'Item was bought successfully'})
+        this.setState({showAlert:true})
+        return true
+    }
+    else
+    {
+        this.setState({variant:'danger'})
+        this.setState({message:'You dont have enough money for this item'})
+        this.setState({showAlert:true})
+        return false
+    }
+    }
     //Purchasing of Item
 
     buyItem(item){
-        console.log(item.id)
-        axios.post(getIP()+'/items/boughtitems/', { item_id: item.id })
+        if(this.validatePurchase(item)){
+        axios.post(getIP()+'/items/boughtitems/', { item_name: item.item_name })
+
             .then(response => {
                 axios.get(getIP()+'/students/store/')
                     .then(response => {
@@ -130,8 +154,21 @@ class StudentStore extends React.Component {
                 .catch(error => console.log(error + "store account"))
             })
             .catch(error => console.log(error + "items"))
-            
+        }
         
+    }
+
+    renderAlert(variant, message){
+        
+        if(this.state.showAlert){
+        return(
+        <Alert show={this.state.showAlert} variant={variant} onClose={() => this.setState({showAlert:false})} dismissible>
+            <p>
+                {message}
+            </p>
+        </Alert>
+        )
+        }
     }
     render(){
         return(
@@ -143,6 +180,12 @@ class StudentStore extends React.Component {
                     <div className='title-balance'><h3>${this.state.student_balance} </h3></div>
                     
                 </div>
+                <div className="alert">
+                    {this.renderAlert(this.state.variant, this.state.message)}
+                    {console.log(this.state.message + "sasad")}
+                    
+                </div>
+                
                 <div className="item-cards">
                     <div className='override'>
                         <Row xs="auto" md={2}>

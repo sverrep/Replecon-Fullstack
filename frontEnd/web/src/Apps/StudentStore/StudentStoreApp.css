@@ -32,7 +32,14 @@
     font-family: 'Montserrat', sans-serif;
 }
 
+
+.alert{
+    margin-left: 200px;
+    margin-right: 200px;
+}
+
 .store-button{
     background-color: #546F99 !important;
     border-color: #546F99 !important;
 }
+
