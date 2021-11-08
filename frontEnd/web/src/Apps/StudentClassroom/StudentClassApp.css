@@ -8,6 +8,7 @@
 .transfer{
     float: right;
     width: 50%;
+    padding: 0%;
 }
 
 .wrapper{
@@ -22,4 +23,14 @@
     /* Height of the footer*/ 
     height: 40px;
     background: grey;
+}
+
+.classroom-button{
+    background-color: #546F99 !important;
+    border-color: #546F99 !important;
+}
+
+.classroom-content{
+    margin: 0 auto;
+    width: 1080px;
 }

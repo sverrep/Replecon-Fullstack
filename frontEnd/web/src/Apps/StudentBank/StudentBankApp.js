@@ -169,7 +169,7 @@ class StudentBank extends React.Component {
 
                 <Modal.Footer>
                     <Button variant="secondary" onClick={() => this.closeModal()}>Cancel</Button>
-                    <Button variant="primary" onClick={() => this.setStudentSavings()}>Confirm Saving</Button>
+                    <Button variant="primary" className='bank-button' onClick={() => this.setStudentSavings()}>Confirm Saving</Button>
                 </Modal.Footer>
             </Modal>
         )
@@ -223,7 +223,7 @@ class StudentBank extends React.Component {
                   <Card.Text>
                       Payout of {item.final_amount}$ in {item.payout_date} days
                   </Card.Text>
-                  <Button variant="primary" onClick={() => this.claimSavings(item)}>Claim Savings</Button>
+                  <Button variant="primary" className='bank-button' onClick={() => this.claimSavings(item)}>Claim Savings</Button>
               </Card.Body>
           </Card>
       )
@@ -320,16 +320,24 @@ class StudentBank extends React.Component {
         return(
         <div className='wrapper'>
             <NavBar/>
+            <div className='bank-content'>
+            <div>
+                <div className='bank-title'>
+                  <div className='title-bank'><h3>Bank of {this.state.class_name}</h3></div>
+                  <div className='title-balance'><h3>${this.state.student_balance}</h3></div>
+                </div>
 
-            
-            <div className='title'>
-                <h3>Bank of {this.state.class_name}</h3>
-                <h6>Current Intrest Rate: {this.state.interest_rate} %</h6>
+                <div className='bank-title'>
+                  <div className='title-bank'><h6>Current Intrest Rate: {this.state.interest_rate} %</h6>
                 <h6>Current Payout Rate: {this.state.payout_rate} week</h6>
-                <h6>Current Balance: {this.state.student_balance}$</h6>
-                <Button onClick={() => this.openModal()}>
+                <h6>Current Balance: {this.state.student_balance}$</h6></div>
+                  <div className='title-balance'><h3><Button className='bank-button' onClick={() => this.openModal()}>
                   Start Saving
-                </Button>
+                </Button></h3></div>
+                </div>
+                
+                
+                
                 
                 {this.renderModal()}
             </div>
@@ -347,6 +355,7 @@ class StudentBank extends React.Component {
                         </Row>
                       </div>
                 </div>
+            </div>
             </div>
         </div>
         )

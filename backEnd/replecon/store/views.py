@@ -80,10 +80,20 @@ class ListBoughtItems(APIView):
     def post(self, request):
         logger = logging.getLogger(__name__)
         user_id = request.user.id
-        bought_item = Item.objects.get(item_name = request.data["item_name"])
-        data = {"item_id": bought_item.id, "user_id": user_id}
+        data = {"item_id": request.data["item_id"], "user_id": user_id}
         bought_item_serializer = BoughtItemsSerializer(data = data)
         if bought_item_serializer.is_valid():
             bought_item_serializer.save()
             return Response(bought_item_serializer.data, status=status.HTTP_201_CREATED)
         return Response(bought_item_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ListAllBoughtItems(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
+    queryset = BoughtItems.objects.all()
+    serializer_class = BoughtItemsSerializer
+
+    def get(self, request):
+        return self.list(request)
+
+    def post(self, request):
+        return self.create(request)

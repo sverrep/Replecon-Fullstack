@@ -33,6 +33,8 @@ CORS_ORIGIN_WHITELIST = (
     'http://localhost:3000',
     'https://replecon.com',
     'https://www.replecon.com',
+    'http://replecon.com',
+    'http://www.replecon.com',
 )
 
 

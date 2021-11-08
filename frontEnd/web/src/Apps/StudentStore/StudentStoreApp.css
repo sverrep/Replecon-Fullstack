@@ -1,3 +1,8 @@
+.store-content{
+    margin: 0 auto;
+    width: 1080px;
+}
+
 .item-cards{
     margin-top: 25px;
     margin-left: 0px;
@@ -8,19 +13,33 @@
 }
 
 .title{
+    display: flex;
+    flex-direction: row;
     margin-top: 20px;
-    margin-left: 50px;
 }
-.override {
-    margin-left: 50px;
-    margin-right: 50px;
+
+.title-name{
+    text-align: left;
 }
+
+.title-balance{
+    float: right;
+    margin-left:auto;
+}
+
 
 .wrapper{
     font-family: 'Montserrat', sans-serif;
 }
 
+
 .alert{
     margin-left: 200px;
     margin-right: 200px;
 }
+
+.store-button{
+    background-color: #546F99 !important;
+    border-color: #546F99 !important;
+}
+

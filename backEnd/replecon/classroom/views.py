@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from rest_framework import viewsets, generics, mixins
+from rest_framework.permissions import AllowAny
 from .models import Classroom
 from .serializers import ClassroomSerializer
 
@@ -9,6 +10,7 @@ from .serializers import ClassroomSerializer
 class ClassroomList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
     queryset = Classroom.objects.all()
     serializer_class = ClassroomSerializer
+    permission_classes = [AllowAny]
 
     def get(self, request):
         return self.list(request)

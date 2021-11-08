@@ -103,11 +103,11 @@ class StudentStore extends React.Component {
         return(
             <Card style={{ width: '15rem', padding: '10px' }} className='cards'>
                 <Card.Body>
-                    <Card.Title>{item.item_name}</Card.Title>
+                    <Card.Title>{item.item_name} ${item.price}</Card.Title>
                     <Card.Text>
-                        {item.description}
+                        {item.description} 
                     </Card.Text>
-                    <Button variant="primary" onClick={() => this.buyItem(item)}>Purchase</Button>
+                    <Button variant="primary" className='store-button' onClick={() => this.buyItem(item)}>Purchase</Button>
                 </Card.Body>
             </Card>
         )
@@ -137,6 +137,7 @@ class StudentStore extends React.Component {
     buyItem(item){
         if(this.validatePurchase(item)){
         axios.post(getIP()+'/items/boughtitems/', { item_name: item.item_name })
+
             .then(response => {
                 axios.get(getIP()+'/students/store/')
                     .then(response => {
@@ -173,9 +174,11 @@ class StudentStore extends React.Component {
         return(
             <div className='wrapper'>
                 <NavBar/>
+                <div className='store-content'>
                 <div className='title'>
-                    <h3>{this.state.store_name}</h3>
-                    <h5>Your current balance: {this.state.student_balance} </h5>
+                    <div className='title-name'><h3>{this.state.store_name}</h3></div>
+                    <div className='title-balance'><h3>${this.state.student_balance} </h3></div>
+                    
                 </div>
                 <div className="alert">
                     {this.renderAlert(this.state.variant, this.state.message)}
@@ -191,6 +194,7 @@ class StudentStore extends React.Component {
                         })}
                         </Row>
                     </div>
+                </div>
                 </div>
             </div>
 

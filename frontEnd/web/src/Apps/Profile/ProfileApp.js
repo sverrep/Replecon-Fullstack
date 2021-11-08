@@ -9,6 +9,7 @@ import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import ListGroup from 'react-bootstrap/ListGroup'
 import Modal from 'react-bootstrap/Modal'
+import Form from 'react-bootstrap/Form'
 import FormControl from 'react-bootstrap/FormControl'
 import FloatingLabel from 'react-bootstrap/FloatingLabel'
 
@@ -33,9 +34,13 @@ class Profile extends React.Component {
             redirect_class: false, 
             selected_class: [],
             showCreateClass: false,
+
+            showInven:false,
         };
         this.handleLogOut = this.handleLogOut.bind(this)
         this.handleChange = this.handleChange.bind(this)
+        this.openInven = this.openInven.bind(this)
+        this.closeInven = this.closeInven.bind(this)
     }
 
     componentDidMount(){
@@ -113,7 +118,7 @@ class Profile extends React.Component {
     getBoughtItems(){
         axios.get(getIP()+'/items/boughtitems/')
         .then(response => {
-        this.setState({bought_items: response.data})
+            this.setState({bought_items: response.data})
         })
         
         .catch(error => console.log(error))
@@ -207,7 +212,38 @@ class Profile extends React.Component {
         );
       }
     
+    openInven(){
+        this.setState({showInven:true})
+    }
+    closeInven(){
+        this.setState({showInven:false})
+    }
+    renderInventoryModal(){
+        return(
+            <Modal
+            show={this.state.showInven}
+            
+            keyboard={false}
+            >
+                <Modal.Header>
+                    <Modal.Title>My Inventory</Modal.Title>
+                    <Button variant="secondary" onClick={() => this.closeInven()}>Close</Button>
+                </Modal.Header>
 
+                <Modal.Body>
+                    <Form>
+                    <div className='boughtItems'>
+                            <ul>
+                                {this.state.bought_items.map(item => {
+                                    return <li key={item.id} className='grey cardb'>{this.renderItemCard(item)}</li>;
+                                })}
+                            </ul>
+                        </div>
+                    </Form>
+                </Modal.Body>
+            </Modal>
+        )
+    }
     render() {
         if(this.state.redirect_login){
             return(
@@ -216,25 +252,33 @@ class Profile extends React.Component {
         }
         else if(this.state.redirect_class){
             return(
-                <Redirect to={{pathname: `/Class/${this.state.class_code}`, state: {class: this.state.selected_class, teacher_id: this.state.teacher_id}}}></Redirect>
+                <Redirect to={{pathname: `/Class/${this.state.class_code}/students`, state: {class: this.state.selected_class, teacher_id: this.state.teacher_id}}}></Redirect>
             );
         }
         else if (this.state.role === "Student"){
             return (
                 <div className='wrapper'>
                     <NavBar/>
-                    <div className='title'>
-                    <h3>Welcome Back {this.state.first_name}</h3>
-                    <p>
-                        Current Balance: {this.state.balance}$  
-                    </p>
-                    <Button variant='primary' onClick={this.handleLogOut}>
-                        Log Out
-                    </Button>
+                    <div className='profile-content'>
+                    <div className='profile-title'>
+                        <div className='profile-name'><h3>{this.state.first_name}</h3></div>
+                        
+                        <div className='profile-balance'>
+                            <Button variant='primary' className='profile-button' onClick={this.handleLogOut}>
+                            Log Out
+                            </Button>
+
+                            <Button variant='primary' className='inventory-button' onClick={this.openInven}>
+                            Inventory
+                            </Button>
+                            
+                        </div>
+                        
+                    {this.renderInventoryModal()}
                     </div>
+                    <h3>${this.state.balance}</h3>
                     <div className='content'>
-                        <div className='transactions'>
-                            <h2>Transactions History</h2>
+                        <div>
                             <ul>
                                 {this.state.transactions.map(item => {
                                     if(item.symbol === '+'){
@@ -247,14 +291,8 @@ class Profile extends React.Component {
                             </ul>   
                         </div>
 
-                        <div className='boughtItems'>
-                            <h2>Bought Items</h2>
-                            <ul>
-                                {this.state.bought_items.map(item => {
-                                    return <li key={item.id} className='grey cardb'>{this.renderItemCard(item)}</li>;
-                                })}
-                            </ul>
-                        </div>
+                        
+                    </div>
                     </div>
                 </div>
             );
@@ -267,12 +305,12 @@ class Profile extends React.Component {
                     <h4>Your Classes</h4>
                         {this.state.classes.map((item,i) => <ListGroup.Item key={i} className="class-list" action onClick={() => this.handleClassRedirect(item)}>{item.class_name} {item.class_code}</ListGroup.Item>)}
                     <div className="teacher-btns-row">
-                        <Button variant="outline-primary" className="teacher-btns" onClick={() => this.setState({showCreateClass: true})}>
+                        <Button variant="primary" className="teacher-btn-create" onClick={() => this.setState({showCreateClass: true})}>
                             Create New Class
                         </Button>
                     </div>
                     <div className="teacher-btns-row">
-                        <Button variant="outline-secondary" className="teacher-btns" onClick={this.handleLogOut}>
+                        <Button variant="outline-secondary" className="teacher-btn-logout" onClick={this.handleLogOut}>
                             Log Out
                         </Button>
                     </div>

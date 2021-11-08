@@ -2,46 +2,61 @@
   font-family: 'Montserrat', sans-serif;
 }
 
-
+ul{
+  list-style: circle;
+}
 ul li {
     transition: 0.3s;
     padding: 3px 8px;
     border-radius: 5px;
     margin-top: 2px;
-    
   }
 
   .green{
-    background-color:rgb(49, 211, 49);
+    background-color:rgb(107, 200, 134);
   }
 
   .red{
-    background-color:rgb(253, 63, 63);
+    background-color:rgb(232, 96, 96);
   }
 
   .grey{
-    background-color:rgb(117, 117, 117);
+    background-color:rgb(118, 118, 118);
   }
 
-.transactions{
-    width: 49.5%;
-    float: left;
+.profile-title{
+    display: flex;
+    flex-direction: row;
+    margin-top: 20px;
 }
 
-.boughtItems{
-    width: 49.5%;
-    float: right;
+.profile-name{
+  text-align: left;
 }
 
-.title{
-  margin-left: 40px;
+.profile-balance{
+  float: right;
+  margin-left:auto;
 }
 
-.content{
-  margin-left: 10px;
-  margin-right: 10px;
-  margin-top: 20px;
+
+.profile-content{
+    margin: 0 auto;
+    width: 1080px;
 }
+
+.inventory-button{
+    margin-left: 10px;
+    background-color: #546F99 !important;
+    border-color: #546F99 !important;
+    
+}
+
+.profile-button{
+  background-color: #546F99 !important;
+    border-color: #546F99 !important;
+}
+
 
 .cardb{
   margin-top: 5px;
@@ -52,17 +67,37 @@ ul li {
   justify-content: center;
   width: 50%;
   text-align: center;
+  padding-top: 3%;
 }
 
 .teacher-h3{
   text-align: center;
 }
 
-.teacher-btns{
+.teacher-btn-create{
   margin-right: 5px;
   margin-left: 5px;
   margin-bottom: 10px;
-  width: 30%;
+  width: 20%;
+  background-color: #546F99 !important;
+  border-color: #546F99 !important;
+  border-radius: 12px !important;
+}
+
+.teacher-btn-create:hover{
+  background-color: #3a4d6b !important;
+}
+
+.teacher-btn-logout{
+  margin-right: 5px;
+  margin-left: 5px;
+  margin-bottom: 10px;
+  width: 20%;
+  border-radius: 12px !important;
+}
+
+.teacher-btn-logout:hover{
+  background-color: #767676 !important;
 }
 
 .teacher-btns-row{
@@ -70,7 +105,6 @@ ul li {
   align-items: center;
   justify-content: center;
   align-content: center;
-  width: 100%;
 }
 
 .class-list{

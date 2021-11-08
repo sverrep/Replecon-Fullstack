@@ -203,7 +203,7 @@ class StudentClass extends React.Component {
 
                 <Modal.Footer>
                     <Button variant="secondary" onClick={() => this.closeModal()}>Cancel</Button>
-                    <Button variant="primary" onClick={() => this.sendTransfer()}>Send</Button>
+                    <Button variant="primary" className='classroom-button' onClick={() => this.sendTransfer()}>Send</Button>
                 </Modal.Footer>
             </Modal.Dialog>
         )
@@ -234,11 +234,12 @@ class StudentClass extends React.Component {
         return(
             <div className='wrapper'>
                 <NavBar/>
+                <div className='classroom-content'>
                 <div className='title'>
                     <h3>{this.state.class_name} - Mr.{this.state.teacher}</h3>
                     <h6>Current Balance: {this.state.balance}</h6>
                 </div>
-                
+                <div className='classroom-boxes'>
                 <div className="student-list">
                     <ListGroup>
                     {this.state.students.map(item => {
@@ -251,9 +252,12 @@ class StudentClass extends React.Component {
                     {this.renderAlert(this.state.variant, this.state.message)}
                     {this.renderModal()}
                 </div>
+                </div>
+                </div>
                 <div className='footer'>
                     <p>Your classroom: {this.state.classroom}</p>
                 </div>
+
                 
             </div>
         )
