@@ -28,6 +28,8 @@ class StudentClass extends React.Component {
             recipient_id: '',
             current_user_name:'',
 
+            current_user_id: 0,
+
             showAlert: false,
             variant: '',
             message: '',
@@ -43,6 +45,7 @@ class StudentClass extends React.Component {
     componentDidMount(){
         axios.get(getIP()+'/students/current/')
         .then(response => { 
+            this.setState({current_user_id: response.data.id})
             this.setState({current_user_name: response.data.first_name})
         })
         .catch(error => console.log(error))
@@ -172,7 +175,7 @@ class StudentClass extends React.Component {
     }
 
     alertClicked(item){
-        if(this.state.current_user_name === item.name){
+        if(this.state.current_user_id === item.id){
         }
         else{
             this.setState({clicked: item})
