@@ -136,7 +136,6 @@ class StudentStore extends React.Component {
 
     buyItem(item){
         if(this.validatePurchase(item)){
-            console.log(item)
         axios.post(getIP()+'/items/boughtitems/', { item_id: item.id })
             .then(response => {
                 axios.get(getIP()+'/students/store/')
@@ -182,7 +181,6 @@ class StudentStore extends React.Component {
                 </div>
                 <div className="alert">
                     {this.renderAlert(this.state.variant, this.state.message)}
-                    {console.log(this.state.message + "sasad")}
                     
                 </div>
                 

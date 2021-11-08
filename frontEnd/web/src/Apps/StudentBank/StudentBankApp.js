@@ -261,6 +261,7 @@ class StudentBank extends React.Component {
                   .then(response => {
                     console.log(response.data)
                     this.getStudentSavings()
+                    this.getStudentBalance()
                   })
                   .catch(error => console.log(error))
                 })

@@ -856,6 +856,59 @@ class TeacherTaxes extends React.Component {
         return tax
     }
 
+    importTaxes(){
+        axios.get(getIP()+'/classrooms/')
+        .then(async (response) => {
+          for(let i = 0; i <= Object.keys(response.data).length - 1; i++){
+            if(this.state.tax_import_class_code === response.data[i].class_code)
+            {
+              await this.getTaxes("import")
+              await this.getAllBrackets("import")
+              axios.post(getIP()+'/taxes/', {
+                class_code: this.state.class_code,
+                sales_tax: this.state.tax_import_taxes.sales_tax,
+                percentage_tax: this.state.tax_import_taxes.percentage_tax,
+                flat_tax: this.state.tax_import_taxes.flat_tax,
+              })
+              .then(async (response) => {
+                for(let i=0; i<=this.state.tax_import_prog.length-1;i++){
+                  console.log("prog")
+                  await axios.post(getIP()+'/progressivebrackets/', {
+                    tax_id: response.data.id,
+                    lower_bracket: this.state.arOfLows[i],
+                    higher_bracket: this.state.arOfHighs[i],
+                    percentage: this.state.arOfPer[i],
+                  })
+                  .then(response => {
+                    console.log(response.data)
+                    this.getTaxes("local")
+                  })
+                  .catch(error => console.log(error))
+                }
+                for(let i=0; i<=this.state.tax_import_reg.length-1;i++){
+                  console.log("reg")
+                  await axios.post(getIP()+'/regressivebrackets/', {
+                    tax_id: response.data.id,
+                    lower_bracket: this.state.regArOfLows[i],
+                    higher_bracket: this.state.regArOfHighs[i],
+                    percentage: this.state.regArOfPer[i],
+                  })
+                  .then(async (response) => {
+                    console.log(response.data)
+                    this.getTaxes("local")
+                  })
+                  .catch(error => console.log(error))
+                }
+                this.getTaxes("local")
+                this.setState({showImportTaxes: false})
+              
+              })
+            }
+          }
+        })
+        .catch(error => console.log(error))
+    }
+
     createTaxesModal(){
         return (
           <Modal

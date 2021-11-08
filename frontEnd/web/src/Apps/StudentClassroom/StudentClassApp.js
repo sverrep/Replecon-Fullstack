@@ -97,7 +97,7 @@ class StudentClass extends React.Component {
         if(this.validateTransfer()){
         for (let i = 0; i <= this.state.students.length-1; i++)
         {
-            if (this.state.students[i].name === this.state.name)
+            if (this.state.students[i].id === this.state.clicked.id)
             {
                 this.setState({ recipient_id: this.state.students[i].id }, () => {
                 axios.get(getIP()+'/students/current/')
