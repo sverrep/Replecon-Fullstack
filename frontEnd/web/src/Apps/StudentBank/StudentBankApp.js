@@ -231,7 +231,7 @@ class StudentBank extends React.Component {
     }
 
     validateClaim(item){
-      if(item.payout_date === 0){
+      if(item.payout_date <= 0){
         this.setState({variant:'success'})
         this.setState({message:'Money claimed successfully'})
         this.setState({showAlert:true})
