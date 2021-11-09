@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.db.models.query import QuerySet
 from rest_framework import viewsets, generics, mixins, status
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
@@ -27,6 +28,10 @@ class TransactionDetails(generics.GenericAPIView, mixins.RetrieveModelMixin):
 
     def get(self, request, id):
         return self.retrieve(request, id=id)
+
+    def delete(self, request, id):
+        return self.destroy(request, id=id)
+
 
 class StoreTransaction(APIView):
     queryset = Transaction.objects.all()
@@ -107,6 +112,36 @@ class ListTransactionsByID(APIView):
                 tempdict = {"id": transaction.id, "name": user.first_name, "amount": transaction.amount, "symbol": "-"}
                 transactions.append(tempdict)
             elif (transaction.recipient_id == request.user.id):
+                amountstr = str(transaction.amount)
+                if "-" in amountstr:
+                    newamountstr = amountstr.replace("-", "")
+                    user = get_user_model().objects.get(id = transaction.sender_id)
+                    tempdict = {"id": transaction.id, "name": user.first_name, "amount": newamountstr, "symbol": "-"}
+                    transactions.append(tempdict)
+                else:
+                    user = get_user_model().objects.get(id = transaction.sender_id)
+                    tempdict = {"id": transaction.id, "name": user.first_name, "amount": transaction.amount, "symbol": "+"}
+                    transactions.append(tempdict)
+        transactions.reverse()
+        return Response(transactions, status=status.HTTP_200_OK)
+
+class GetTransactionsByID(APIView):
+    queryset = Transaction.objects.all()
+    permission_classes = [AllowAny]
+    serializer_class = TransactionSerializer
+
+    lookup_field = 'id'
+
+    def get(self, request, id):
+        logger = logging.getLogger(__name__)
+        all_transactions = Transaction.objects.all()
+        transactions = []
+        for transaction in all_transactions:
+            if (transaction.sender_id == id):
+                user = get_user_model().objects.get(id = transaction.recipient_id)
+                tempdict = {"id": transaction.id, "name": user.first_name, "amount": transaction.amount, "symbol": "-"}
+                transactions.append(tempdict)
+            elif (transaction.recipient_id == id):
                 amountstr = str(transaction.amount)
                 if "-" in amountstr:
                     newamountstr = amountstr.replace("-", "")

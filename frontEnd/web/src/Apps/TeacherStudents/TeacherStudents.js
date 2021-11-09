@@ -234,6 +234,30 @@ class TeacherStudents extends React.Component {
         }
     }
 
+    async deleteSelected(){
+        for (var i = 0; i < Object.keys(this.state.selected).length; i++)
+        {
+            await axios.delete(getIP()+`/users/${this.state.selected[i]}/`)
+            .then(async response => {
+                await axios.get(getIP()+`/transactions/getTransactionsByID/${this.state.selected[i]}`)
+                .then(async response1 => {
+                    for (var j = 0; j < Object.keys(response1.data).length; j++)
+                    {
+                        if (response1.data[j].name === "BANK")
+                        {
+                            await axios.delete(getIP()+`/transactioninterestrates/${response1.data[j].id}`)
+                            .then(async response2 => {
+                            })
+                            .catch(error => console.log(error))
+                        }
+                    }
+                })
+                this.getClassStudents()
+            })
+            .catch(error => console.log(error))
+        }
+    }
+
     amountIsValid(amount){
         if(isNaN(amount)){
           this.setState({error: 'Make sure that amount is a number'})
@@ -268,6 +292,7 @@ class TeacherStudents extends React.Component {
                             <p>{this.state.error}</p>
                             <Button className="pay-btns" onClick={() => this.changeSelected(true)}>Pay Selected Students</Button>
                             <Button className="pay-btns" onClick={() => this.changeSelected(false)}>Charge Selected Students</Button>
+                            <Button className="delete-btn" onClick={() => this.deleteSelected()}>Delete Selected Students</Button>
                         </Col>
                         <Col>
                             <h4 className="student-header">Student Items</h4>

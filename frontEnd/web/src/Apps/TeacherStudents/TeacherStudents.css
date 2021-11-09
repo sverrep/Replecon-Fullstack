@@ -47,6 +47,16 @@
     border-radius: 12px !important;
 }
 
+.delete-btn {
+    margin-top: 2%;
+    width: 60%;
+    margin-right: 5px;
+    margin-left: 5px;
+    background-color: #E86060 !important;
+    border-color: #E86060 !important;
+    border-radius: 12px !important;
+}
+
 .pay-btns:hover {
     background-color: #3a4d6b !important;
 }

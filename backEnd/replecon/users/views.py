@@ -36,6 +36,9 @@ class UserDetails(generics.GenericAPIView, mixins.RetrieveModelMixin, mixins.Upd
     def get(self, request, id):
         return self.retrieve(request, id=id)
 
+    def delete(self, request, id):
+        return self.destroy(request, id=id)
+
 class TeacherList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
     queryset = Teacher.objects.all()
     permission_classes = [AllowAny]
