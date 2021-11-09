@@ -84,3 +84,15 @@ class TransactionIntrestRatePayoutDate(APIView):
         current_date = datetime.date.today()
         payout_date = transaction.end_date - current_date
         return Response(payout_date, status=status.HTTP_200_OK)
+
+class TransactionInterestRates(generics.GenericAPIView, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin):
+    queryset = TransactionInterestRate.objects.all()
+    serializer_class = TransactionInterestRateSerializer
+
+    lookup_field = 'transaction_id'
+
+    def get(self, request, transaction_id):
+        return self.retrieve(request, transaction_id=transaction_id)
+
+    def delete(self, request, transaction_id):
+        return self.destroy(request, transaction_id=transaction_id)
