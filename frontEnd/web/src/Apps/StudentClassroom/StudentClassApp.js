@@ -3,7 +3,7 @@ import { withRouter } from "react-router-dom";
 import axios from 'axios';
 import getIP from '../../settings.js';
 import './StudentClassApp.css';
-import NavBar from '../../Components/navbar/Navbar.js';
+import navbar from '../../Components/navbar/Student NavBar/Navbar.js';
 import Button from 'react-bootstrap/Button';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Modal from 'react-bootstrap/Modal';
@@ -27,7 +27,7 @@ class StudentClass extends React.Component {
             sender_id: '',
             recipient_id: '',
             current_user_name:'',
-
+            token: this.props.location.state.token,
             current_user_id: 0,
 
             showAlert: false,
@@ -43,6 +43,7 @@ class StudentClass extends React.Component {
     }
     
     componentDidMount(){
+        axios.defaults.headers.common.Authorization = `Token ${this.state.token}`;
         axios.get(getIP()+'/students/current/')
         .then(response => { 
             this.setState({current_user_id: response.data.id})
@@ -236,7 +237,7 @@ class StudentClass extends React.Component {
     render(){
         return(
             <div className='wrapper'>
-                <NavBar/>
+                {navbar(this.state.token)}
                 <div className='classroom-content'>
                 <div className='title'>
                     <h3>{this.state.class_name} - Mr.{this.state.teacher}</h3>

@@ -23,7 +23,8 @@ class SignUpApp extends React.Component {
             redirect_login: false, 
             redirect_profile: false, 
             showError: false, 
-            error: '' 
+            error: '',
+            token: '',
         }
         this.handleChange = this.handleChange.bind(this)
         this.handleSignup = this.handleSignup.bind(this)
@@ -43,7 +44,7 @@ class SignUpApp extends React.Component {
                 return(
                     <Redirect to={{
                         pathname: '/Profile', 
-                        state: { email: this.state.email, name: this.state.name, class_code: this.state.class_code, role: this.props.location.state.role }}}>
+                        state: { email: this.state.email, name: this.state.name, class_code: this.state.class_code, role: this.props.location.state.role, token: this.state.token }}}>
                     </Redirect>
                 );
             }
@@ -52,7 +53,7 @@ class SignUpApp extends React.Component {
                 return(
                     <Redirect to={{
                         pathname: '/Profile', 
-                        state: { role: this.props.location.state.role }}}>
+                        state: { role: this.props.location.state.role, token: this.state.token }}}>
                     </Redirect>
                 );
             }
@@ -230,8 +231,8 @@ class SignUpApp extends React.Component {
                 const payload = { username: this.state.email, password: this.state.password, first_name: this.state.name } 
                 axios.post(getIP()+'/auth/register/', payload)
                 .then(response => {
-                    const { token } = response.data;
-                    axios.defaults.headers.common.Authorization = `Token ${token}`;
+                    this.setState({ token: response.data.token })
+                    axios.defaults.headers.common.Authorization = `Token ${this.state.token}`;
                     axios.post(getIP()+'/students/create/', {class_code: this.state.class_code})
                     .then(response => {
                         this.setState({ redirect_profile : true})
@@ -249,8 +250,8 @@ class SignUpApp extends React.Component {
                 const payload = { username: this.state.email, password: this.state.password, first_name: this.state.first_name } 
                 axios.post(getIP()+'/auth/register/', payload)
                 .then(response => {
-                    const { token } = response.data;
-                    axios.defaults.headers.common.Authorization = `Token ${token}`;
+                    this.setState({ token: response.data.token })
+                    axios.defaults.headers.common.Authorization = `Token ${this.state.token}`;
                     axios.post(getIP()+'/teachers/create/', {last_name: this.state.last_name})
                     .then(response => {
                         this.setState({ redirect_profile : true})

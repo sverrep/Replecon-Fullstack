@@ -2,7 +2,7 @@ import React from 'react';
 import { withRouter } from "react-router-dom";
 import axios from 'axios';
 import getIP from '../../settings.js';
-import NavBar from '../../Components/navbar/Navbar.js';
+import navbar from '../../Components/navbar/Student NavBar/Navbar.js';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import Row from 'react-bootstrap/Row';
@@ -20,7 +20,7 @@ class StudentStore extends React.Component {
             shops:[],
             students: [],
             items: [],
-
+            token: this.props.location.state.token,
             showAlert: false,
             variant: '',
             message: '',
@@ -31,6 +31,7 @@ class StudentStore extends React.Component {
     }
 
     componentDidMount(){
+        axios.defaults.headers.common.Authorization = `Token ${this.state.token}`;
         this.getStudentBalance()
         this.getClassCode()
     }
@@ -172,7 +173,7 @@ class StudentStore extends React.Component {
     render(){
         return(
             <div className='wrapper'>
-                <NavBar/>
+                {navbar(this.state.token)}
                 <div className='store-content'>
                 <div className='title'>
                     <div className='title-name'><h3>{this.state.store_name}</h3></div>

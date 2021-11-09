@@ -11,7 +11,7 @@ import Button from 'react-bootstrap/Button'
 export default class LoginApp extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { email: '', password: '', redirect_student_profile: false, redirect_student_signup: false, redirect_teacher_signup: false, error: '' };
+    this.state = { email: '', password: '', redirect_student_profile: false, redirect_student_signup: false, redirect_teacher_signup: false, error: '', token: '' };
     this.handleChange = this.handleChange.bind(this);
     this.handleLogin = this.handleLogin.bind(this);
     this.handleStudentSignUpRedirect = this.handleStudentSignUpRedirect.bind(this);
@@ -31,12 +31,12 @@ export default class LoginApp extends React.Component {
     }
     else if(this.state.redirect_student_profile){
       return(
-        <Redirect to={{pathname: '/Profile', state: { email: this.state.email, role: "Student" }}}></Redirect>
+        <Redirect to={{pathname: '/Profile', state: { email: this.state.email, role: "Student", token: this.state.token }}}></Redirect>
       )
     }
     else if(this.state.redirect_teacher_profile){
       return(
-        <Redirect to={{pathname: '/Profile', state: { email: this.state.email,  role: "Teacher" }}}></Redirect>
+        <Redirect to={{pathname: '/Profile', state: { email: this.state.email,  role: "Teacher", token: this.state.token }}}></Redirect>
       )
     }
     else{
@@ -113,8 +113,8 @@ export default class LoginApp extends React.Component {
       const payload = { username: this.state.email, password: this.state.password } 
       axios.post(getIP()+'/auth/login/', payload)
       .then(response => {
-        const { token } = response.data;
-        axios.defaults.headers.common.Authorization = `Token ${token}`;
+        this.setState ({ token: response.data.token })
+        axios.defaults.headers.common.Authorization = `Token ${this.state.token}`;
         axios.get(getIP()+'/teachers/isTeacher/')
         .then(response => {
           if(response.data === true) {

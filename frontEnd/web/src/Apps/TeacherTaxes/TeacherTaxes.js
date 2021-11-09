@@ -21,7 +21,7 @@ class TeacherTaxes extends React.Component {
             class_name: this.props.location.state.class.class_name,
             teacher_id:  this.props.location.state.teacher_id,
             students: [],
-            
+            token: this.props.location.state.token,
             classHasTaxes: false,
             class_tax: {},
             checked: '',
@@ -69,6 +69,7 @@ class TeacherTaxes extends React.Component {
     }
 
     componentDidMount(){
+        axios.defaults.headers.common.Authorization = `Token ${this.state.token}`;
         this.getClassStudents()
         this.getTaxes("local")
     }
@@ -1103,7 +1104,7 @@ class TeacherTaxes extends React.Component {
     render(){
         return (
             <div className="wrapper">
-                {navbar(this.state.class_name, {class_code: this.state.class_code, class_name: this.state.class_name}, this.state.teacher_id)}
+                {navbar(this.state.class_name, {class_code: this.state.class_code, class_name: this.state.class_name}, this.state.teacher_id, this.state.token)}
                 <Container className="taxes-container">
                     <Row>
                         {this.renderTaxView()}

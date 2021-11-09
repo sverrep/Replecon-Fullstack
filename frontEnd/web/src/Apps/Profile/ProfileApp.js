@@ -3,7 +3,7 @@ import { withRouter, Redirect } from "react-router-dom";
 import axios from 'axios';
 import getIP from '../../settings.js';
 import './ProfileApp.css';
-import NavBar from '../../Components/navbar/Navbar.js';
+import navbar from '../../Components/navbar/Student NavBar/Navbar.js';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
@@ -34,7 +34,7 @@ class Profile extends React.Component {
             redirect_class: false, 
             selected_class: [],
             showCreateClass: false,
-
+            token: this.props.location.state.token,
             showInven:false,
         };
         this.handleLogOut = this.handleLogOut.bind(this)
@@ -44,6 +44,7 @@ class Profile extends React.Component {
     }
 
     componentDidMount(){
+        axios.defaults.headers.common.Authorization = `Token ${this.state.token}`;
         axios.get(getIP()+'/students/current/')
         .then(response => {
             if(this.state.role === "Student")
@@ -252,13 +253,13 @@ class Profile extends React.Component {
         }
         else if(this.state.redirect_class){
             return(
-                <Redirect to={{pathname: `/Class/${this.state.class_code}/students`, state: {class: this.state.selected_class, teacher_id: this.state.teacher_id}}}></Redirect>
+                <Redirect to={{pathname: `/Class/${this.state.class_code}/students`, state: {class: this.state.selected_class, teacher_id: this.state.teacher_id, token: this.state.token}}}></Redirect>
             );
         }
         else if (this.state.role === "Student"){
             return (
                 <div className='wrapper'>
-                    <NavBar/>
+                    {navbar(this.state.token)}
                     <div className='profile-content'>
                     <div className='profile-title'>
                         <div className='profile-name'><h3>{this.state.first_name}</h3></div>

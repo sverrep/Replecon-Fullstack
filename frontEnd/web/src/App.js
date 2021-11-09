@@ -11,7 +11,6 @@ import SignUpApp from "./Apps/SignUp/SignUpApp";
 import StudentClassApp from './Apps/StudentClassroom/StudentClassApp'
 import StudentStoreApp from './Apps/StudentStore/StudentStoreApp'
 import StudentBankApp from './Apps/StudentBank/StudentBankApp'
-import TeacherClassApp from "./Apps/TeacherClass/TeacherClassApp";
 import TeacherStudents from "./Apps/TeacherStudents/TeacherStudents";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import TeacherTaxes from "./Apps/TeacherTaxes/TeacherTaxes";
@@ -42,9 +41,6 @@ export default function App() {
           </Route>
           <Route path="/StudentBank">
             <StudentBankApp />
-            </Route>
-          <Route path="/Class/features">
-            <TeacherClassApp />
           </Route>
           <Route path="/Class/:code/students">
             <TeacherStudents />

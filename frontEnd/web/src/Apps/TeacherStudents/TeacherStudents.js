@@ -2,6 +2,7 @@ import React from 'react';
 import { withRouter } from "react-router-dom";
 import axios from 'axios';
 import getIP from '../../settings.js';
+import { getToken } from '../../settings.js';
 import './TeacherStudents.css';
 import navbar from '../../Components/navbar/Teacher NavBar/TeacherNavbar';
 import Button from 'react-bootstrap/Button'
@@ -22,7 +23,7 @@ class TeacherStudents extends React.Component {
             class_name: this.props.location.state.class.class_name,
             teacher_id:  this.props.location.state.teacher_id,
             students: [],
-            
+            token: this.props.location.state.token,
             selected: [],
             selected_name: "",
             selected_balance: "",
@@ -38,8 +39,10 @@ class TeacherStudents extends React.Component {
     }
 
     componentDidMount(){
+        axios.defaults.headers.common.Authorization = `Token ${this.state.token}`;
         this.getClassStudents()
         this.getAllItems()
+        
     }
 
     getClassStudents() {
@@ -277,7 +280,7 @@ class TeacherStudents extends React.Component {
     render(){
         return (
             <div className="wrapper">
-                {navbar(this.state.class_name, {class_code: this.state.class_code, class_name: this.state.class_name}, this.state.teacher_id)}
+                {navbar(this.state.class_name, {class_code: this.state.class_code, class_name: this.state.class_name}, this.state.teacher_id, this.state.token)}
                 <Container className="student-container">
                     <Row className="content-row">
                         <Col className="student-list-col">

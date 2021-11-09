@@ -24,7 +24,7 @@ class TeacherBank extends React.Component {
             class_name: this.props.location.state.class.class_name,
             teacher_id:  this.props.location.state.teacher_id,
             students: [],
-
+            token: this.props.location.state.token,
             bank_id: '',
             interest_rate: "",
             payout_rate: "",
@@ -44,8 +44,9 @@ class TeacherBank extends React.Component {
     }
 
     componentDidMount(){
-        this.getClassStudents()
-        this.getBanks()
+      axios.defaults.headers.common.Authorization = `Token ${this.state.token}`;
+      this.getClassStudents()
+      this.getBanks()
     }
 
     getClassStudents() {
@@ -339,7 +340,7 @@ class TeacherBank extends React.Component {
     render(){
         return(
             <div className="wrapper">
-                {navbar(this.state.class_name, {class_code: this.state.class_code, class_name: this.state.class_name}, this.state.teacher_id)}
+                {navbar(this.state.class_name, {class_code: this.state.class_code, class_name: this.state.class_name}, this.state.teacher_id, this.state.token)}
                 <Container className="bank-container">
                     <Row className="content-row">
                         {this.renderBankView()}

@@ -2,7 +2,7 @@ import React from 'react';
 import { withRouter } from "react-router-dom";
 import axios from 'axios';
 import getIP from '../../settings.js';
-import NavBar from '../../Components/navbar/Navbar.js';
+import navbar from '../../Components/navbar/Student NavBar/Navbar.js';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
@@ -25,7 +25,7 @@ class StudentBank extends React.Component {
             show:false,
             value:'',
             loggedin_student:{},
-
+            token: this.props.location.state.token,
             savings: [],
 
             showAlert: false,
@@ -43,9 +43,10 @@ class StudentBank extends React.Component {
     }
 
     componentDidMount(){
-        this.getClassStudents()
-        this.getBanks()
-        this.getStudentBalance()
+      axios.defaults.headers.common.Authorization = `Token ${this.state.token}`;
+      this.getClassStudents()
+      this.getBanks()
+      this.getStudentBalance()
 
     }
 
@@ -320,7 +321,7 @@ class StudentBank extends React.Component {
     render(){
         return(
         <div className='wrapper'>
-            <NavBar/>
+            {navbar(this.state.token)}
             <div className='bank-content'>
             <div>
                 <div className='bank-title'>
