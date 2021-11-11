@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from rest_framework import viewsets, generics, mixins
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, DjangoModelPermissions
 from .models import Classroom
 from .serializers import ClassroomSerializer
 
@@ -21,6 +21,7 @@ class ClassroomList(generics.GenericAPIView, mixins.ListModelMixin, mixins.Creat
 class ClassroomDetails(generics.GenericAPIView, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin):
     queryset = Classroom.objects.all()
     serializer_class = ClassroomSerializer
+    permission_classes = [DjangoModelPermissions]
 
     lookup_field = 'id'
 
