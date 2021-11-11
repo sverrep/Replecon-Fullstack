@@ -3369,7 +3369,7 @@ export const passwords = [
 "sucked",
 "sex123",
 "sexy69",
-"pic\'s",
+"pics",
 "tommyboy",
 "lamont",
 "meat",
