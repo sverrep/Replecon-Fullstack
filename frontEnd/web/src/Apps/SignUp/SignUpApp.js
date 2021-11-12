@@ -228,7 +228,7 @@ class SignUpApp extends React.Component {
         if(this.props.location.state.role === "Student")
         {
             if (await this.validateData()) {
-                const payload = { username: this.state.email, password: this.state.password, first_name: this.state.name } 
+                const payload = { username: this.state.email, password: this.state.password, first_name: this.state.name, email: this.state.email } 
                 axios.post(getIP()+'/auth/register/', payload)
                 .then(response => {
                     this.setState({ token: response.data.token })
@@ -247,7 +247,7 @@ class SignUpApp extends React.Component {
         }
         else if(this.props.location.state.role === "Teacher"){
             if (await this.validateData()) {
-                const payload = { username: this.state.email, password: this.state.password, first_name: this.state.first_name } 
+                const payload = { username: this.state.email, password: this.state.password, first_name: this.state.first_name, email: this.state.email } 
                 axios.post(getIP()+'/auth/register/', payload)
                 .then(response => {
                     this.setState({ token: response.data.token })
