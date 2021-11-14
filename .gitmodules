@@ -1,9 +1,6 @@
 [submodule "frontEnd/web"]
 	path = frontEnd/web
 	url = https://github.com/sverrep/web.git
-[submodule "frontEnd/--force"]
-	path = frontEnd/--force
-	url = https://github.com/sverrep/web.git
-[submodule "frontEnd/WebApp"]
-	path = frontEnd/WebApp
-	url = https://github.com/sverrep/WebApp.git
+[submodule "backEnd/replecon"]
+	path = backEnd/replecon
+	url = https://github.com/sverrep/replecon.git
