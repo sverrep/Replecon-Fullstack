@@ -108,6 +108,9 @@ https://github.com/steveno06/RepleconScreenShots/blob/main/Replecon_Backend_Arch
 
 https://github.com/steveno06/RepleconScreenShots/blob/main/Backend%20API%20Description.pdf
 
+## Cyber Security Measures Implemented
+https://docs.google.com/document/d/1MOT0_gzFjEICuPPi4KH5cjHGamvCaiEhg8BfUleZ8Vw/edit?usp=sharing
+
 ## Backend Team Contribution
 
 - Bank App - Sverre & Steven

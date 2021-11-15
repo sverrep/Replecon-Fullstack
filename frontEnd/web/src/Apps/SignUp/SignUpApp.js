@@ -8,7 +8,7 @@ import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Form from 'react-bootstrap/Form'
 import FloatingLabel from 'react-bootstrap/FloatingLabel'
-
+import {passwords} from '../../Components/passwords/mostCommon.js'
 
 class SignUpApp extends React.Component {
     constructor(props) {
@@ -30,6 +30,8 @@ class SignUpApp extends React.Component {
         this.handleSignup = this.handleSignup.bind(this)
         this.handleReturnRedirect = this.handleReturnRedirect.bind(this)
         this.checkClassCode = this.checkClassCode.bind(this)
+        this.validateStrongPassword = this.validateStrongPassword.bind(this)
+        this.vaildateComplexity = this.vaildateComplexity.bind(this)
     }
 
     render() {
@@ -133,6 +135,26 @@ class SignUpApp extends React.Component {
         }
     }
 
+    validateStrongPassword(password){
+        var flag = true
+        for(let i= 0; i <= 999; i++){
+            if (password === passwords[i]){
+                flag = false
+            }
+        }
+        return flag
+    }
+
+    vaildateComplexity(password){
+        let strongPassword = new RegExp('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{8,})')
+        if(strongPassword.test(password)){
+            return true
+        }
+        else{
+            return false
+        }
+    }
+
     async validateData() 
     {
         var reg = /^\w+([-]?\w+)*@\w+([-]?\w+)*(\.\w\w+)+$/;
@@ -142,57 +164,68 @@ class SignUpApp extends React.Component {
                 this.setState({error: "Password needs to be longer", showError: true})
             }
             else{
-                if (this.props.location.state.role === "Student")
-                {
-                    if(this.state.name === '')
-                    {
-                        this.setState({error: "Please enter a name"})
-                        return false
+                if(this.validateStrongPassword(this.state.password)===false){
+                    this.setState({error: "Please use a stronger password", showError: true})
+                }
+                else{
+                    
+                    if(this.vaildateComplexity(this.state.password)===false){
+                        this.setState({error: "Please use a more complex password. Must be 8 characters long and include at least 1 symbol, uppercase, and number", showError: true})
                     }
-                    else
-                    {
-                        if(this.state.class_code.length === 6)
+                    else{
+
+                        if (this.props.location.state.role === "Student")
                         {
-                            var check = await this.checkClassCode(this.state.class_code)
-                            if(check)
+                            if(this.state.name === '')
                             {
-                                return true
+                                this.setState({error: "Please enter a name"})
+                                return false
                             }
                             else
                             {
-                                this.setState({error: "Please enter an existing class code"})
+                                if(this.state.class_code.length === 6)
+                                {
+                                    var check = await this.checkClassCode(this.state.class_code)
+                                    if(check)
+                                    {
+                                        return true
+                                    }
+                                    else
+                                    {
+                                        this.setState({error: "Please enter an existing class code"})
+                                        return false
+                                    }        
+                                }
+                                else
+                                {
+                                    this.setState({error: "Class Code needs to be 6 characters long", showError: true})
+                                    return false
+                                }
+                            }
+                            
+                        }
+                        else if (this.props.location.state.role === "Teacher")
+                        {
+                            if(this.state.first_name === '')
+                            {
+                                this.setState({error: "Please enter a first name"})
                                 return false
-                            }        
-                        }
-                        else
-                        {
-                            this.setState({error: "Class Code needs to be 6 characters long", showError: true})
-                            return false
-                        }
-                    }
-                    
-                }
-                else if (this.props.location.state.role === "Teacher")
-                {
-                    if(this.state.first_name === '')
-                    {
-                        this.setState({error: "Please enter a first name"})
-                        return false
-                    }
-                    else
-                    {
-                        if(this.state.last_name === '')
-                        {
-                            this.setState({error: "Please enter a last name"})
-                            return false
-                        }
-                        else
-                        {
-                            return true
+                            }
+                            else
+                            {
+                                if(this.state.last_name === '')
+                                {
+                                    this.setState({error: "Please enter a last name"})
+                                    return false
+                                }
+                                else
+                                {
+                                    return true
+                                }
+                            }
                         }
                     }
                 }
-
             }
         }
         else

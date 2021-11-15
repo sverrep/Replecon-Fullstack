@@ -2,10 +2,12 @@ from django.shortcuts import render
 from rest_framework import viewsets, generics, mixins, viewsets, status
 from .serializers import TaxSerializer, ProgressiveBracketSerializer, RegressiveBracketSerializer
 from .models import Tax, ProgressiveBracket, RegressiveBracket
+from rest_framework.permissions import DjangoModelPermissions
 
 class TaxList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
     queryset = Tax.objects.all()
     serializer_class = TaxSerializer
+    permission_classes = [DjangoModelPermissions]
 
     def get(self, request):
         return self.list(request)
@@ -16,6 +18,7 @@ class TaxList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModel
 class TaxDetails(generics.GenericAPIView, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin):
     queryset = Tax.objects.all()
     serializer_class = TaxSerializer
+    permission_classes = [DjangoModelPermissions]
 
     lookup_field = 'id'
 
@@ -31,6 +34,7 @@ class TaxDetails(generics.GenericAPIView, mixins.RetrieveModelMixin, mixins.Upda
 class ProgressiveBracketList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
     queryset = ProgressiveBracket.objects.all()
     serializer_class = ProgressiveBracketSerializer
+    permission_classes = [DjangoModelPermissions]
     
     def get(self, request):
         return self.list(request)
@@ -41,6 +45,7 @@ class ProgressiveBracketList(generics.GenericAPIView, mixins.ListModelMixin, mix
 class ProgressiveBracketDetails(generics.GenericAPIView, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin):
     queryset = ProgressiveBracket.objects.all()
     serializer_class = ProgressiveBracketSerializer
+    permission_classes = [DjangoModelPermissions]
 
     lookup_field = 'id'
 
@@ -56,6 +61,7 @@ class ProgressiveBracketDetails(generics.GenericAPIView, mixins.RetrieveModelMix
 class RegressiveBracketList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
     queryset = RegressiveBracket.objects.all()
     serializer_class = RegressiveBracketSerializer
+    permission_classes = [DjangoModelPermissions]
 
     def get(self, request):
         return self.list(request)
@@ -66,6 +72,7 @@ class RegressiveBracketList(generics.GenericAPIView, mixins.ListModelMixin, mixi
 class RegressiveBracketDetails(generics.GenericAPIView, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin):
     queryset = RegressiveBracket.objects.all()
     serializer_class = RegressiveBracketSerializer
+    permission_classes = [DjangoModelPermissions]
 
     lookup_field = 'id'
 
