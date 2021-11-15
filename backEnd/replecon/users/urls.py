@@ -3,6 +3,7 @@ from django.conf.urls import url
 from rest_framework.authtoken.views import obtain_auth_token
 from .views import CreateUserAPIView, UserDetails, LogoutUserAPIView, CreateBankStore, UserViewSet, StudentClassCode, TeacherList, StudentBalance, CurrentStudent, StoreStudent, BankStudent, CreateTeacherAPIView, CreateStudentAPIView, IsUserTeacher, StudentList 
 from rest_framework.routers import DefaultRouter
+from django.contrib.auth import views as auth_views
 
 router = DefaultRouter()
 router.register('users', UserViewSet, basename='users')
