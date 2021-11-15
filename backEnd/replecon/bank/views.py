@@ -6,6 +6,7 @@ from django.http import JsonResponse
 from rest_framework.response import Response
 from rest_framework.parsers import JSONParser
 from rest_framework.decorators import api_view, APIView
+from rest_framework.permissions import DjangoModelPermissions
 import datetime
 import logging
 # Create your views here.
@@ -13,6 +14,7 @@ import logging
 class BankList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
     queryset = Bank.objects.all()
     serializer_class = BankSerializer
+    permission_classes = [DjangoModelPermissions]
 
     def get(self, request):
         return self.list(request)
@@ -23,6 +25,7 @@ class BankList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateMode
 class BankDetails(generics.GenericAPIView, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin):
     queryset = Bank.objects.all()
     serializer_class = BankSerializer
+    permission_classes = [DjangoModelPermissions]
 
     lookup_field = 'id'
 

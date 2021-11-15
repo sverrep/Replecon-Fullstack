@@ -6,6 +6,7 @@ from rest_framework.authtoken.models import Token
 from rest_framework import status, viewsets
 from rest_framework.views import APIView
 from rest_framework import viewsets, generics, mixins, status
+from django.contrib.auth.models import Group
 from users.serializers import CreateUserSerializer, CreateStudentSerializer, CreateTeacherSerializer
 from .models import Student, Teacher
 from decimal import Decimal
@@ -41,7 +42,6 @@ class UserDetails(generics.GenericAPIView, mixins.RetrieveModelMixin, mixins.Upd
 
 class TeacherList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
     queryset = Teacher.objects.all()
-    permission_classes = [AllowAny]
     serializer_class = CreateTeacherSerializer
 
     def get(self, request):
@@ -58,6 +58,8 @@ class CreateTeacherAPIView(CreateAPIView):
         serializer = CreateTeacherSerializer(data = data)
         if serializer.is_valid():
             serializer.save()
+            teachers = Group.objects.get(name='Teacher')
+            teachers.user_set.add(teacher.id)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         logger.error(serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -69,6 +71,8 @@ class CreateStudentAPIView(CreateAPIView):
         serializer = CreateStudentSerializer(data = data)
         if serializer.is_valid():
             serializer.save()
+            students = Group.objects.get(name='Student')
+            students.user_set.add(student.id)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -113,7 +117,6 @@ class BankStudent(APIView):
         
 
 class UserViewSet(viewsets.ModelViewSet):
-    permission_classes = [AllowAny]
     queryset = get_user_model().objects.all()
     serializer_class = CreateUserSerializer
 
@@ -197,7 +200,6 @@ class StudentList(APIView):
         return Response(sorted_list, status=status.HTTP_200_OK)
 
 class CreateBankStore(APIView):
-    permission_classes = [AllowAny]
 
     def post(self, request):
         logger = logging.getLogger(__name__)

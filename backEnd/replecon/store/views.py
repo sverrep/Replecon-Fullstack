@@ -8,6 +8,7 @@ from django.http import JsonResponse
 from rest_framework.parsers import JSONParser
 from rest_framework.decorators import api_view, APIView
 import logging
+from rest_framework.permissions import AllowAny, DjangoModelPermissions
 
 # Create your views here.
 
@@ -41,6 +42,7 @@ class ShopDetails(generics.GenericAPIView, mixins.RetrieveModelMixin, mixins.Upd
 class ItemList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
     queryset = Item.objects.all()
     serializer_class = ItemSerializer
+    permission_classes = [DjangoModelPermissions]
 
     def get(self, request):
         return self.list(request)

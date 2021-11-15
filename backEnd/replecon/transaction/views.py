@@ -2,14 +2,13 @@ from django.contrib.auth import get_user_model
 from django.db.models.query import QuerySet
 from rest_framework import viewsets, generics, mixins, status
 from rest_framework.response import Response
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import DjangoModelPermissions
 from rest_framework.views import APIView
 from .serializers import TransactionSerializer
 from .models import Transaction
 import logging
 
 class CreateTransaction(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
-    permission_classes = [AllowAny]
     queryset = Transaction.objects.all()
     serializer_class = TransactionSerializer
 
@@ -21,7 +20,6 @@ class CreateTransaction(generics.GenericAPIView, mixins.ListModelMixin, mixins.C
 
 class TransactionDetails(generics.GenericAPIView, mixins.RetrieveModelMixin):
     queryset = Transaction.objects.all()
-    permission_classes = [AllowAny]
     serializer_class = TransactionSerializer
 
     lookup_field = 'id'
@@ -35,7 +33,6 @@ class TransactionDetails(generics.GenericAPIView, mixins.RetrieveModelMixin):
 
 class StoreTransaction(APIView):
     queryset = Transaction.objects.all()
-    permission_classes = [AllowAny]
     serializer_class = TransactionSerializer
 
     def post(self, request):
@@ -82,6 +79,9 @@ class BankTransaction(APIView):
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
 class TeacherPayStudents(APIView):
+    queryset = Transaction.objects.all()
+    serializer_class = TransactionSerializer
+    permission_classes = [DjangoModelPermissions]
 
     def post(self, request):
         logger = logging.getLogger(__name__)
@@ -99,7 +99,6 @@ class TeacherPayStudents(APIView):
 
 class ListTransactionsByID(APIView):
     queryset = Transaction.objects.all()
-    permission_classes = [AllowAny]
     serializer_class = TransactionSerializer
 
     def get(self, request):
@@ -127,7 +126,6 @@ class ListTransactionsByID(APIView):
 
 class GetTransactionsByID(APIView):
     queryset = Transaction.objects.all()
-    permission_classes = [AllowAny]
     serializer_class = TransactionSerializer
 
     lookup_field = 'id'
