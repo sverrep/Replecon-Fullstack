@@ -1,0 +1,298 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Sign Up Tests Render Tests Student Render 1`] = `
+Array [
+  <Container
+    className="signup-container"
+    fluid={false}
+  >
+    <div
+      className="vertical-center"
+    >
+      <Row>
+        <h3
+          className="signup-h3"
+        >
+          Student
+           Sign Up
+        </h3>
+      </Row>
+      <Row>
+        <Row>
+          <FormGroup
+            className="mb-3"
+            controlId="email"
+          >
+            <FloatingLabel
+              label="Email"
+            >
+              <FormControl
+                id="email"
+                onChange={[Function]}
+                placeholder="Email"
+              />
+            </FloatingLabel>
+            <FloatingLabel
+              label="Password"
+            >
+              <FormControl
+                id="password"
+                onChange={[Function]}
+                placeholder="Password"
+                type="password"
+              />
+            </FloatingLabel>
+          </FormGroup>
+        </Row>
+        <Row>
+          <FormGroup
+            className="mb-3"
+            controlId="email"
+          >
+            <FloatingLabel
+              label="Name"
+            >
+              <FormControl
+                id="name"
+                onChange={[Function]}
+                placeholder="Name"
+              />
+            </FloatingLabel>
+            <FloatingLabel
+              label="Class Code"
+            >
+              <FormControl
+                id="class_code"
+                onChange={[Function]}
+                placeholder="Class code"
+              />
+            </FloatingLabel>
+          </FormGroup>
+        </Row>
+      </Row>
+      <p
+        className="error-message"
+      >
+        
+      </p>
+      <div
+        className="signup-btns-row"
+      >
+        <Button
+          active={false}
+          className="signup-btns"
+          disabled={false}
+          onClick={[Function]}
+          variant="primary"
+        >
+          SignUp
+        </Button>
+      </div>
+      <div
+        className="signup-btns-row"
+      >
+        <Button
+          active={false}
+          className="signup-btns"
+          disabled={false}
+          onClick={[Function]}
+          variant="primary"
+        >
+          Already have an account? Log In
+        </Button>
+      </div>
+    </div>
+  </Container>,
+]
+`;
+
+exports[`Sign Up Tests Render Tests Teacher Render 1`] = `
+Array [
+  <Container
+    className="signup-container"
+    fluid={false}
+  >
+    <div
+      className="vertical-center"
+    >
+      <Row>
+        <h3
+          className="signup-h3"
+        >
+          Teacher
+           Sign Up
+        </h3>
+      </Row>
+      <Row>
+        <Row>
+          <FormGroup
+            className="mb-3"
+            controlId="email"
+          >
+            <FloatingLabel
+              label="Email"
+            >
+              <FormControl
+                id="email"
+                onChange={[Function]}
+                placeholder="Email"
+              />
+            </FloatingLabel>
+            <FloatingLabel
+              label="Password"
+            >
+              <FormControl
+                id="password"
+                onChange={[Function]}
+                placeholder="Password"
+                type="password"
+              />
+            </FloatingLabel>
+          </FormGroup>
+        </Row>
+        <Row>
+          <FormGroup
+            className="mb-3"
+            controlId="email"
+          >
+            <FloatingLabel
+              label="First Name"
+            >
+              <FormControl
+                id="first_name"
+                onChange={[Function]}
+                placeholder="First Name"
+              />
+            </FloatingLabel>
+            <FloatingLabel
+              label="Last Name"
+            >
+              <FormControl
+                id="last_name"
+                onChange={[Function]}
+                placeholder="Last Name"
+              />
+            </FloatingLabel>
+          </FormGroup>
+        </Row>
+      </Row>
+      <p
+        className="error-message"
+      >
+        
+      </p>
+      <div
+        className="signup-btns-row"
+      >
+        <Button
+          active={false}
+          className="signup-btns"
+          disabled={false}
+          onClick={[Function]}
+          variant="primary"
+        >
+          SignUp
+        </Button>
+      </div>
+      <div
+        className="signup-btns-row"
+      >
+        <Button
+          active={false}
+          className="signup-btns"
+          disabled={false}
+          onClick={[Function]}
+          variant="primary"
+        >
+          Already have an account? Log In
+        </Button>
+      </div>
+    </div>
+  </Container>,
+]
+`;
+
+exports[`Sign Up Tests User Fields Test Common Field  1`] = `
+<Row>
+  <FormGroup
+    className="mb-3"
+    controlId="email"
+  >
+    <FloatingLabel
+      label="Email"
+    >
+      <FormControl
+        id="email"
+        onChange={[Function]}
+        placeholder="Email"
+      />
+    </FloatingLabel>
+    <FloatingLabel
+      label="Password"
+    >
+      <FormControl
+        id="password"
+        onChange={[Function]}
+        placeholder="Password"
+        type="password"
+      />
+    </FloatingLabel>
+  </FormGroup>
+</Row>
+`;
+
+exports[`Sign Up Tests User Fields Test Student Unique Field  1`] = `
+<Row>
+  <FormGroup
+    className="mb-3"
+    controlId="email"
+  >
+    <FloatingLabel
+      label="Name"
+    >
+      <FormControl
+        id="name"
+        onChange={[Function]}
+        placeholder="Name"
+      />
+    </FloatingLabel>
+    <FloatingLabel
+      label="Class Code"
+    >
+      <FormControl
+        id="class_code"
+        onChange={[Function]}
+        placeholder="Class code"
+      />
+    </FloatingLabel>
+  </FormGroup>
+</Row>
+`;
+
+exports[`Sign Up Tests User Fields Test Teacher Unique Field  1`] = `
+<Row>
+  <FormGroup
+    className="mb-3"
+    controlId="email"
+  >
+    <FloatingLabel
+      label="First Name"
+    >
+      <FormControl
+        id="first_name"
+        onChange={[Function]}
+        placeholder="First Name"
+      />
+    </FloatingLabel>
+    <FloatingLabel
+      label="Last Name"
+    >
+      <FormControl
+        id="last_name"
+        onChange={[Function]}
+        placeholder="Last Name"
+      />
+    </FloatingLabel>
+  </FormGroup>
+</Row>
+`;
