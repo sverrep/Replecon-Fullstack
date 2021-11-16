@@ -213,7 +213,7 @@ describe('Sign Up Tests', ()=>{
             let wrapper = shallow(<SignUpApp.WrappedComponent {...props2} />)
             wrapper.instance().validateData = jest.fn()
             wrapper.instance().validateData.mockReturnValueOnce(true)
-            wrapper.instance().state.email = 'student@gmail.com'
+            wrapper.instance().state.email = 'teacher@gmail.com'
             wrapper.instance().state.password = 'password'
             wrapper.instance().state.first_name = 'name'
             wrapper.instance().state.last_name = 'last'
