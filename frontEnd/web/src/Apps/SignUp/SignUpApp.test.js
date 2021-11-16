@@ -202,7 +202,7 @@ describe('Sign Up Tests', ()=>{
             axios.post.mockImplementationOnce(() => Promise.resolve(user2))
 
             await wrapper.instance().handleSignup()
-            await wrapper.instance().handleSignup()
+            
             expect(axios.post).toHaveBeenCalledWith('https://mythical-mason-324813.ey.r.appspot.com//auth/register/', payload)
             expect(axios.post).toHaveBeenCalledWith('https://mythical-mason-324813.ey.r.appspot.com//students/create/', payload2)
             expect(wrapper.instance().state.redirect_profile).toBe(true)
@@ -237,7 +237,7 @@ describe('Sign Up Tests', ()=>{
             axios.post.mockImplementationOnce(() => Promise.resolve(user2))
 
             await wrapper.instance().handleSignup()
-            await wrapper.instance().handleSignup()
+            
             expect(axios.post).toHaveBeenCalledWith('https://mythical-mason-324813.ey.r.appspot.com//auth/register/', payload)
             expect(axios.post).toHaveBeenCalledWith('https://mythical-mason-324813.ey.r.appspot.com//teachers/create/', payload2)
             expect(wrapper.instance().state.redirect_profile).toBe(true)

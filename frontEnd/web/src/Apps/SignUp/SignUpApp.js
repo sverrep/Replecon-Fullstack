@@ -262,11 +262,11 @@ class SignUpApp extends React.Component {
         {
             if (await this.validateData()) {
                 const payload = { username: this.state.email, password: this.state.password, first_name: this.state.name, email: this.state.email } 
-                axios.post(getIP()+'/auth/register/', payload)
-                .then(response => {
+                await axios.post(getIP()+'/auth/register/', payload)
+                .then(async response => {
                     this.setState({ token: response.data.token })
                     axios.defaults.headers.common.Authorization = `Token ${this.state.token}`;
-                    axios.post(getIP()+'/students/create/', {class_code: this.state.class_code})
+                    await axios.post(getIP()+'/students/create/', {class_code: this.state.class_code})
                     .then(response => {
                         this.setState({ redirect_profile : true})
                     })
@@ -281,11 +281,11 @@ class SignUpApp extends React.Component {
         else if(this.props.location.state.role === "Teacher"){
             if (await this.validateData()) {
                 const payload = { username: this.state.email, password: this.state.password, first_name: this.state.first_name, email: this.state.email } 
-                axios.post(getIP()+'/auth/register/', payload)
-                .then(response => {
+                await axios.post(getIP()+'/auth/register/', payload)
+                .then(async response => {
                     this.setState({ token: response.data.token })
                     axios.defaults.headers.common.Authorization = `Token ${this.state.token}`;
-                    axios.post(getIP()+'/teachers/create/', {last_name: this.state.last_name})
+                    await axios.post(getIP()+'/teachers/create/', {last_name: this.state.last_name})
                     .then(response => {
                         this.setState({ redirect_profile : true})
                     })
