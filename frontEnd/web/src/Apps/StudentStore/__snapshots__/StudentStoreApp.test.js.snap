@@ -1,0 +1,188 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Student Store Tests Student Page renders should render cards properly 1`] = `
+<Card
+  body={false}
+  className="cards"
+  style={
+    Object {
+      "padding": "10px",
+      "width": "15rem",
+    }
+  }
+>
+  <CardBody>
+    <CardTitle>
+      item name
+       $
+      60
+    </CardTitle>
+    <CardText>
+      description
+    </CardText>
+    <Button
+      active={false}
+      className="store-button"
+      disabled={false}
+      onClick={[Function]}
+      variant="primary"
+    >
+      Purchase
+    </Button>
+  </CardBody>
+</Card>
+`;
+
+exports[`Student Store Tests Student Page renders should render page properly 1`] = `
+Array [
+  <div
+    className="wrapper"
+  >
+    <Navbar
+      className="teacher-navbar"
+      collapseOnSelect={true}
+      expand="lg"
+      variant="dark"
+    >
+      <Container
+        fluid={false}
+      >
+        <NavbarBrand
+          className="navbar-header"
+        >
+          Replecon
+        </NavbarBrand>
+        <Nav
+          className="navbar-btns"
+          fill={false}
+          justify={false}
+        >
+          <Button
+            active={false}
+            className="navbar-btn"
+            disabled={false}
+            variant="light"
+          >
+            <Link
+              className="navbar-link"
+              to={
+                Object {
+                  "pathname": "/Profile",
+                  "state": Object {
+                    "role": "Student",
+                    "token": "Token",
+                  },
+                }
+              }
+            >
+              Profile
+            </Link>
+          </Button>
+          <Button
+            active={false}
+            className="navbar-btn"
+            disabled={false}
+            variant="light"
+          >
+            <Link
+              className="navbar-link"
+              to={
+                Object {
+                  "pathname": "/StudentStore",
+                  "state": Object {
+                    "role": "Student",
+                    "token": "Token",
+                  },
+                }
+              }
+            >
+              Store
+            </Link>
+          </Button>
+          <Button
+            active={false}
+            className="navbar-btn"
+            disabled={false}
+            variant="light"
+          >
+            <Link
+              className="navbar-link"
+              to={
+                Object {
+                  "pathname": "/StudentBank",
+                  "state": Object {
+                    "role": "Student",
+                    "token": "Token",
+                  },
+                }
+              }
+            >
+              Bank
+            </Link>
+          </Button>
+          <Button
+            active={false}
+            className="navbar-btn"
+            disabled={false}
+            variant="light"
+          >
+            <Link
+              className="navbar-link"
+              to={
+                Object {
+                  "pathname": "/StudentClass",
+                  "state": Object {
+                    "role": "Student",
+                    "token": "Token",
+                  },
+                }
+              }
+            >
+              Classroom
+            </Link>
+          </Button>
+        </Nav>
+      </Container>
+    </Navbar>
+    <div
+      className="store-content"
+    >
+      <div
+        className="title"
+      >
+        <div
+          className="title-name"
+        >
+          <h3>
+            
+          </h3>
+        </div>
+        <div
+          className="title-balance"
+        >
+          <h3>
+            $
+            
+             
+          </h3>
+        </div>
+      </div>
+      <div
+        className="alert"
+      />
+      <div
+        className="item-cards"
+      >
+        <div
+          className="override"
+        >
+          <Row
+            md={2}
+            xs="auto"
+          />
+        </div>
+      </div>
+    </div>
+  </div>,
+]
+`;
