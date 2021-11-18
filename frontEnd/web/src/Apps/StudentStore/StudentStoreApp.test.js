@@ -1,7 +1,5 @@
 import React from 'react';
-import ReactDom from 'react-dom';
 import StudentStoreApp from './StudentStoreApp.js'
-import renderer from 'react-test-renderer'
 import axios from 'axios'
 
 jest.mock('axios');
