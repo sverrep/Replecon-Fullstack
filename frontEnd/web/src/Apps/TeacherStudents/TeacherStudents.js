@@ -2,7 +2,6 @@ import React from 'react';
 import { withRouter } from "react-router-dom";
 import axios from 'axios';
 import getIP from '../../settings.js';
-import { getToken } from '../../settings.js';
 import './TeacherStudents.css';
 import navbar from '../../Components/navbar/Teacher NavBar/TeacherNavbar';
 import Button from 'react-bootstrap/Button'
