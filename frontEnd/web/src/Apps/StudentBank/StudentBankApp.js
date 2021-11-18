@@ -42,29 +42,29 @@ class StudentBank extends React.Component {
         this.getStudentBalance = this.getStudentBalance.bind(this)
     }
 
-    componentDidMount(){
+    async componentDidMount(){
       axios.defaults.headers.common.Authorization = `Token ${this.state.token}`;
-      this.getClassStudents()
-      this.getBanks()
-      this.getStudentBalance()
+      await this.getClassStudents()
+      await this.getBanks()
+      await this.getStudentBalance()
 
     }
 
-    getStudentBalance(){
-    axios.get(getIP()+'/students/balance/')
-    .then(response => {
-      this.setState({student_balance: response.data})
-    })
-    .catch(error => console.log(error))
-    }
+    async getStudentBalance(){
+      await axios.get(getIP()+'/students/balance/')
+      .then(response => {
+        this.setState({student_balance: response.data})
+      })
+      .catch(error => this.setState({message: error}))
+      }
     //Retrieving the class name
-    getClassStudents() {
-        axios.get(getIP()+'/students/class_code/')
-        .then(response => {
+    async getClassStudents() {
+        await axios.get(getIP()+'/students/class_code/')
+        .then(async response  => {
             this.setState({ classroom: response.data[0].class_code })
             this.getBanks(response.data[0].class_code)
             this.getClassroomDetails()
-            axios.get(getIP()+'/students/current/')
+            await axios.get(getIP()+'/students/current/')
               .then(response => {
                 this.setState({loggedin_student: response.data}, () => {this.getStudentSavings()})
               })
@@ -72,8 +72,8 @@ class StudentBank extends React.Component {
         .catch(error => console.log(error))
     }
 
-    getClassroomDetails(){
-        axios.get(getIP()+'/classrooms/')
+    async getClassroomDetails(){
+        await axios.get(getIP()+'/classrooms/')
         .then(response => {
             this.findClassroom(response.data)
         })
@@ -92,8 +92,8 @@ class StudentBank extends React.Component {
     
     //Getting the inrest rate
 
-    getBanks(class_code){
-        axios.get(getIP()+'/banks/')
+    async getBanks(class_code){
+        await axios.get(getIP()+'/banks/')
         .then(response => {
           this.setState({banks: response.data})
           this.getBankDetails(response.data, class_code)
@@ -113,16 +113,16 @@ class StudentBank extends React.Component {
       }
 
       //Insert Savings
-      setStudentSavings(){
+      async setStudentSavings(){
         if(this.validateSavings()){
-          axios.post(getIP()+'/transactions/banksavings/', {"amount": this.state.value, "done": false})
-          .then(response => {
+          await axios.post(getIP()+'/transactions/banksavings/', {"amount": this.state.value, "done": false})
+          .then(async response => {
             var transaction_id = response.data["id"]
-            axios.post(getIP()+'/transactioninterestrates/', {"class_code": this.state.classroom, "transaction_id": transaction_id})
-            .then(response => {
-              axios.get(getIP()+'/students/bank/')
-              .then(response => {
-                axios.put(getIP()+'/students/balance/', { amount: this.state.value, user_id: response.data, recipient: false })
+            await axios.post(getIP()+'/transactioninterestrates/', {"class_code": this.state.classroom, "transaction_id": transaction_id})
+            .then(async response => {
+              await axios.get(getIP()+'/students/bank/')
+              .then(async response => {
+                await axios.put(getIP()+'/students/balance/', { amount: this.state.value, user_id: response.data, recipient: false })
                 .then(response => {
                   this.setState({show:false})
                   this.getStudentSavings()
@@ -178,20 +178,21 @@ class StudentBank extends React.Component {
 
 
       //Get Savings
-      getStudentSavings(){
+      async getStudentSavings(){
         this.setState({savings: []})
-        axios.get(getIP()+'/transactioninterestrates/')
-        .then(response1 => {
+        await axios.get(getIP()+'/transactioninterestrates/')
+        .then(async response1 => {
+          
             for(let i = 0; i <= response1.data.length-1; i++)
             {
-                axios.get(getIP()+'/transactions/' + response1.data[i].transaction_id)
-                .then(response2 => {
+                await axios.get(getIP()+'/transactions/' + response1.data[i].transaction_id)
+                .then(async response2 => {
                     var initamount = parseFloat(response2.data.amount)
                     if(this.state.loggedin_student.id === response2.data.sender_id)
                     {
                         var intrate = parseFloat(response1.data[i].set_interest_rate)
                         var finalamount = initamount + (initamount*(intrate/100))
-                        axios.get(getIP()+'/transactioninterestrates/payoutdate/' + response2.data.id)
+                        await axios.get(getIP()+'/transactioninterestrates/payoutdate/' + response2.data.id)
                         .then(response => {
                           var payout_date = (((response.data / 60) / 60) / 24)
                           var tempdict = {
@@ -203,6 +204,7 @@ class StudentBank extends React.Component {
                             "payout_date": payout_date, 
                             "active": response1.data[i].active
                           }
+                          this.setState({message: tempdict})
                           this.setState({savings: [...this.state.savings, tempdict]})
                         })
                         .catch(error => console.log(error))
@@ -214,11 +216,11 @@ class StudentBank extends React.Component {
         .catch(error => console.log(error))
       }
 
-      renderSavings(item){
+      renderSavings(item, i){
         if(item.active === true)
     {
         return(
-          <Card style={{ width: '15rem' }} className='cards'>
+          <Card key={i} style={{ width: '15rem' }} className='cards'>
               <Card.Body>
                   <Card.Title>Amount: {item.initial_amount}</Card.Title>
                   <Card.Text>
@@ -245,22 +247,18 @@ class StudentBank extends React.Component {
         return false
       }
     }
-        claimSavings(item){
+        async claimSavings(item){
           
           if(this.validateClaim(item))
           {
-            console.log(item)
-            axios.post(getIP()+'/transactions/banksavings/', {"amount": Math.round(item.final_amount * 10) / 10, "done": true})
-            .then(response => {
-              console.log(response.data)
-              axios.put(getIP()+'/transactioninterestrates/', {active: false, class_code: this.state.classroom, transaction_id: item.transaction_id})
-              .then(response => {
-                console.log(response.data)
-                axios.get(getIP()+'/students/bank/')
-                .then(response => {
-                  axios.put(getIP()+'/students/balance/', { amount: (Math.round(item.final_amount * 10) / 10).toString(), user_id: response.data, recipient: true })
+            await axios.post(getIP()+'/transactions/banksavings/', {"amount": Math.round(item.final_amount * 10) / 10, "done": true})
+            .then(async response => {
+              await axios.put(getIP()+'/transactioninterestrates/', {active: false, class_code: this.state.classroom, transaction_id: item.transaction_id})
+              .then(async response => {
+                await axios.get(getIP()+'/students/bank/')
+                .then(async response => {
+                  await axios.put(getIP()+'/students/balance/', { amount: (Math.round(item.final_amount * 10) / 10).toString(), user_id: response.data, recipient: true })
                   .then(response => {
-                    console.log(response.data)
                     this.getStudentSavings()
                     this.getStudentBalance()
                   })
@@ -351,9 +349,8 @@ class StudentBank extends React.Component {
                 <div className="savings_cards">
                     <div className='bank-cards'>
                         <Row xs="auto" md={2} className='override'>
-                    {this.state.savings.map(item => {
-                            return(this.renderSavings(item))
-                        })}
+                          {this.state.savings.map((item, i) => this.renderSavings(item, i))}
+                        
                         </Row>
                       </div>
                 </div>
