@@ -43,19 +43,19 @@ class TeacherBank extends React.Component {
         this.setState({ [field] : e.target.value });
     }
 
-    componentDidMount(){
+    async componentDidMount(){
       axios.defaults.headers.common.Authorization = `Token ${this.state.token}`;
-      this.getClassStudents()
-      this.getBanks()
+      await this.getClassStudents()
+      await this.getBanks()
     }
 
-    getClassStudents() {
-        axios.get(getIP()+'/students/')
+    async getClassStudents() {
+        await axios.get(getIP()+'/students/')
         .then(response => {
           this.setState({students:response.data});
           this.getCurrentClassStudents(response.data)
         })
-        .catch(error => console.log(error))
+        .catch(error => this.setState({error: error}))
     }
 
     getCurrentClassStudents(students){
@@ -70,16 +70,16 @@ class TeacherBank extends React.Component {
         this.setState({students:newAr})
     }
 
-    getBanks(){
-        axios.get(getIP()+'/banks/')
-        .then(response => {
+    async getBanks(){
+        await axios.get(getIP()+'/banks/')
+        .then(async response => {
           this.setState({banks: response.data})
-          this.checkForBank(response.data)
+          await this.checkForBank(response.data)
         })
         .catch(error => console.log(error))
     }
 
-    checkForBank(banks){
+    async checkForBank(banks){
         for(let i = 0; i <= Object.keys(banks).length - 1; i++){
           if(banks[i].class_code === this.state.class_code){
             this.setState({classHasBank:true})
@@ -88,7 +88,7 @@ class TeacherBank extends React.Component {
             this.setState({payout_rate: banks[i].payout_rate})
           }
         }
-        this.getStudentSavings()
+        await this.getStudentSavings()
     }
 
     isStudentInClass(student_name){
@@ -123,21 +123,22 @@ class TeacherBank extends React.Component {
         }
     }
 
-    getStudentSavings(){
-        axios.get(getIP()+'/transactioninterestrates/')
-        .then(response1 => {
+    async getStudentSavings(){
+        await axios.get(getIP()+'/transactioninterestrates/')
+        .then(async response1 => {
+          this.setState({response1: response1.data})
             for(let i = 0; i <= Object.keys(response1.data).length-1; i++)
             {
-                axios.get(getIP()+'/transactions/' + response1.data[i].transaction_id)
-                .then(response2 => {
+                await axios.get(getIP()+'/transactions/' + response1.data[i].transaction_id)
+                .then(async response2 => {
                     var initamount = parseFloat(response2.data.amount)
-                    axios.get(getIP()+'/users/' + response2.data.sender_id + '/')
-                    .then(userresponse => {
+                    await axios.get(getIP()+'/users/' + response2.data.sender_id + '/')
+                    .then(async userresponse => {
                         if(this.isStudentInClass(userresponse.data.first_name))
                         {
                             var intrate = parseFloat(response1.data[i].set_interest_rate)
                             var finalamount = initamount + (initamount*(intrate/100))
-                            axios.get(getIP()+'/transactioninterestrates/payoutdate/' + response2.data.id)
+                            await axios.get(getIP()+'/transactioninterestrates/payoutdate/' + response2.data.id)
                             .then(response => {
                                 var payout_date = (((response.data / 60) / 60) / 24)
                                 var tempdict = {
@@ -209,10 +210,10 @@ class TeacherBank extends React.Component {
         }
     }
 
-    createNewBank(){
+    async createNewBank(){
         if(this.validateBank())
         {
-          axios.post(getIP()+'/banks/', {
+          await axios.post(getIP()+'/banks/', {
             class_code: this.state.class_code,
             interest_rate: this.state.interest_rate,
             payout_rate: this.state.payout_rate,
