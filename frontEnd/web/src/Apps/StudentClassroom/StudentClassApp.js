@@ -42,10 +42,11 @@ class StudentClass extends React.Component {
         this.sendTransfer = this.sendTransfer.bind(this)
     }
     
-    componentDidMount(){
+    async componentDidMount(){
         axios.defaults.headers.common.Authorization = `Token ${this.state.token}`;
-        axios.get(getIP()+'/students/current/')
+        await axios.get(getIP()+'/students/current/')
         .then(response => { 
+            this.setState({message: response.data})
             this.setState({current_user_id: response.data.id})
             this.setState({current_user_name: response.data.first_name})
         })
@@ -55,8 +56,8 @@ class StudentClass extends React.Component {
         this.getStudentBalance()
     }
 
-    getStudentBalance(){
-        axios.get(getIP()+'/students/balance/')
+    async getStudentBalance(){
+        await axios.get(getIP()+'/students/balance/')
                 .then(response => {  
                     this.setState({balance:response.data})
                 })
@@ -94,28 +95,33 @@ class StudentClass extends React.Component {
         
     }
 
-    createTransaction(){
+    async createTransaction(){
         if(this.validateTransfer()){
+            
         for (let i = 0; i <= this.state.students.length-1; i++)
         {
             if (this.state.students[i].id === this.state.clicked.id)
             {
-                this.setState({ recipient_id: this.state.students[i].id }, () => {
-                axios.get(getIP()+'/students/current/')
-                .then(response => {
-                    this.setState({sender_id: response.data.id}, () => {
-                    const payload = { user_id: this.state.recipient_id, amount: this.state.value, recipient: false };
-                    const transaction_payload = { recipient_id: this.state.recipient_id, sender_id: this.state.sender_id, category: "Transfer", amount: this.state.value };
-                    axios.put(getIP()+'/students/balance/', payload)
-                    .then(response => {
-                        axios.post(getIP()+'/transactions/', transaction_payload)
-                        .then(response => {
-                            this.getStudentBalance()
+                
+                this.setState({ recipient_id: this.state.students[i].id }, async() => {
+                await axios.get(getIP()+'/students/current/')
+                .then(async response => {
+                    this.setState({sender_id: response.data.id}, async() => {
+                        
+                        const payload = { user_id: this.state.recipient_id, amount: this.state.value, recipient: false };
+                        const transaction_payload = { recipient_id: this.state.recipient_id, sender_id: this.state.sender_id, category: "Transfer", amount: this.state.value };
+                        await axios.put(getIP()+'/students/balance/', payload)
+                        .then(async response => {
+                            
+                            await axios.post(getIP()+'/transactions/', transaction_payload)
+                            .then( async response => {
+                                this.getStudentBalance()
+                            })
+                            .catch(error => console.log(error))
                         })
                         .catch(error => console.log(error))
                     })
-                    })
-                    .catch(error => console.log(error))
+                    
                 })
                 .catch(error => console.log(error))
                 this.setState({show:false});
@@ -126,8 +132,8 @@ class StudentClass extends React.Component {
     }
 }
 
-    getClassStudents() {
-        axios.get(getIP()+'/students/class_code/')
+    async getClassStudents() {
+        await axios.get(getIP()+'/students/class_code/')
         .then(response => {
           this.setState({ students: response.data });
           this.setState({ classroom: this.state.students[0].class_code })
@@ -145,14 +151,14 @@ class StudentClass extends React.Component {
         .catch(error => console.log(error))
       }
     
-      findClassroom(classrooms){
+      async findClassroom(classrooms){
         for (let i = 0; i <= classrooms.length-1; i++)
         {
             
           if (classrooms[i].class_code === this.state.classroom)
           {
             this.setState({ class_name: classrooms[i].class_name });
-            axios.get(getIP()+'/teachers/')
+            await axios.get(getIP()+'/teachers/')
             .then(response => {
               for(let j = 0; j <= response.data.length-1; j++)
               {
@@ -167,9 +173,9 @@ class StudentClass extends React.Component {
         }
       }
 
-    renderCards(item){
+    renderCards(item, i){
         return(
-        <ListGroup.Item action onClick={() => this.alertClicked(item)}>
+        <ListGroup.Item key={i} action onClick={() => this.alertClicked(item)}>
             {item.name}
         </ListGroup.Item>
         )
@@ -246,9 +252,7 @@ class StudentClass extends React.Component {
                 <div className='classroom-boxes'>
                 <div className="student-list">
                     <ListGroup>
-                    {this.state.students.map(item => {
-                        return(this.renderCards(item))
-                    })}
+                    {this.state.students.map((item, i) => this.renderCards(item, i))}
                     </ListGroup>
                     
                 </div>
