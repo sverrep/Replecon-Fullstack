@@ -129,7 +129,7 @@ export default class LoginApp extends React.Component {
         })
         .catch(error => console.log(error));
       })
-      .catch(error => console.log(error));
+      .catch(error => this.setState({error: error}));
       this.setState({error: "User Not Found"})
       return true
     }

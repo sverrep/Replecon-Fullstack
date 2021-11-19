@@ -1,0 +1,1017 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TeacherTaxes Testing createTaxesModal testing should render createTaxesModal modal and show 1`] = `
+<Modal
+  animation={true}
+  autoFocus={true}
+  backdrop={true}
+  centered={true}
+  dialogAs={
+    Object {
+      "$$typeof": Symbol(react.forward_ref),
+      "render": [Function],
+    }
+  }
+  enforceFocus={true}
+  keyboard={true}
+  onHide={[Function]}
+  restoreFocus={true}
+  show={true}
+  size="lg"
+>
+  <ModalHeader
+    closeButton={true}
+    closeLabel="Close"
+  >
+    <ModalTitle>
+      Set Up Taxes
+    </ModalTitle>
+  </ModalHeader>
+  <ModalBody>
+    <Container
+      fluid={false}
+    >
+      <Row>
+        <Col
+          md={4}
+          xs={6}
+        >
+          <FloatingLabel
+            className="modal-input"
+            label="Flat Tax"
+          >
+            <FormControl
+              id="current_flat_tax"
+              onChange={[Function]}
+              placeholder="Flat Tax"
+            />
+          </FloatingLabel>
+        </Col>
+        <Col
+          md={4}
+          xs={6}
+        >
+          <FloatingLabel
+            className="modal-input"
+            label="Percent Tax"
+          >
+            <FormControl
+              id="current_percent_tax"
+              onChange={[Function]}
+              placeholder="Percent Tax"
+            />
+          </FloatingLabel>
+        </Col>
+        <Col
+          md={4}
+          xs={6}
+        >
+          <FloatingLabel
+            className="modal-input"
+            label="Sales Tax"
+          >
+            <FormControl
+              id="current_sales_tax"
+              onChange={[Function]}
+              placeholder="Sales Tax"
+            />
+          </FloatingLabel>
+        </Col>
+      </Row>
+      <br />
+      <Row>
+        <Col>
+          <h5>
+             Progressive Taxes 
+          </h5>
+        </Col>
+        <Col
+          className="tax-btn-col"
+        >
+          <Button
+            active={false}
+            disabled={false}
+            onClick={[Function]}
+            variant="outline-secondary"
+          >
+            +
+          </Button>
+           
+          <Button
+            active={false}
+            disabled={false}
+            onClick={[Function]}
+            variant="outline-secondary"
+          >
+            -
+          </Button>
+        </Col>
+      </Row>
+      <br />
+      <Row>
+        <Col>
+          <h5>
+             Regressive Taxes 
+          </h5>
+        </Col>
+        <Col
+          className="tax-btn-col"
+        >
+          <Button
+            active={false}
+            disabled={false}
+            onClick={[Function]}
+            variant="outline-secondary"
+          >
+            +
+          </Button>
+           
+          <Button
+            active={false}
+            disabled={false}
+            onClick={[Function]}
+            variant="outline-secondary"
+          >
+            -
+          </Button>
+        </Col>
+      </Row>
+    </Container>
+    <p>
+      
+    </p>
+  </ModalBody>
+  <ModalFooter>
+    <Button
+      active={false}
+      className="modal-btn"
+      disabled={false}
+      onClick={[Function]}
+      variant="primary"
+    >
+      Create Taxes
+    </Button>
+  </ModalFooter>
+</Modal>
+`;
+
+exports[`TeacherTaxes Testing createTaxesModal testing should render createTaxesModal modal but not show 1`] = `
+<Modal
+  animation={true}
+  autoFocus={true}
+  backdrop={true}
+  centered={true}
+  dialogAs={
+    Object {
+      "$$typeof": Symbol(react.forward_ref),
+      "render": [Function],
+    }
+  }
+  enforceFocus={true}
+  keyboard={true}
+  onHide={[Function]}
+  restoreFocus={true}
+  show={false}
+  size="lg"
+>
+  <ModalHeader
+    closeButton={true}
+    closeLabel="Close"
+  >
+    <ModalTitle>
+      Set Up Taxes
+    </ModalTitle>
+  </ModalHeader>
+  <ModalBody>
+    <Container
+      fluid={false}
+    >
+      <Row>
+        <Col
+          md={4}
+          xs={6}
+        >
+          <FloatingLabel
+            className="modal-input"
+            label="Flat Tax"
+          >
+            <FormControl
+              id="current_flat_tax"
+              onChange={[Function]}
+              placeholder="Flat Tax"
+            />
+          </FloatingLabel>
+        </Col>
+        <Col
+          md={4}
+          xs={6}
+        >
+          <FloatingLabel
+            className="modal-input"
+            label="Percent Tax"
+          >
+            <FormControl
+              id="current_percent_tax"
+              onChange={[Function]}
+              placeholder="Percent Tax"
+            />
+          </FloatingLabel>
+        </Col>
+        <Col
+          md={4}
+          xs={6}
+        >
+          <FloatingLabel
+            className="modal-input"
+            label="Sales Tax"
+          >
+            <FormControl
+              id="current_sales_tax"
+              onChange={[Function]}
+              placeholder="Sales Tax"
+            />
+          </FloatingLabel>
+        </Col>
+      </Row>
+      <br />
+      <Row>
+        <Col>
+          <h5>
+             Progressive Taxes 
+          </h5>
+        </Col>
+        <Col
+          className="tax-btn-col"
+        >
+          <Button
+            active={false}
+            disabled={false}
+            onClick={[Function]}
+            variant="outline-secondary"
+          >
+            +
+          </Button>
+           
+          <Button
+            active={false}
+            disabled={false}
+            onClick={[Function]}
+            variant="outline-secondary"
+          >
+            -
+          </Button>
+        </Col>
+      </Row>
+      <br />
+      <Row>
+        <Col>
+          <h5>
+             Regressive Taxes 
+          </h5>
+        </Col>
+        <Col
+          className="tax-btn-col"
+        >
+          <Button
+            active={false}
+            disabled={false}
+            onClick={[Function]}
+            variant="outline-secondary"
+          >
+            +
+          </Button>
+           
+          <Button
+            active={false}
+            disabled={false}
+            onClick={[Function]}
+            variant="outline-secondary"
+          >
+            -
+          </Button>
+        </Col>
+      </Row>
+    </Container>
+    <p>
+      
+    </p>
+  </ModalBody>
+  <ModalFooter>
+    <Button
+      active={false}
+      className="modal-btn"
+      disabled={false}
+      onClick={[Function]}
+      variant="primary"
+    >
+      Create Taxes
+    </Button>
+  </ModalFooter>
+</Modal>
+`;
+
+exports[`TeacherTaxes Testing hasNoTaxes testing should render hasNoTaxes view 1`] = `
+<Row
+  className="taxes-col"
+>
+  <h4>
+    This class has no taxes
+  </h4>
+  <Button
+    active={false}
+    className="tax-btns"
+    disabled={false}
+    onClick={[Function]}
+    variant="primary"
+  >
+    Set Up Taxes
+  </Button>
+  <Button
+    active={false}
+    className="tax-btns"
+    disabled={false}
+    onClick={[Function]}
+    variant="primary"
+  >
+    Import Taxes from Another Class
+  </Button>
+  <Modal
+    animation={true}
+    autoFocus={true}
+    backdrop={true}
+    centered={true}
+    dialogAs={
+      Object {
+        "$$typeof": Symbol(react.forward_ref),
+        "render": [Function],
+      }
+    }
+    enforceFocus={true}
+    keyboard={true}
+    onHide={[Function]}
+    restoreFocus={true}
+    show={false}
+    size="lg"
+  >
+    <ModalHeader
+      closeButton={true}
+      closeLabel="Close"
+    >
+      <ModalTitle>
+        Set Up Taxes
+      </ModalTitle>
+    </ModalHeader>
+    <ModalBody>
+      <Container
+        fluid={false}
+      >
+        <Row>
+          <Col
+            md={4}
+            xs={6}
+          >
+            <FloatingLabel
+              className="modal-input"
+              label="Flat Tax"
+            >
+              <FormControl
+                id="current_flat_tax"
+                onChange={[Function]}
+                placeholder="Flat Tax"
+              />
+            </FloatingLabel>
+          </Col>
+          <Col
+            md={4}
+            xs={6}
+          >
+            <FloatingLabel
+              className="modal-input"
+              label="Percent Tax"
+            >
+              <FormControl
+                id="current_percent_tax"
+                onChange={[Function]}
+                placeholder="Percent Tax"
+              />
+            </FloatingLabel>
+          </Col>
+          <Col
+            md={4}
+            xs={6}
+          >
+            <FloatingLabel
+              className="modal-input"
+              label="Sales Tax"
+            >
+              <FormControl
+                id="current_sales_tax"
+                onChange={[Function]}
+                placeholder="Sales Tax"
+              />
+            </FloatingLabel>
+          </Col>
+        </Row>
+        <br />
+        <Row>
+          <Col>
+            <h5>
+               Progressive Taxes 
+            </h5>
+          </Col>
+          <Col
+            className="tax-btn-col"
+          >
+            <Button
+              active={false}
+              disabled={false}
+              onClick={[Function]}
+              variant="outline-secondary"
+            >
+              +
+            </Button>
+             
+            <Button
+              active={false}
+              disabled={false}
+              onClick={[Function]}
+              variant="outline-secondary"
+            >
+              -
+            </Button>
+          </Col>
+        </Row>
+        <br />
+        <Row>
+          <Col>
+            <h5>
+               Regressive Taxes 
+            </h5>
+          </Col>
+          <Col
+            className="tax-btn-col"
+          >
+            <Button
+              active={false}
+              disabled={false}
+              onClick={[Function]}
+              variant="outline-secondary"
+            >
+              +
+            </Button>
+             
+            <Button
+              active={false}
+              disabled={false}
+              onClick={[Function]}
+              variant="outline-secondary"
+            >
+              -
+            </Button>
+          </Col>
+        </Row>
+      </Container>
+      <p>
+        
+      </p>
+    </ModalBody>
+    <ModalFooter>
+      <Button
+        active={false}
+        className="modal-btn"
+        disabled={false}
+        onClick={[Function]}
+        variant="primary"
+      >
+        Create Taxes
+      </Button>
+    </ModalFooter>
+  </Modal>
+  <Modal
+    animation={true}
+    autoFocus={true}
+    backdrop={true}
+    centered={true}
+    dialogAs={
+      Object {
+        "$$typeof": Symbol(react.forward_ref),
+        "render": [Function],
+      }
+    }
+    enforceFocus={true}
+    keyboard={true}
+    onHide={[Function]}
+    restoreFocus={true}
+    show={false}
+    size="lg"
+  >
+    <ModalHeader
+      closeButton={true}
+      closeLabel="Close"
+    >
+      <ModalTitle>
+        Import Taxes from Another Class
+      </ModalTitle>
+    </ModalHeader>
+    <ModalBody>
+      <FloatingLabel
+        className="modal-input"
+        label="Class Code"
+      >
+        <FormControl
+          id="tax_import_class_code"
+          onChange={[Function]}
+          placeholder="Class Code"
+        />
+      </FloatingLabel>
+      <p />
+    </ModalBody>
+    <ModalFooter>
+      <Button
+        active={false}
+        className="modal-btn"
+        disabled={false}
+        onClick={[Function]}
+        variant="primary"
+      >
+        Import Taxes
+      </Button>
+    </ModalFooter>
+  </Modal>
+</Row>
+`;
+
+exports[`TeacherTaxes Testing hasTaxes testing should render hasTaxes view 1`] = `
+<Row
+  className="taxes-col"
+>
+  <h3>
+    Testclass
+     Taxes 
+    12
+  </h3>
+  <ListGroup>
+    <ListGroupItem
+      action={true}
+      onClick={[Function]}
+    >
+      Flat Tax 
+    </ListGroupItem>
+    <ListGroupItem
+      action={true}
+      onClick={[Function]}
+    >
+      Percentage Tax 
+    </ListGroupItem>
+    <ListGroupItem
+      action={true}
+      onClick={[Function]}
+    >
+      Progressive Tax
+    </ListGroupItem>
+    <ListGroupItem
+      action={true}
+      onClick={[Function]}
+    >
+      Regressive Tax
+    </ListGroupItem>
+  </ListGroup>
+</Row>
+`;
+
+exports[`TeacherTaxes Testing importTaxModal testing should render importTaxModal modal and show 1`] = `
+<Modal
+  animation={true}
+  autoFocus={true}
+  backdrop={true}
+  centered={true}
+  dialogAs={
+    Object {
+      "$$typeof": Symbol(react.forward_ref),
+      "render": [Function],
+    }
+  }
+  enforceFocus={true}
+  keyboard={true}
+  onHide={[Function]}
+  restoreFocus={true}
+  show={true}
+  size="lg"
+>
+  <ModalHeader
+    closeButton={true}
+    closeLabel="Close"
+  >
+    <ModalTitle>
+      Import Taxes from Another Class
+    </ModalTitle>
+  </ModalHeader>
+  <ModalBody>
+    <FloatingLabel
+      className="modal-input"
+      label="Class Code"
+    >
+      <FormControl
+        id="tax_import_class_code"
+        onChange={[Function]}
+        placeholder="Class Code"
+      />
+    </FloatingLabel>
+    <p />
+  </ModalBody>
+  <ModalFooter>
+    <Button
+      active={false}
+      className="modal-btn"
+      disabled={false}
+      onClick={[Function]}
+      variant="primary"
+    >
+      Import Taxes
+    </Button>
+  </ModalFooter>
+</Modal>
+`;
+
+exports[`TeacherTaxes Testing importTaxModal testing should render importTaxModal modal but not show 1`] = `
+<Modal
+  animation={true}
+  autoFocus={true}
+  backdrop={true}
+  centered={true}
+  dialogAs={
+    Object {
+      "$$typeof": Symbol(react.forward_ref),
+      "render": [Function],
+    }
+  }
+  enforceFocus={true}
+  keyboard={true}
+  onHide={[Function]}
+  restoreFocus={true}
+  show={false}
+  size="lg"
+>
+  <ModalHeader
+    closeButton={true}
+    closeLabel="Close"
+  >
+    <ModalTitle>
+      Import Taxes from Another Class
+    </ModalTitle>
+  </ModalHeader>
+  <ModalBody>
+    <FloatingLabel
+      className="modal-input"
+      label="Class Code"
+    >
+      <FormControl
+        id="tax_import_class_code"
+        onChange={[Function]}
+        placeholder="Class Code"
+      />
+    </FloatingLabel>
+    <p />
+  </ModalBody>
+  <ModalFooter>
+    <Button
+      active={false}
+      className="modal-btn"
+      disabled={false}
+      onClick={[Function]}
+      variant="primary"
+    >
+      Import Taxes
+    </Button>
+  </ModalFooter>
+</Modal>
+`;
+
+exports[`TeacherTaxes Testing renderBracket testing should render reg brackets properly 1`] = `
+<Row>
+  <Col
+    md={4}
+    xs={6}
+  >
+    <FloatingLabel
+      className="modal-input"
+      label="Low"
+    >
+      <FormControl
+        defaultValue={1}
+        onChange={[Function]}
+        placeholder="Low"
+      />
+    </FloatingLabel>
+  </Col>
+  <Col
+    md={4}
+    xs={6}
+  >
+    <FloatingLabel
+      className="modal-input"
+      label="High"
+    >
+      <FormControl
+        defaultValue={12}
+        onChange={[Function]}
+        placeholder="High"
+      />
+    </FloatingLabel>
+  </Col>
+  <Col
+    md={4}
+    xs={6}
+  >
+    <FloatingLabel
+      className="modal-input"
+      label="%"
+    >
+      <FormControl
+        defaultValue={15}
+        onChange={[Function]}
+        placeholder="%"
+      />
+    </FloatingLabel>
+  </Col>
+</Row>
+`;
+
+exports[`TeacherTaxes Testing renderBracket testing should render reg brackets properly 2`] = `
+<Row>
+  <Col
+    md={4}
+    xs={6}
+  >
+    <FloatingLabel
+      className="modal-input"
+      label="Low"
+    >
+      <FormControl
+        defaultValue={1}
+        onChange={[Function]}
+        placeholder="Low"
+      />
+    </FloatingLabel>
+  </Col>
+  <Col
+    md={4}
+    xs={6}
+  >
+    <FloatingLabel
+      className="modal-input"
+      label="High"
+    >
+      <FormControl
+        defaultValue={10}
+        onChange={[Function]}
+        placeholder="High"
+      />
+    </FloatingLabel>
+  </Col>
+  <Col
+    md={4}
+    xs={6}
+  >
+    <FloatingLabel
+      className="modal-input"
+      label="%"
+    >
+      <FormControl
+        defaultValue={10}
+        onChange={[Function]}
+        placeholder="%"
+      />
+    </FloatingLabel>
+  </Col>
+</Row>
+`;
+
+exports[`TeacherTaxes Testing renderUpdateEasyTax testing should render renderUpdateEasyTax modal progressive tax 1`] = `
+<Modal
+  animation={true}
+  autoFocus={true}
+  backdrop={true}
+  centered={true}
+  dialogAs={
+    Object {
+      "$$typeof": Symbol(react.forward_ref),
+      "render": [Function],
+    }
+  }
+  enforceFocus={true}
+  keyboard={true}
+  onHide={[Function]}
+  restoreFocus={true}
+  show={false}
+  size="lg"
+>
+  <ModalHeader
+    closeButton={true}
+    closeLabel="Close"
+  >
+    <ModalTitle>
+      Update 
+      Progressive Tax
+    </ModalTitle>
+  </ModalHeader>
+  <ModalBody>
+    <Row>
+      <Col>
+        <h5>
+           Progressive Taxes 
+        </h5>
+      </Col>
+      <Col
+        className="tax-btn-col"
+      >
+        <Button
+          active={false}
+          disabled={false}
+          onClick={[Function]}
+          variant="outline-secondary"
+        >
+          +
+        </Button>
+         
+        <Button
+          active={false}
+          disabled={false}
+          onClick={[Function]}
+          variant="outline-secondary"
+        >
+          -
+        </Button>
+      </Col>
+    </Row>
+  </ModalBody>
+  <ModalFooter>
+    <Button
+      active={false}
+      className="tax-btns"
+      disabled={false}
+      onClick={[Function]}
+      variant="primary"
+    >
+      Update Tax
+    </Button>
+    <Button
+      active={false}
+      className="tax-btns"
+      disabled={false}
+      onClick={[Function]}
+      variant="primary"
+    >
+      Tax The Class
+    </Button>
+  </ModalFooter>
+</Modal>
+`;
+
+exports[`TeacherTaxes Testing renderUpdateEasyTax testing should render renderUpdateEasyTax modal regressive tax 1`] = `
+<Modal
+  animation={true}
+  autoFocus={true}
+  backdrop={true}
+  centered={true}
+  dialogAs={
+    Object {
+      "$$typeof": Symbol(react.forward_ref),
+      "render": [Function],
+    }
+  }
+  enforceFocus={true}
+  keyboard={true}
+  onHide={[Function]}
+  restoreFocus={true}
+  show={false}
+  size="lg"
+>
+  <ModalHeader
+    closeButton={true}
+    closeLabel="Close"
+  >
+    <ModalTitle>
+      Update 
+      Regressive Tax
+    </ModalTitle>
+  </ModalHeader>
+  <ModalBody>
+    <Row>
+      <Col>
+        <h5>
+           Regressive Taxes 
+        </h5>
+      </Col>
+      <Col
+        className="tax-btn-col"
+      >
+        <Button
+          active={false}
+          disabled={false}
+          onClick={[Function]}
+          variant="outline-secondary"
+        >
+          +
+        </Button>
+         
+        <Button
+          active={false}
+          disabled={false}
+          onClick={[Function]}
+          variant="outline-secondary"
+        >
+          -
+        </Button>
+      </Col>
+    </Row>
+  </ModalBody>
+  <ModalFooter>
+    <Button
+      active={false}
+      className="tax-btns"
+      disabled={false}
+      onClick={[Function]}
+      variant="primary"
+    >
+      Update Tax
+    </Button>
+    <Button
+      active={false}
+      className="tax-btns"
+      disabled={false}
+      onClick={[Function]}
+      variant="primary"
+    >
+      Tax The Class
+    </Button>
+  </ModalFooter>
+</Modal>
+`;
+
+exports[`TeacherTaxes Testing renderUpdateEasyTax testing should render renderUpdateEasyTax modal with flat tax or percentage tax 1`] = `
+<Modal
+  animation={true}
+  autoFocus={true}
+  backdrop={true}
+  centered={true}
+  dialogAs={
+    Object {
+      "$$typeof": Symbol(react.forward_ref),
+      "render": [Function],
+    }
+  }
+  enforceFocus={true}
+  keyboard={true}
+  onHide={[Function]}
+  restoreFocus={true}
+  show={false}
+  size="lg"
+>
+  <ModalHeader
+    closeButton={true}
+    closeLabel="Close"
+  >
+    <ModalTitle>
+      Update 
+      Flat Tax
+    </ModalTitle>
+  </ModalHeader>
+  <ModalBody>
+    <FloatingLabel
+      className="modal-input"
+      label="Flat Tax"
+    >
+      <FormControl
+        defaultValue=""
+        id=""
+        onChange={[Function]}
+        placeholder="Flat Tax"
+      />
+    </FloatingLabel>
+    <p>
+      
+    </p>
+  </ModalBody>
+  <ModalFooter>
+    <Button
+      active={false}
+      className="tax-btns"
+      disabled={false}
+      onClick={[Function]}
+      variant="primary"
+    >
+      Update Tax
+    </Button>
+    <Button
+      active={false}
+      className="tax-btns"
+      disabled={false}
+      onClick={[Function]}
+      variant="primary"
+    >
+      Tax The Class
+    </Button>
+  </ModalFooter>
+</Modal>
+`;
