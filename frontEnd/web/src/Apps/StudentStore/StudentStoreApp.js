@@ -102,9 +102,9 @@ class StudentStore extends React.Component {
         
     }
 
-    renderCard(item){
+    renderCard(item, i){
         return(
-            <Card style={{ width: '15rem', padding: '10px' }} className='cards'>
+            <Card key={i} style={{ width: '15rem', padding: '10px' }} className='cards'>
                 <Card.Body>
                     <Card.Title>{item.item_name} ${item.price}</Card.Title>
                     <Card.Text>
@@ -190,9 +190,7 @@ class StudentStore extends React.Component {
                 <div className="item-cards">
                     <div className='override'>
                         <Row xs="auto" md={2}>
-                    {this.state.items.map(item => {
-                            return(this.renderCard(item))
-                        })}
+                    {this.state.items.map((item, i) => this.renderCard(item, i))}
                         </Row>
                     </div>
                 </div>
