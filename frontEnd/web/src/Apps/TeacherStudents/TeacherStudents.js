@@ -38,28 +38,27 @@ class TeacherStudents extends React.Component {
         this.amountIsValid = this.amountIsValid.bind(this)
     }
 
-    componentDidMount(){
+    async componentDidMount(){
         axios.defaults.headers.common.Authorization = `Token ${this.state.token}`;
-        this.getClassStudents()
-        this.getAllItems()
+        await this.getClassStudents()
+        await this.getAllItems()
         
     }
 
-    getClassStudents() {
-        axios.get(getIP()+'/students/')
+    async getClassStudents() {
+        await axios.get(getIP()+'/students/')
         .then(response => {
-          this.setState({students:response.data});
-          this.getCurrentClassStudents(response.data)
+            this.getCurrentClassStudents(response.data)
         })
-        .catch(error => console.log(error))
+        .catch(error => this.setState({error: error}))
     }
 
-    getAllItems(){
-        axios.get(getIP()+'/items/')
+    async getAllItems(){
+        await axios.get(getIP()+'/items/')
         .then(async (response) => {
             this.setState({all_items: response.data})
         })
-        .catch(error => console.log(error))
+        .catch(error => this.setState({error: error}))
     }
 
     handleChange(e) {
@@ -149,7 +148,7 @@ class TeacherStudents extends React.Component {
         }
     }
 
-    changeSelected(pay){
+    async changeSelected(pay){
         var selected_amount = this.state.amount 
         if(this.amountIsValid(selected_amount)) {
           if(!pay) {
@@ -159,23 +158,27 @@ class TeacherStudents extends React.Component {
           for(let i = 0; i <= Object.keys(selected).length-1; i++)
           {
             var payload = { user_id: selected[i], amount: selected_amount }; 
-            axios.put(getIP()+'/students/balance/', payload)
-            .then(response => {
-                axios.post(getIP()+'/transactions/teacherPayStudents/', {"user_id": response.data.user, "amount": selected_amount})
-                .then(response => {
-                  this.getClassStudents()
+            await axios.put(getIP()+'/students/balance/', payload)
+            .then(async response => {
+                await axios.post(getIP()+'/transactions/teacherPayStudents/', {"user_id": response.data.user, "amount": selected_amount})
+                .then(async response => {
+                  await this.getClassStudents()
                   this.setState({selected: []})
                 })
                 .catch(error => console.log(error))
             })
-            .catch(error => console.log(error))
+            .catch(error => this.setState({error: error}))
           }
           this.setState({show:false})
         }
+        else
+        {
+            this.setState({error: "Did not pass validation"})
+        }
     }
 
-    getBoughtItems(){
-        axios.get(getIP()+'/items/allboughtitems/')
+    async getBoughtItems(){
+        await axios.get(getIP()+'/items/allboughtitems/')
         .then(response => {
             var all_bought_items = response.data.reverse()
             var temparray = []
@@ -192,7 +195,7 @@ class TeacherStudents extends React.Component {
             }
             this.setState({display_items: temparray})
         })
-        .catch(error => console.log(error))
+        .catch(error => this.setState({error: error}))
     }
 
     renderItems(item, x){
