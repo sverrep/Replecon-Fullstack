@@ -43,9 +43,9 @@ class Profile extends React.Component {
         this.closeInven = this.closeInven.bind(this)
     }
 
-    componentDidMount(){
+    async componentDidMount(){
         axios.defaults.headers.common.Authorization = `Token ${this.state.token}`;
-        axios.get(getIP()+'/students/current/')
+        await axios.get(getIP()+'/students/current/')
         .then(response => {
             if(this.state.role === "Student")
             {
@@ -68,8 +68,8 @@ class Profile extends React.Component {
         this.setState({ [field] : e.target.value });
     }
 
-    getTeacherClasses(){
-        axios.get(getIP()+'/classrooms/')
+    async getTeacherClasses(){
+        await axios.get(getIP()+'/classrooms/')
         .then(response => {
             this.findTeacherClassrooms(response.data)
         })
@@ -99,8 +99,8 @@ class Profile extends React.Component {
         this.setState({class_code: item.class_code, redirect_class: true, selected_class: item})
       }
 
-    getStudentBalance() {
-     axios.get(getIP()+'/students/balance/')
+    async getStudentBalance() {
+    await axios.get(getIP()+'/students/balance/')
     .then(response => {
         const balance = response.data
         this.setState({balance})
@@ -108,16 +108,16 @@ class Profile extends React.Component {
     .catch(error =>  console.log(error));
     }
 
-    getStudentTransactions(){
-        axios.get(getIP()+'/transactions/getAllStudentTransactions/')
+    async getStudentTransactions(){
+        await axios.get(getIP()+'/transactions/getAllStudentTransactions/')
         .then(response =>{
           this.setState({transactions: response.data})
         })
     .catch(error => console.log(error))
     }
 
-    getBoughtItems(){
-        axios.get(getIP()+'/items/boughtitems/')
+    async getBoughtItems(){
+        await axios.get(getIP()+'/items/boughtitems/')
         .then(response => {
             this.setState({bought_items: response.data})
         })
@@ -125,15 +125,15 @@ class Profile extends React.Component {
         .catch(error => console.log(error))
     }
 
-    createClass(){
-        axios.get(getIP()+'/classrooms/')
-        .then(response => {
-          this.setState({new_class_code: this.makeClassCode(response.data)}, () => {
+    async createClass(){
+        await axios.get(getIP()+'/classrooms/')
+        .then(async response => {
+          this.setState({new_class_code: this.makeClassCode(response.data)}, async() => {
             const payload = {class_name: this.state.new_class_name, teacher_id: this.state.teacher_id, class_code: this.state.new_class_code}
-            axios.post(getIP()+'/classrooms/', payload)
+            await axios.post(getIP()+'/classrooms/', payload)
             .then(response => {
-              this.setState({showCreateClass: false}, () => {
-                this.setState({ classes: [...this.state.classes, response.data] });
+                this.setState({showCreateClass: false}, () => {
+                    this.setState({ classes: [...this.state.classes, response.data] });
               })
             })
             .catch(error => console.log(error))
@@ -235,8 +235,8 @@ class Profile extends React.Component {
                     <Form>
                     <div className='boughtItems'>
                             <ul>
-                                {this.state.bought_items.map(item => {
-                                    return <li key={item.id} className='grey cardb'>{this.renderItemCard(item)}</li>;
+                                {this.state.bought_items.map((item, i) => {
+                                    return <li key={i} className='grey cardb'>{this.renderItemCard(item)}</li>;
                                 })}
                             </ul>
                         </div>
@@ -281,12 +281,12 @@ class Profile extends React.Component {
                     <div className='content'>
                         <div>
                             <ul>
-                                {this.state.transactions.map(item => {
+                                {this.state.transactions.map((item, i) => {
                                     if(item.symbol === '+'){
-                                        return <li key={item.id} className='green cardb'>{this.renderCard(item)}</li>;
+                                        return <li key={i} className='green cardb'>{this.renderCard(item)}</li>;
                                     }
                                     else{
-                                        return <li key={item.id} className='red cardb'>{this.renderCard(item)}</li>;
+                                        return <li key={i} className='red cardb'>{this.renderCard(item)}</li>;
                                     }
                                 })}
                             </ul>   
