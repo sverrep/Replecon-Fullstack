@@ -68,19 +68,18 @@ class TeacherTaxes extends React.Component {
         this.setState({ [field] : e.target.value });
     }
 
-    componentDidMount(){
+    async componentDidMount(){
         axios.defaults.headers.common.Authorization = `Token ${this.state.token}`;
-        this.getClassStudents()
-        this.getTaxes("local")
+        await this.getClassStudents()
+        await this.getTaxes("local")
     }
 
-    getClassStudents() {
-        axios.get(getIP()+'/students/')
+    async getClassStudents() {
+        await axios.get(getIP()+'/students/')
         .then(response => {
-          this.setState({students:response.data});
           this.getCurrentClassStudents(response.data)
         })
-        .catch(error => console.log(error))
+        .catch(error => this.setState({error: error}))
     }
 
     getCurrentClassStudents(students){
@@ -110,6 +109,7 @@ class TeacherTaxes extends React.Component {
             if(alltaxes[i].class_code === this.state.class_code){
               this.setState({classHasTaxes: true})
               this.setState({class_tax: alltaxes[i]})
+              
               return true
             }
           }
@@ -125,40 +125,40 @@ class TeacherTaxes extends React.Component {
         }   
     }
 
-    setUpTax(){
+    async setUpTax(){
         if(this.setupIsValid()){
-            axios.post(getIP()+'/taxes/', {
+            await axios.post(getIP()+'/taxes/', {
                 class_code: this.state.class_code,
                 sales_tax: this.state.current_sales_tax,
                 percentage_tax: this.state.current_percent_tax,
                 flat_tax: this.state.current_flat_tax,
             })
-            .then(response => {
+            .then(async response => {
                 for(let i=0; i<=this.state.progAmount-1;i++){
-                    axios.post(getIP()+'/progressivebrackets/', {
+                    await axios.post(getIP()+'/progressivebrackets/', {
                         tax_id: response.data.id,
                         lower_bracket: this.state.arOfLows[i],
                         higher_bracket: this.state.arOfHighs[i],
                         percentage: this.state.arOfPer[i],
                     })
-                    .then(response => {
-                        this.getTaxes("local")
+                    .then(async response => {
+                        await this.getTaxes("local")
                     })
                     .catch(error => console.log(error))
                 }
                 for(let i=0; i<=this.state.regAmount-1;i++){
-                    axios.post(getIP()+'/regressivebrackets/', {
+                    await axios.post(getIP()+'/regressivebrackets/', {
                         tax_id: response.data.id,
                         lower_bracket: this.state.regArOfLows[i],
                         higher_bracket: this.state.regArOfHighs[i],
                         percentage: this.state.regArOfPer[i],
                     })
-                    .then(response => {
-                        this.getTaxes("local")
+                    .then(async response => {
+                        await this.getTaxes("local")
                     })
                     .catch(error => console.log(error))
                 }
-                this.getTaxes("local")
+                await this.getTaxes("local")
                 this.setState({showCreateTaxes: false})
             })
             .catch(error => console.log(error))
@@ -554,77 +554,6 @@ class TeacherTaxes extends React.Component {
             )
         }
     }
-
-    validateItem(){
-        if(this.state.item_name !== '')
-        {
-            if(!isNaN(this.state.item_price))
-            {
-                if(Math.sign(parseFloat(this.state.item_price)) === 1)
-                {
-                    if(this.state.item_desc)
-                    {
-                        return true
-                    }
-                    else
-                    {
-                        this.setState({store_error: "Please enter a valid item description"})
-                    }
-                }
-                else
-                {
-                    this.setState({store_error: "Please enter a valid item price"})
-                }
-            }
-            else
-            {
-                this.setState({store_error: "Please enter a number"})
-            }
-        }
-        else
-        {
-            this.setState({store_error: "Please enter a valid item name"})
-        }
-    }   
-    
-    validateBank(){
-        if(this.state.interest_rate !== '')
-        {
-            if(this.state.payout_rate !== '')
-            {
-                if(!isNaN(this.state.interest_rate))
-                {
-                    if(parseFloat(this.state.interest_rate) > 0 && parseFloat(this.state.interest_rate) < 100)
-                    {
-                        if(!isNaN(this.state.payout_rate))
-                        {
-                            return true
-                        }
-                        else
-                        {
-                            this.setState({bank_error: "Please enter a number for payout rate"})
-                        }
-                    }
-                    else
-                    {
-                        this.setState({bank_error: "Please enter a valid interest rate percentage"})
-                    }
-                }
-                else
-                {
-                    this.setState({bank_error: "Please enter a valid interest rate"})
-                }
-            }
-            else
-            {
-                this.setState({bank_error: "Please enter a payout rate"})
-            }
-        }
-        else
-        {
-            this.setState({bank_error: "Please enter an interest rate"})
-        }
-    }
     
     setupIsValid(){
         if(this.flat_tax_isValid(this.state.current_flat_tax)){
@@ -857,15 +786,15 @@ class TeacherTaxes extends React.Component {
         return tax
     }
 
-    importTaxes(){
-        axios.get(getIP()+'/classrooms/')
+    async importTaxes(){
+        await axios.get(getIP()+'/classrooms/')
         .then(async (response) => {
           for(let i = 0; i <= Object.keys(response.data).length - 1; i++){
             if(this.state.tax_import_class_code === response.data[i].class_code)
             {
               await this.getTaxes("import")
               await this.getAllBrackets("import")
-              axios.post(getIP()+'/taxes/', {
+              await axios.post(getIP()+'/taxes/', {
                 class_code: this.state.class_code,
                 sales_tax: this.state.tax_import_taxes.sales_tax,
                 percentage_tax: this.state.tax_import_taxes.percentage_tax,
@@ -873,7 +802,6 @@ class TeacherTaxes extends React.Component {
               })
               .then(async (response) => {
                 for(let i=0; i<=this.state.tax_import_prog.length-1;i++){
-                  console.log("prog")
                   await axios.post(getIP()+'/progressivebrackets/', {
                     tax_id: response.data.id,
                     lower_bracket: this.state.arOfLows[i],
@@ -881,13 +809,11 @@ class TeacherTaxes extends React.Component {
                     percentage: this.state.arOfPer[i],
                   })
                   .then(response => {
-                    console.log(response.data)
                     this.getTaxes("local")
                   })
                   .catch(error => console.log(error))
                 }
                 for(let i=0; i<=this.state.tax_import_reg.length-1;i++){
-                  console.log("reg")
                   await axios.post(getIP()+'/regressivebrackets/', {
                     tax_id: response.data.id,
                     lower_bracket: this.state.regArOfLows[i],
@@ -895,7 +821,6 @@ class TeacherTaxes extends React.Component {
                     percentage: this.state.regArOfPer[i],
                   })
                   .then(async (response) => {
-                    console.log(response.data)
                     this.getTaxes("local")
                   })
                   .catch(error => console.log(error))

@@ -1,0 +1,1251 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TeacherStore Testing addItemModal testing should render addItemModal modal and show 1`] = `
+<Modal
+  animation={true}
+  autoFocus={true}
+  backdrop={true}
+  centered={true}
+  dialogAs={
+    Object {
+      "$$typeof": Symbol(react.forward_ref),
+      "render": [Function],
+    }
+  }
+  enforceFocus={true}
+  keyboard={true}
+  onHide={[Function]}
+  restoreFocus={true}
+  show={true}
+  size="lg"
+>
+  <ModalHeader
+    closeButton={true}
+    closeLabel="Close"
+  >
+    <ModalTitle>
+      Add An Item
+    </ModalTitle>
+  </ModalHeader>
+  <ModalBody>
+    <Container
+      fluid={false}
+    >
+      <Row>
+        <Col
+          md={8}
+          xs={12}
+        >
+          <FloatingLabel
+            className="modal-input"
+            label="Item Name"
+          >
+            <FormControl
+              id="item_name"
+              onChange={[Function]}
+              placeholder="Item Name"
+            />
+          </FloatingLabel>
+        </Col>
+        <Col
+          md={4}
+          xs={6}
+        >
+          <FloatingLabel
+            className="modal-input"
+            label="Item Price"
+          >
+            <FormControl
+              id="item_price"
+              onChange={[Function]}
+              placeholder="Item Price"
+            />
+          </FloatingLabel>
+        </Col>
+      </Row>
+      <Row>
+        <FloatingLabel
+          className="modal-input"
+          label="Item Description"
+        >
+          <FormControl
+            id="item_desc"
+            onChange={[Function]}
+            placeholder="Item Description"
+          />
+        </FloatingLabel>
+      </Row>
+    </Container>
+    <p>
+      
+    </p>
+  </ModalBody>
+  <ModalFooter>
+    <Button
+      active={false}
+      className="modal-btn"
+      disabled={false}
+      onClick={[Function]}
+      variant="primary"
+    >
+      Add Item
+    </Button>
+  </ModalFooter>
+</Modal>
+`;
+
+exports[`TeacherStore Testing addItemModal testing should render addItemModal modal but not show 1`] = `
+<Modal
+  animation={true}
+  autoFocus={true}
+  backdrop={true}
+  centered={true}
+  dialogAs={
+    Object {
+      "$$typeof": Symbol(react.forward_ref),
+      "render": [Function],
+    }
+  }
+  enforceFocus={true}
+  keyboard={true}
+  onHide={[Function]}
+  restoreFocus={true}
+  show={false}
+  size="lg"
+>
+  <ModalHeader
+    closeButton={true}
+    closeLabel="Close"
+  >
+    <ModalTitle>
+      Add An Item
+    </ModalTitle>
+  </ModalHeader>
+  <ModalBody>
+    <Container
+      fluid={false}
+    >
+      <Row>
+        <Col
+          md={8}
+          xs={12}
+        >
+          <FloatingLabel
+            className="modal-input"
+            label="Item Name"
+          >
+            <FormControl
+              id="item_name"
+              onChange={[Function]}
+              placeholder="Item Name"
+            />
+          </FloatingLabel>
+        </Col>
+        <Col
+          md={4}
+          xs={6}
+        >
+          <FloatingLabel
+            className="modal-input"
+            label="Item Price"
+          >
+            <FormControl
+              id="item_price"
+              onChange={[Function]}
+              placeholder="Item Price"
+            />
+          </FloatingLabel>
+        </Col>
+      </Row>
+      <Row>
+        <FloatingLabel
+          className="modal-input"
+          label="Item Description"
+        >
+          <FormControl
+            id="item_desc"
+            onChange={[Function]}
+            placeholder="Item Description"
+          />
+        </FloatingLabel>
+      </Row>
+    </Container>
+    <p>
+      
+    </p>
+  </ModalBody>
+  <ModalFooter>
+    <Button
+      active={false}
+      className="modal-btn"
+      disabled={false}
+      onClick={[Function]}
+      variant="primary"
+    >
+      Add Item
+    </Button>
+  </ModalFooter>
+</Modal>
+`;
+
+exports[`TeacherStore Testing createStoreModal testing should render createStoreModal modal and show 1`] = `
+<Modal
+  animation={true}
+  autoFocus={true}
+  backdrop={true}
+  centered={true}
+  dialogAs={
+    Object {
+      "$$typeof": Symbol(react.forward_ref),
+      "render": [Function],
+    }
+  }
+  enforceFocus={true}
+  keyboard={true}
+  onHide={[Function]}
+  restoreFocus={true}
+  show={true}
+  size="lg"
+>
+  <ModalHeader
+    closeButton={true}
+    closeLabel="Close"
+  >
+    <ModalTitle>
+      Create A Store
+    </ModalTitle>
+  </ModalHeader>
+  <ModalBody>
+    <FloatingLabel
+      className="modal-input"
+      label="Store Name"
+    >
+      <FormControl
+        id="store_name"
+        onChange={[Function]}
+        placeholder="Interest Rate"
+      />
+    </FloatingLabel>
+    <p>
+      
+    </p>
+  </ModalBody>
+  <ModalFooter>
+    <Button
+      active={false}
+      className="modal-btn"
+      disabled={false}
+      onClick={[Function]}
+      variant="primary"
+    >
+      Create Store
+    </Button>
+  </ModalFooter>
+</Modal>
+`;
+
+exports[`TeacherStore Testing createStoreModal testing should render createStoreModal modal but not show 1`] = `
+<Modal
+  animation={true}
+  autoFocus={true}
+  backdrop={true}
+  centered={true}
+  dialogAs={
+    Object {
+      "$$typeof": Symbol(react.forward_ref),
+      "render": [Function],
+    }
+  }
+  enforceFocus={true}
+  keyboard={true}
+  onHide={[Function]}
+  restoreFocus={true}
+  show={false}
+  size="lg"
+>
+  <ModalHeader
+    closeButton={true}
+    closeLabel="Close"
+  >
+    <ModalTitle>
+      Create A Store
+    </ModalTitle>
+  </ModalHeader>
+  <ModalBody>
+    <FloatingLabel
+      className="modal-input"
+      label="Store Name"
+    >
+      <FormControl
+        id="store_name"
+        onChange={[Function]}
+        placeholder="Interest Rate"
+      />
+    </FloatingLabel>
+    <p>
+      
+    </p>
+  </ModalBody>
+  <ModalFooter>
+    <Button
+      active={false}
+      className="modal-btn"
+      disabled={false}
+      onClick={[Function]}
+      variant="primary"
+    >
+      Create Store
+    </Button>
+  </ModalFooter>
+</Modal>
+`;
+
+exports[`TeacherStore Testing hasNoShop testing should render hasNoShop view 1`] = `
+<Col>
+  <h4>
+    This class has no store
+  </h4>
+  <Button
+    active={false}
+    className="store-btns"
+    disabled={false}
+    onClick={[Function]}
+    variant="primary"
+  >
+    Create A Store
+  </Button>
+  <Modal
+    animation={true}
+    autoFocus={true}
+    backdrop={true}
+    centered={true}
+    dialogAs={
+      Object {
+        "$$typeof": Symbol(react.forward_ref),
+        "render": [Function],
+      }
+    }
+    enforceFocus={true}
+    keyboard={true}
+    onHide={[Function]}
+    restoreFocus={true}
+    show={false}
+    size="lg"
+  >
+    <ModalHeader
+      closeButton={true}
+      closeLabel="Close"
+    >
+      <ModalTitle>
+        Create A Store
+      </ModalTitle>
+    </ModalHeader>
+    <ModalBody>
+      <FloatingLabel
+        className="modal-input"
+        label="Store Name"
+      >
+        <FormControl
+          id="store_name"
+          onChange={[Function]}
+          placeholder="Interest Rate"
+        />
+      </FloatingLabel>
+      <p>
+        
+      </p>
+    </ModalBody>
+    <ModalFooter>
+      <Button
+        active={false}
+        className="modal-btn"
+        disabled={false}
+        onClick={[Function]}
+        variant="primary"
+      >
+        Create Store
+      </Button>
+    </ModalFooter>
+  </Modal>
+</Col>
+`;
+
+exports[`TeacherStore Testing hasShop testing should render hasShop view 1`] = `
+<Col
+  className="store-col"
+>
+  <h4>
+    Test
+     Store
+  </h4>
+  <Row
+    className="store-row"
+  >
+    <Row
+      lg={3}
+      md={2}
+      xl={5}
+      xs={1}
+    />
+  </Row>
+  <Row
+    className="store-btn-row"
+  >
+    <Button
+      active={false}
+      className="store-btns"
+      disabled={false}
+      onClick={[Function]}
+      variant="primary"
+    >
+      Add Item
+    </Button>
+    <Button
+      active={false}
+      className="store-btns"
+      disabled={false}
+      onClick={[Function]}
+      variant="primary"
+    >
+      Import Store Items
+    </Button>
+  </Row>
+  <Modal
+    animation={true}
+    autoFocus={true}
+    backdrop={true}
+    centered={true}
+    dialogAs={
+      Object {
+        "$$typeof": Symbol(react.forward_ref),
+        "render": [Function],
+      }
+    }
+    enforceFocus={true}
+    keyboard={true}
+    onHide={[Function]}
+    restoreFocus={true}
+    show={false}
+    size="lg"
+  >
+    <ModalHeader
+      closeButton={true}
+      closeLabel="Close"
+    >
+      <ModalTitle>
+        Add An Item
+      </ModalTitle>
+    </ModalHeader>
+    <ModalBody>
+      <Container
+        fluid={false}
+      >
+        <Row>
+          <Col
+            md={8}
+            xs={12}
+          >
+            <FloatingLabel
+              className="modal-input"
+              label="Item Name"
+            >
+              <FormControl
+                id="item_name"
+                onChange={[Function]}
+                placeholder="Item Name"
+              />
+            </FloatingLabel>
+          </Col>
+          <Col
+            md={4}
+            xs={6}
+          >
+            <FloatingLabel
+              className="modal-input"
+              label="Item Price"
+            >
+              <FormControl
+                id="item_price"
+                onChange={[Function]}
+                placeholder="Item Price"
+              />
+            </FloatingLabel>
+          </Col>
+        </Row>
+        <Row>
+          <FloatingLabel
+            className="modal-input"
+            label="Item Description"
+          >
+            <FormControl
+              id="item_desc"
+              onChange={[Function]}
+              placeholder="Item Description"
+            />
+          </FloatingLabel>
+        </Row>
+      </Container>
+      <p>
+        
+      </p>
+    </ModalBody>
+    <ModalFooter>
+      <Button
+        active={false}
+        className="modal-btn"
+        disabled={false}
+        onClick={[Function]}
+        variant="primary"
+      >
+        Add Item
+      </Button>
+    </ModalFooter>
+  </Modal>
+  <Modal
+    animation={true}
+    autoFocus={true}
+    backdrop={true}
+    centered={true}
+    dialogAs={
+      Object {
+        "$$typeof": Symbol(react.forward_ref),
+        "render": [Function],
+      }
+    }
+    enforceFocus={true}
+    keyboard={true}
+    onHide={[Function]}
+    restoreFocus={true}
+    show={false}
+    size="lg"
+  >
+    <ModalHeader
+      closeButton={true}
+      closeLabel="Close"
+    >
+      <ModalTitle>
+        Update An Item
+      </ModalTitle>
+    </ModalHeader>
+    <ModalBody>
+      <Container
+        fluid={false}
+      >
+        <Row>
+          <Col
+            md={8}
+            xs={12}
+          >
+            <FloatingLabel
+              className="modal-input"
+              label="Item Name"
+            >
+              <FormControl
+                defaultValue=""
+                id="item_name"
+                onChange={[Function]}
+                placeholder="Item Name"
+              />
+            </FloatingLabel>
+          </Col>
+          <Col
+            md={4}
+            xs={6}
+          >
+            <FloatingLabel
+              className="modal-input"
+              label="Item Price"
+            >
+              <FormControl
+                defaultValue={0}
+                id="item_price"
+                onChange={[Function]}
+                placeholder="Item Price"
+              />
+            </FloatingLabel>
+          </Col>
+        </Row>
+        <Row>
+          <FloatingLabel
+            className="modal-input"
+            label="Item Description"
+          >
+            <FormControl
+              defaultValue=""
+              id="item_desc"
+              onChange={[Function]}
+              placeholder="Item Description"
+            />
+          </FloatingLabel>
+        </Row>
+      </Container>
+      <p>
+        
+      </p>
+    </ModalBody>
+    <ModalFooter>
+      <Button
+        active={false}
+        className="modal-btn"
+        disabled={false}
+        onClick={[Function]}
+        variant="primary"
+      >
+        Update Item
+      </Button>
+      <Button
+        active={false}
+        className="modal-btn"
+        disabled={false}
+        onClick={[Function]}
+        variant="primary"
+      >
+        Delete Item
+      </Button>
+    </ModalFooter>
+  </Modal>
+  <Modal
+    animation={true}
+    autoFocus={true}
+    backdrop={true}
+    centered={true}
+    dialogAs={
+      Object {
+        "$$typeof": Symbol(react.forward_ref),
+        "render": [Function],
+      }
+    }
+    enforceFocus={true}
+    keyboard={true}
+    onHide={[Function]}
+    restoreFocus={true}
+    show={false}
+    size="lg"
+  >
+    <ModalHeader
+      closeButton={true}
+      closeLabel="Close"
+    >
+      <ModalTitle>
+        Import Items from Another Class Store
+      </ModalTitle>
+    </ModalHeader>
+    <ModalBody>
+      <FloatingLabel
+        className="modal-input"
+        label="Class Code"
+      >
+        <FormControl
+          id="item_import_class_code"
+          onChange={[Function]}
+          placeholder="Class Code"
+        />
+      </FloatingLabel>
+      <p>
+        
+      </p>
+    </ModalBody>
+    <ModalFooter>
+      <Button
+        active={false}
+        className="modal-btn"
+        disabled={false}
+        onClick={[Function]}
+        variant="primary"
+      >
+        Import Items
+      </Button>
+    </ModalFooter>
+  </Modal>
+</Col>
+`;
+
+exports[`TeacherStore Testing importStoreItemsModal testing should render importStoreItemsModal modal and show 1`] = `
+<Modal
+  animation={true}
+  autoFocus={true}
+  backdrop={true}
+  centered={true}
+  dialogAs={
+    Object {
+      "$$typeof": Symbol(react.forward_ref),
+      "render": [Function],
+    }
+  }
+  enforceFocus={true}
+  keyboard={true}
+  onHide={[Function]}
+  restoreFocus={true}
+  show={true}
+  size="lg"
+>
+  <ModalHeader
+    closeButton={true}
+    closeLabel="Close"
+  >
+    <ModalTitle>
+      Import Items from Another Class Store
+    </ModalTitle>
+  </ModalHeader>
+  <ModalBody>
+    <FloatingLabel
+      className="modal-input"
+      label="Class Code"
+    >
+      <FormControl
+        id="item_import_class_code"
+        onChange={[Function]}
+        placeholder="Class Code"
+      />
+    </FloatingLabel>
+    <p>
+      
+    </p>
+  </ModalBody>
+  <ModalFooter>
+    <Button
+      active={false}
+      className="modal-btn"
+      disabled={false}
+      onClick={[Function]}
+      variant="primary"
+    >
+      Import Items
+    </Button>
+  </ModalFooter>
+</Modal>
+`;
+
+exports[`TeacherStore Testing importStoreItemsModal testing should render importStoreItemsModal modal but not show 1`] = `
+<Modal
+  animation={true}
+  autoFocus={true}
+  backdrop={true}
+  centered={true}
+  dialogAs={
+    Object {
+      "$$typeof": Symbol(react.forward_ref),
+      "render": [Function],
+    }
+  }
+  enforceFocus={true}
+  keyboard={true}
+  onHide={[Function]}
+  restoreFocus={true}
+  show={false}
+  size="lg"
+>
+  <ModalHeader
+    closeButton={true}
+    closeLabel="Close"
+  >
+    <ModalTitle>
+      Import Items from Another Class Store
+    </ModalTitle>
+  </ModalHeader>
+  <ModalBody>
+    <FloatingLabel
+      className="modal-input"
+      label="Class Code"
+    >
+      <FormControl
+        id="item_import_class_code"
+        onChange={[Function]}
+        placeholder="Class Code"
+      />
+    </FloatingLabel>
+    <p>
+      
+    </p>
+  </ModalBody>
+  <ModalFooter>
+    <Button
+      active={false}
+      className="modal-btn"
+      disabled={false}
+      onClick={[Function]}
+      variant="primary"
+    >
+      Import Items
+    </Button>
+  </ModalFooter>
+</Modal>
+`;
+
+exports[`TeacherStore Testing render testing should render default components 1`] = `
+Array [
+  <div
+    className="wrapper"
+  >
+    <Navbar
+      className="teacher-navbar"
+      collapseOnSelect={true}
+      expand="lg"
+      variant="dark"
+    >
+      <Container
+        fluid={false}
+      >
+        <NavbarBrand
+          className="navbar-header"
+        >
+          classname
+        </NavbarBrand>
+        <Nav
+          className="navbar-btns"
+          fill={false}
+          justify={false}
+        >
+          <Button
+            active={false}
+            className="navbar-btn"
+            disabled={false}
+            variant="light"
+          >
+            <Link
+              className="navbar-link"
+              to={
+                Object {
+                  "pathname": "/Class/classc/students",
+                  "state": Object {
+                    "class": Object {
+                      "class_code": "classc",
+                      "class_name": "classname",
+                    },
+                    "teacher_id": "teacherid",
+                    "token": "token",
+                  },
+                }
+              }
+            >
+              Students
+            </Link>
+          </Button>
+          <Button
+            active={false}
+            className="navbar-btn"
+            disabled={false}
+            variant="light"
+          >
+            <Link
+              className="navbar-link"
+              to={
+                Object {
+                  "pathname": "/Class/classc/taxes",
+                  "state": Object {
+                    "class": Object {
+                      "class_code": "classc",
+                      "class_name": "classname",
+                    },
+                    "teacher_id": "teacherid",
+                    "token": "token",
+                  },
+                }
+              }
+            >
+              Taxes
+            </Link>
+          </Button>
+          <Button
+            active={false}
+            className="navbar-btn"
+            disabled={false}
+            variant="light"
+          >
+            <Link
+              className="navbar-link"
+              to={
+                Object {
+                  "pathname": "/Class/classc/store",
+                  "state": Object {
+                    "class": Object {
+                      "class_code": "classc",
+                      "class_name": "classname",
+                    },
+                    "teacher_id": "teacherid",
+                    "token": "token",
+                  },
+                }
+              }
+            >
+              Store
+            </Link>
+          </Button>
+          <Button
+            active={false}
+            className="navbar-btn"
+            disabled={false}
+            variant="light"
+          >
+            <Link
+              className="navbar-link"
+              to={
+                Object {
+                  "pathname": "/Class/classc/bank",
+                  "state": Object {
+                    "class": Object {
+                      "class_code": "classc",
+                      "class_name": "classname",
+                    },
+                    "teacher_id": "teacherid",
+                    "token": "token",
+                  },
+                }
+              }
+            >
+              Bank
+            </Link>
+          </Button>
+          <Button
+            active={false}
+            className="navbar-btn-class-list"
+            disabled={false}
+            variant="secondary-outline"
+          >
+            <Link
+              className="navbar-link"
+              to={
+                Object {
+                  "pathname": "/Profile/",
+                  "state": Object {
+                    "role": "Teacher",
+                    "token": "token",
+                  },
+                }
+              }
+            >
+              Class List
+            </Link>
+          </Button>
+        </Nav>
+      </Container>
+    </Navbar>
+    <Container
+      className="store-container"
+      fluid={false}
+    >
+      <Row
+        className="content-row"
+      >
+        <Col>
+          <h4>
+            This class has no store
+          </h4>
+          <Button
+            active={false}
+            className="store-btns"
+            disabled={false}
+            onClick={[Function]}
+            variant="primary"
+          >
+            Create A Store
+          </Button>
+          <Modal
+            animation={true}
+            autoFocus={true}
+            backdrop={true}
+            centered={true}
+            dialogAs={
+              Object {
+                "$$typeof": Symbol(react.forward_ref),
+                "render": [Function],
+              }
+            }
+            enforceFocus={true}
+            keyboard={true}
+            onHide={[Function]}
+            restoreFocus={true}
+            show={false}
+            size="lg"
+          >
+            <ModalHeader
+              closeButton={true}
+              closeLabel="Close"
+            >
+              <ModalTitle>
+                Create A Store
+              </ModalTitle>
+            </ModalHeader>
+            <ModalBody>
+              <FloatingLabel
+                className="modal-input"
+                label="Store Name"
+              >
+                <FormControl
+                  id="store_name"
+                  onChange={[Function]}
+                  placeholder="Interest Rate"
+                />
+              </FloatingLabel>
+              <p>
+                
+              </p>
+            </ModalBody>
+            <ModalFooter>
+              <Button
+                active={false}
+                className="modal-btn"
+                disabled={false}
+                onClick={[Function]}
+                variant="primary"
+              >
+                Create Store
+              </Button>
+            </ModalFooter>
+          </Modal>
+        </Col>
+      </Row>
+    </Container>
+  </div>,
+]
+`;
+
+exports[`TeacherStore Testing renderStoreCards testing should display cards properly 1`] = `
+<Col>
+  <Card
+    body={false}
+    className="store-cards"
+  >
+    <CardBody>
+      <CardTitle>
+        itemname
+         $10
+      </CardTitle>
+      <CardText>
+        itemdesc
+        <br />
+        <Button
+          active={false}
+          className="card-btns"
+          disabled={false}
+          onClick={[Function]}
+          variant="primary"
+        >
+          Update Item
+        </Button>
+      </CardText>
+    </CardBody>
+  </Card>
+</Col>
+`;
+
+exports[`TeacherStore Testing renderStoreItems testing should display single row 1`] = `
+<Row
+  lg={3}
+  md={2}
+  xl={5}
+  xs={1}
+/>
+`;
+
+exports[`TeacherStore Testing updateItemModal testing should render updateItemModal modal and show 1`] = `
+<Modal
+  animation={true}
+  autoFocus={true}
+  backdrop={true}
+  centered={true}
+  dialogAs={
+    Object {
+      "$$typeof": Symbol(react.forward_ref),
+      "render": [Function],
+    }
+  }
+  enforceFocus={true}
+  keyboard={true}
+  onHide={[Function]}
+  restoreFocus={true}
+  show={true}
+  size="lg"
+>
+  <ModalHeader
+    closeButton={true}
+    closeLabel="Close"
+  >
+    <ModalTitle>
+      Update An Item
+    </ModalTitle>
+  </ModalHeader>
+  <ModalBody>
+    <Container
+      fluid={false}
+    >
+      <Row>
+        <Col
+          md={8}
+          xs={12}
+        >
+          <FloatingLabel
+            className="modal-input"
+            label="Item Name"
+          >
+            <FormControl
+              defaultValue="itemname"
+              id="item_name"
+              onChange={[Function]}
+              placeholder="Item Name"
+            />
+          </FloatingLabel>
+        </Col>
+        <Col
+          md={4}
+          xs={6}
+        >
+          <FloatingLabel
+            className="modal-input"
+            label="Item Price"
+          >
+            <FormControl
+              defaultValue={10}
+              id="item_price"
+              onChange={[Function]}
+              placeholder="Item Price"
+            />
+          </FloatingLabel>
+        </Col>
+      </Row>
+      <Row>
+        <FloatingLabel
+          className="modal-input"
+          label="Item Description"
+        >
+          <FormControl
+            defaultValue="itemdesc"
+            id="item_desc"
+            onChange={[Function]}
+            placeholder="Item Description"
+          />
+        </FloatingLabel>
+      </Row>
+    </Container>
+    <p>
+      
+    </p>
+  </ModalBody>
+  <ModalFooter>
+    <Button
+      active={false}
+      className="modal-btn"
+      disabled={false}
+      onClick={[Function]}
+      variant="primary"
+    >
+      Update Item
+    </Button>
+    <Button
+      active={false}
+      className="modal-btn"
+      disabled={false}
+      onClick={[Function]}
+      variant="primary"
+    >
+      Delete Item
+    </Button>
+  </ModalFooter>
+</Modal>
+`;
+
+exports[`TeacherStore Testing updateItemModal testing should render updateItemModal modal but not show 1`] = `
+<Modal
+  animation={true}
+  autoFocus={true}
+  backdrop={true}
+  centered={true}
+  dialogAs={
+    Object {
+      "$$typeof": Symbol(react.forward_ref),
+      "render": [Function],
+    }
+  }
+  enforceFocus={true}
+  keyboard={true}
+  onHide={[Function]}
+  restoreFocus={true}
+  show={false}
+  size="lg"
+>
+  <ModalHeader
+    closeButton={true}
+    closeLabel="Close"
+  >
+    <ModalTitle>
+      Update An Item
+    </ModalTitle>
+  </ModalHeader>
+  <ModalBody>
+    <Container
+      fluid={false}
+    >
+      <Row>
+        <Col
+          md={8}
+          xs={12}
+        >
+          <FloatingLabel
+            className="modal-input"
+            label="Item Name"
+          >
+            <FormControl
+              defaultValue="itemname"
+              id="item_name"
+              onChange={[Function]}
+              placeholder="Item Name"
+            />
+          </FloatingLabel>
+        </Col>
+        <Col
+          md={4}
+          xs={6}
+        >
+          <FloatingLabel
+            className="modal-input"
+            label="Item Price"
+          >
+            <FormControl
+              defaultValue={10}
+              id="item_price"
+              onChange={[Function]}
+              placeholder="Item Price"
+            />
+          </FloatingLabel>
+        </Col>
+      </Row>
+      <Row>
+        <FloatingLabel
+          className="modal-input"
+          label="Item Description"
+        >
+          <FormControl
+            defaultValue="itemdesc"
+            id="item_desc"
+            onChange={[Function]}
+            placeholder="Item Description"
+          />
+        </FloatingLabel>
+      </Row>
+    </Container>
+    <p>
+      
+    </p>
+  </ModalBody>
+  <ModalFooter>
+    <Button
+      active={false}
+      className="modal-btn"
+      disabled={false}
+      onClick={[Function]}
+      variant="primary"
+    >
+      Update Item
+    </Button>
+    <Button
+      active={false}
+      className="modal-btn"
+      disabled={false}
+      onClick={[Function]}
+      variant="primary"
+    >
+      Delete Item
+    </Button>
+  </ModalFooter>
+</Modal>
+`;

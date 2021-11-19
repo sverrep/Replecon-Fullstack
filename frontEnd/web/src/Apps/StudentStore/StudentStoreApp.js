@@ -30,25 +30,25 @@ class StudentStore extends React.Component {
         this.getClassCode = this.getClassCode.bind(this)
     }
 
-    componentDidMount(){
+    async componentDidMount(){
         axios.defaults.headers.common.Authorization = `Token ${this.state.token}`;
-        this.getStudentBalance()
-        this.getClassCode()
+        await this.getStudentBalance()
+        await this.getClassCode()
     }
 
     //Classroom Store Setups
-    getClassCode(){
-        axios.get(getIP()+'/students/class_code/')
+    async getClassCode(){
+        await axios.get(getIP()+'/students/class_code/')
         .then(response => {
-        this.setState({ students: response.data });
-        this.setState({ class_code: this.state.students[0].class_code })
-        this.getShops()
+            this.setState({ students: response.data });
+            this.setState({ class_code: this.state.students[0].class_code })
+            this.getShops()
         })
         .catch(error => console.log(error))
     }
 
-    getShops(){
-        axios.get(getIP()+'/shops/')
+    async getShops(){
+        await axios.get(getIP()+'/shops/')
         .then(response => {
         this.setState({shops: response.data})
         this.findShopName(response.data)
@@ -58,13 +58,13 @@ class StudentStore extends React.Component {
 
     findShopName(shops){
         for (let i = 0; i<=shops.length -1;i++)
-        {
-        if(shops[i].class_code===this.state.class_code)
-        {
-            this.setState({store_name:shops[i].shop_name})
-            this.setState({store_id: shops[i].id})
+        { 
+            if(shops[i].class_code===this.state.class_code)
+            {
+                this.setState({store_name:shops[i].shop_name})
+                this.setState({store_id: shops[i].id})
 
-        }
+            }
         }
         this.getItems()
     }
@@ -72,7 +72,7 @@ class StudentStore extends React.Component {
     getItems(){
         axios.get(getIP()+'/items/')
         .then(response => {
-        this.getShopItems(response.data)
+            this.getShopItems(response.data)
         })
         .catch(error => console.log(error))
 
@@ -82,27 +82,29 @@ class StudentStore extends React.Component {
         var ar = []
         for(let i = 0; i<=allItems.length -1; i++)
         {
-        if(allItems[i].shop_id===this.state.store_id)
-        {
-            ar.push(allItems[i])
-        }
+            if(allItems[i].shop_id===this.state.store_id)
+            {
+                ar.push(allItems[i])
+            }
         }
         this.setState({items:ar})
         }
 
     //Student Balance
-    getStudentBalance()
+    async getStudentBalance()
     {
-        axios.get(getIP()+'/students/balance/')
+        await axios.get(getIP()+'/students/balance/')
         .then(response => {
             this.setState({student_balance: response.data})
             })
+            
         .catch(error => console.log(error))
+        
     }
 
-    renderCard(item){
+    renderCard(item, i){
         return(
-            <Card style={{ width: '15rem', padding: '10px' }} className='cards'>
+            <Card key={i} style={{ width: '15rem', padding: '10px' }} className='cards'>
                 <Card.Body>
                     <Card.Title>{item.item_name} ${item.price}</Card.Title>
                     <Card.Text>
@@ -135,16 +137,16 @@ class StudentStore extends React.Component {
     }
     //Purchasing of Item
 
-    buyItem(item){
+    async buyItem(item){
         if(this.validatePurchase(item)){
-        axios.post(getIP()+'/items/boughtitems/', { item_id: item.id })
-            .then(response => {
-                axios.get(getIP()+'/students/store/')
-                    .then(response => {
-                    axios.put(getIP()+'/students/balance/', { amount: item.price, user_id: response.data, recipient: false })
-                        .then(response => {
-                        axios.post(getIP()+'/transactions/buyFromStore/', { amount: item.price })
-                            .then(response => {
+        await axios.post(getIP()+'/items/boughtitems/', { item_id: item.id })
+            .then(async response => {
+                await axios.get(getIP()+'/students/store/')
+                    .then(async response => {
+                    await axios.put(getIP()+'/students/balance/', { amount: item.price, user_id: response.data, recipient: false })
+                        .then(async response => {
+                        await axios.post(getIP()+'/transactions/buyFromStore/', { amount: item.price })
+                            .then(async response => {
                                 this.getStudentBalance()
                             })
                         .catch(error => console.log(error + "transactions"))
@@ -188,9 +190,7 @@ class StudentStore extends React.Component {
                 <div className="item-cards">
                     <div className='override'>
                         <Row xs="auto" md={2}>
-                    {this.state.items.map(item => {
-                            return(this.renderCard(item))
-                        })}
+                    {this.state.items.map((item, i) => this.renderCard(item, i))}
                         </Row>
                     </div>
                 </div>

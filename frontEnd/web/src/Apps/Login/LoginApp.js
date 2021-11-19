@@ -11,7 +11,7 @@ import Button from 'react-bootstrap/Button'
 export default class LoginApp extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { email: '', password: '', redirect_student_profile: false, redirect_student_signup: false, redirect_teacher_signup: false, error: '', token: '' };
+    this.state = { email: '', password: '', redirect_student_profile: false, redirect_teacher_profile: false, redirect_student_signup: false, redirect_teacher_signup: false, error: '', token: '' };
     this.handleChange = this.handleChange.bind(this);
     this.handleLogin = this.handleLogin.bind(this);
     this.handleStudentSignUpRedirect = this.handleStudentSignUpRedirect.bind(this);
@@ -108,15 +108,16 @@ export default class LoginApp extends React.Component {
     } 
   }
 
-  handleLogin() {
+  async handleLogin() {
     if (this.validateData()) {
       const payload = { username: this.state.email, password: this.state.password } 
-      axios.post(getIP()+'/auth/login/', payload)
-      .then(response => {
+      await axios.post(getIP()+'/auth/login/', payload)
+      .then(async response => {
         this.setState ({ token: response.data.token })
         axios.defaults.headers.common.Authorization = `Token ${this.state.token}`;
-        axios.get(getIP()+'/teachers/isTeacher/')
+        await axios.get(getIP()+'/teachers/isTeacher/')
         .then(response => {
+          this.setState({ email: response.data})
           if(response.data === true) {
             this.setState({ redirect_teacher_profile : true})
             return
@@ -128,9 +129,9 @@ export default class LoginApp extends React.Component {
         })
         .catch(error => console.log(error));
       })
-      .catch(error => console.log(error));
+      .catch(error => this.setState({error: error}));
       this.setState({error: "User Not Found"})
-      return
+      return true
     }
     else {
       return

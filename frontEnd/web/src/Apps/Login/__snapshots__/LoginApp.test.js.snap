@@ -1,0 +1,110 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`LoginApp Testing component render testing Login page renders correctly 1`] = `
+Array [
+  <div>
+    <Container
+      className="login-container"
+      fluid={false}
+    >
+      <div
+        className="vertical-center"
+      >
+        <Row>
+          <h1
+            className="logo-h1"
+          >
+            REPLECON
+          </h1>
+          <h3
+            className="login-h3"
+          >
+            Login
+          </h3>
+        </Row>
+        <Row>
+          <FormGroup
+            className="mb-3"
+            controlId="email"
+          >
+            <FormLabel
+              column={false}
+              visuallyHidden={false}
+            >
+              Email address
+            </FormLabel>
+            <FormControl
+              onChange={[Function]}
+              placeholder="Enter email"
+              type="email"
+            />
+          </FormGroup>
+          <FormGroup
+            className="mb-3"
+            controlId="password"
+          >
+            <FormLabel
+              column={false}
+              visuallyHidden={false}
+            >
+              Password
+            </FormLabel>
+            <FormControl
+              onChange={[Function]}
+              placeholder="Password"
+              type="password"
+            />
+          </FormGroup>
+        </Row>
+        <p
+          className="error-message"
+        >
+          
+        </p>
+        <div
+          className="login-btns-row"
+        >
+          <Button
+            active={false}
+            className="login-btns"
+            disabled={false}
+            onClick={[Function]}
+            variant="primary"
+          >
+             Login 
+          </Button>
+        </div>
+        <div
+          className="login-btns-row"
+        >
+          <Button
+            active={false}
+            className="login-btns"
+            disabled={false}
+            onClick={[Function]}
+            variant="secondary"
+          >
+             Student Sign Up 
+          </Button>
+          <Button
+            active={false}
+            className="login-btns"
+            disabled={false}
+            onClick={[Function]}
+            variant="secondary"
+          >
+            Teacher Sign Up
+          </Button>
+        </div>
+      </div>
+    </Container>
+    <div
+      className="footerlog"
+    >
+      <p>
+        SPSO Solutions ©
+      </p>
+    </div>
+  </div>,
+]
+`;
