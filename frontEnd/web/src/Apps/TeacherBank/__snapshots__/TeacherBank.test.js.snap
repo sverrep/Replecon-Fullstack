@@ -1,0 +1,732 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TeacherBank Testing createBankModal testing should render createBankModal modal and show 1`] = `
+<Modal
+  animation={true}
+  autoFocus={true}
+  backdrop={true}
+  centered={true}
+  dialogAs={
+    Object {
+      "$$typeof": Symbol(react.forward_ref),
+      "render": [Function],
+    }
+  }
+  enforceFocus={true}
+  keyboard={true}
+  onHide={[Function]}
+  restoreFocus={true}
+  show={true}
+  size="lg"
+>
+  <ModalHeader
+    closeButton={true}
+    closeLabel="Close"
+  >
+    <ModalTitle>
+      Create A Bank
+    </ModalTitle>
+  </ModalHeader>
+  <ModalBody>
+    <FloatingLabel
+      className="modal-input"
+      label="Bank Interest Rate"
+    >
+      <FormControl
+        id="interest_rate"
+        onChange={[Function]}
+        placeholder="Interest Rate"
+      />
+    </FloatingLabel>
+    <FloatingLabel
+      className="modal-input"
+      label="Bank Payout Rate in Weeks"
+    >
+      <FormControl
+        id="payout_rate"
+        onChange={[Function]}
+        placeholder="Payout Rate"
+      />
+    </FloatingLabel>
+    <p>
+      
+    </p>
+  </ModalBody>
+  <ModalFooter>
+    <Button
+      active={false}
+      className="bank-btns"
+      disabled={false}
+      onClick={[Function]}
+      variant="primary"
+    >
+      Create Bank
+    </Button>
+  </ModalFooter>
+</Modal>
+`;
+
+exports[`TeacherBank Testing createBankModal testing should render createBankModal modal but not show 1`] = `
+<Modal
+  animation={true}
+  autoFocus={true}
+  backdrop={true}
+  centered={true}
+  dialogAs={
+    Object {
+      "$$typeof": Symbol(react.forward_ref),
+      "render": [Function],
+    }
+  }
+  enforceFocus={true}
+  keyboard={true}
+  onHide={[Function]}
+  restoreFocus={true}
+  show={false}
+  size="lg"
+>
+  <ModalHeader
+    closeButton={true}
+    closeLabel="Close"
+  >
+    <ModalTitle>
+      Create A Bank
+    </ModalTitle>
+  </ModalHeader>
+  <ModalBody>
+    <FloatingLabel
+      className="modal-input"
+      label="Bank Interest Rate"
+    >
+      <FormControl
+        id="interest_rate"
+        onChange={[Function]}
+        placeholder="Interest Rate"
+      />
+    </FloatingLabel>
+    <FloatingLabel
+      className="modal-input"
+      label="Bank Payout Rate in Weeks"
+    >
+      <FormControl
+        id="payout_rate"
+        onChange={[Function]}
+        placeholder="Payout Rate"
+      />
+    </FloatingLabel>
+    <p>
+      
+    </p>
+  </ModalBody>
+  <ModalFooter>
+    <Button
+      active={false}
+      className="bank-btns"
+      disabled={false}
+      onClick={[Function]}
+      variant="primary"
+    >
+      Create Bank
+    </Button>
+  </ModalFooter>
+</Modal>
+`;
+
+exports[`TeacherBank Testing hasBank testing should render hasBank view 1`] = `
+<Col
+  className="bank-col"
+>
+  <Row
+    className="bank-row"
+  >
+    <h4>
+      Test
+       Bank
+    </h4>
+    <h6>
+      Interest Rate: 
+      5
+      %
+    </h6>
+    <h6>
+      Payout Rate: 
+      1
+       Weeks
+    </h6>
+    <Button
+      active={false}
+      className="bank-btns"
+      disabled={false}
+      onClick={[Function]}
+      variant="primary"
+    >
+      Update Bank Rates
+    </Button>
+  </Row>
+  <Row>
+    <h4
+      className="bank-header"
+    >
+      Current Student Savings
+    </h4>
+    <ListGroup
+      className="small-group"
+    />
+  </Row>
+  <Modal
+    animation={true}
+    autoFocus={true}
+    backdrop={true}
+    centered={true}
+    dialogAs={
+      Object {
+        "$$typeof": Symbol(react.forward_ref),
+        "render": [Function],
+      }
+    }
+    enforceFocus={true}
+    keyboard={true}
+    onHide={[Function]}
+    restoreFocus={true}
+    show={false}
+    size="lg"
+  >
+    <ModalHeader
+      closeButton={true}
+      closeLabel="Close"
+    >
+      <ModalTitle>
+        Update Bank
+      </ModalTitle>
+    </ModalHeader>
+    <ModalBody>
+      <FloatingLabel
+        className="modal-input"
+        label="Bank Interest Rate"
+      >
+        <FormControl
+          defaultValue="5"
+          id="interest_rate"
+          onChange={[Function]}
+          placeholder="Interest Rate"
+        />
+      </FloatingLabel>
+      <FloatingLabel
+        className="modal-input"
+        label="Bank Payout Rate in Weeks"
+      >
+        <FormControl
+          defaultValue="1"
+          id="payout_rate"
+          onChange={[Function]}
+          placeholder="Payout Rate"
+        />
+      </FloatingLabel>
+      <p>
+        
+      </p>
+    </ModalBody>
+    <ModalFooter>
+      <Button
+        active={false}
+        className="bank-btns"
+        disabled={false}
+        onClick={[Function]}
+        variant="primary"
+      >
+        Update Bank
+      </Button>
+    </ModalFooter>
+  </Modal>
+</Col>
+`;
+
+exports[`TeacherBank Testing hasNoBank testing should render hasNoBank view 1`] = `
+<Col
+  className="bank-col"
+>
+  <h4>
+    This class has no bank
+  </h4>
+  <Button
+    active={false}
+    className="bank-btns"
+    disabled={false}
+    onClick={[Function]}
+    variant="primary"
+  >
+    Create A Bank
+  </Button>
+  <Modal
+    animation={true}
+    autoFocus={true}
+    backdrop={true}
+    centered={true}
+    dialogAs={
+      Object {
+        "$$typeof": Symbol(react.forward_ref),
+        "render": [Function],
+      }
+    }
+    enforceFocus={true}
+    keyboard={true}
+    onHide={[Function]}
+    restoreFocus={true}
+    show={false}
+    size="lg"
+  >
+    <ModalHeader
+      closeButton={true}
+      closeLabel="Close"
+    >
+      <ModalTitle>
+        Create A Bank
+      </ModalTitle>
+    </ModalHeader>
+    <ModalBody>
+      <FloatingLabel
+        className="modal-input"
+        label="Bank Interest Rate"
+      >
+        <FormControl
+          id="interest_rate"
+          onChange={[Function]}
+          placeholder="Interest Rate"
+        />
+      </FloatingLabel>
+      <FloatingLabel
+        className="modal-input"
+        label="Bank Payout Rate in Weeks"
+      >
+        <FormControl
+          id="payout_rate"
+          onChange={[Function]}
+          placeholder="Payout Rate"
+        />
+      </FloatingLabel>
+      <p>
+        
+      </p>
+    </ModalBody>
+    <ModalFooter>
+      <Button
+        active={false}
+        className="bank-btns"
+        disabled={false}
+        onClick={[Function]}
+        variant="primary"
+      >
+        Create Bank
+      </Button>
+    </ModalFooter>
+  </Modal>
+</Col>
+`;
+
+exports[`TeacherBank Testing render testing should render default components 1`] = `
+Array [
+  <div
+    className="wrapper"
+  >
+    <Navbar
+      className="teacher-navbar"
+      collapseOnSelect={true}
+      expand="lg"
+      variant="dark"
+    >
+      <Container
+        fluid={false}
+      >
+        <NavbarBrand
+          className="navbar-header"
+        >
+          classname
+        </NavbarBrand>
+        <Nav
+          className="navbar-btns"
+          fill={false}
+          justify={false}
+        >
+          <Button
+            active={false}
+            className="navbar-btn"
+            disabled={false}
+            variant="light"
+          >
+            <Link
+              className="navbar-link"
+              to={
+                Object {
+                  "pathname": "/Class/classc/students",
+                  "state": Object {
+                    "class": Object {
+                      "class_code": "classc",
+                      "class_name": "classname",
+                    },
+                    "teacher_id": "teacherid",
+                    "token": "token",
+                  },
+                }
+              }
+            >
+              Students
+            </Link>
+          </Button>
+          <Button
+            active={false}
+            className="navbar-btn"
+            disabled={false}
+            variant="light"
+          >
+            <Link
+              className="navbar-link"
+              to={
+                Object {
+                  "pathname": "/Class/classc/taxes",
+                  "state": Object {
+                    "class": Object {
+                      "class_code": "classc",
+                      "class_name": "classname",
+                    },
+                    "teacher_id": "teacherid",
+                    "token": "token",
+                  },
+                }
+              }
+            >
+              Taxes
+            </Link>
+          </Button>
+          <Button
+            active={false}
+            className="navbar-btn"
+            disabled={false}
+            variant="light"
+          >
+            <Link
+              className="navbar-link"
+              to={
+                Object {
+                  "pathname": "/Class/classc/store",
+                  "state": Object {
+                    "class": Object {
+                      "class_code": "classc",
+                      "class_name": "classname",
+                    },
+                    "teacher_id": "teacherid",
+                    "token": "token",
+                  },
+                }
+              }
+            >
+              Store
+            </Link>
+          </Button>
+          <Button
+            active={false}
+            className="navbar-btn"
+            disabled={false}
+            variant="light"
+          >
+            <Link
+              className="navbar-link"
+              to={
+                Object {
+                  "pathname": "/Class/classc/bank",
+                  "state": Object {
+                    "class": Object {
+                      "class_code": "classc",
+                      "class_name": "classname",
+                    },
+                    "teacher_id": "teacherid",
+                    "token": "token",
+                  },
+                }
+              }
+            >
+              Bank
+            </Link>
+          </Button>
+          <Button
+            active={false}
+            className="navbar-btn-class-list"
+            disabled={false}
+            variant="secondary-outline"
+          >
+            <Link
+              className="navbar-link"
+              to={
+                Object {
+                  "pathname": "/Profile/",
+                  "state": Object {
+                    "role": "Teacher",
+                    "token": "token",
+                  },
+                }
+              }
+            >
+              Class List
+            </Link>
+          </Button>
+        </Nav>
+      </Container>
+    </Navbar>
+    <Container
+      className="bank-container"
+      fluid={false}
+    >
+      <Row
+        className="content-row"
+      >
+        <Col
+          className="bank-col"
+        >
+          <h4>
+            This class has no bank
+          </h4>
+          <Button
+            active={false}
+            className="bank-btns"
+            disabled={false}
+            onClick={[Function]}
+            variant="primary"
+          >
+            Create A Bank
+          </Button>
+          <Modal
+            animation={true}
+            autoFocus={true}
+            backdrop={true}
+            centered={true}
+            dialogAs={
+              Object {
+                "$$typeof": Symbol(react.forward_ref),
+                "render": [Function],
+              }
+            }
+            enforceFocus={true}
+            keyboard={true}
+            onHide={[Function]}
+            restoreFocus={true}
+            show={false}
+            size="lg"
+          >
+            <ModalHeader
+              closeButton={true}
+              closeLabel="Close"
+            >
+              <ModalTitle>
+                Create A Bank
+              </ModalTitle>
+            </ModalHeader>
+            <ModalBody>
+              <FloatingLabel
+                className="modal-input"
+                label="Bank Interest Rate"
+              >
+                <FormControl
+                  id="interest_rate"
+                  onChange={[Function]}
+                  placeholder="Interest Rate"
+                />
+              </FloatingLabel>
+              <FloatingLabel
+                className="modal-input"
+                label="Bank Payout Rate in Weeks"
+              >
+                <FormControl
+                  id="payout_rate"
+                  onChange={[Function]}
+                  placeholder="Payout Rate"
+                />
+              </FloatingLabel>
+              <p>
+                
+              </p>
+            </ModalBody>
+            <ModalFooter>
+              <Button
+                active={false}
+                className="bank-btns"
+                disabled={false}
+                onClick={[Function]}
+                variant="primary"
+              >
+                Create Bank
+              </Button>
+            </ModalFooter>
+          </Modal>
+        </Col>
+      </Row>
+    </Container>
+  </div>,
+]
+`;
+
+exports[`TeacherBank Testing renderStudentSavings testing should display selected students items 1`] = `
+<ListGroupItem
+  className="bank-list-group"
+>
+  <Row>
+    <Col>
+      studentname
+    </Col>
+    <Col>
+      $
+      10
+       
+      --&gt;
+        
+      5
+      %  
+      --&gt;
+        $
+      10.5
+    </Col>
+    <Col
+      className="list-balance-col"
+    >
+      Pays out in: 
+      5
+    </Col>
+  </Row>
+</ListGroupItem>
+`;
+
+exports[`TeacherBank Testing renderStudentSavings testing should not display not selected students 1`] = `undefined`;
+
+exports[`TeacherBank Testing updateBankModal testing should render updateBank modal and show 1`] = `
+<Modal
+  animation={true}
+  autoFocus={true}
+  backdrop={true}
+  centered={true}
+  dialogAs={
+    Object {
+      "$$typeof": Symbol(react.forward_ref),
+      "render": [Function],
+    }
+  }
+  enforceFocus={true}
+  keyboard={true}
+  onHide={[Function]}
+  restoreFocus={true}
+  show={true}
+  size="lg"
+>
+  <ModalHeader
+    closeButton={true}
+    closeLabel="Close"
+  >
+    <ModalTitle>
+      Update Bank
+    </ModalTitle>
+  </ModalHeader>
+  <ModalBody>
+    <FloatingLabel
+      className="modal-input"
+      label="Bank Interest Rate"
+    >
+      <FormControl
+        defaultValue={10}
+        id="interest_rate"
+        onChange={[Function]}
+        placeholder="Interest Rate"
+      />
+    </FloatingLabel>
+    <FloatingLabel
+      className="modal-input"
+      label="Bank Payout Rate in Weeks"
+    >
+      <FormControl
+        defaultValue={1}
+        id="payout_rate"
+        onChange={[Function]}
+        placeholder="Payout Rate"
+      />
+    </FloatingLabel>
+    <p>
+      
+    </p>
+  </ModalBody>
+  <ModalFooter>
+    <Button
+      active={false}
+      className="bank-btns"
+      disabled={false}
+      onClick={[Function]}
+      variant="primary"
+    >
+      Update Bank
+    </Button>
+  </ModalFooter>
+</Modal>
+`;
+
+exports[`TeacherBank Testing updateBankModal testing should render updateBank modal but not show 1`] = `
+<Modal
+  animation={true}
+  autoFocus={true}
+  backdrop={true}
+  centered={true}
+  dialogAs={
+    Object {
+      "$$typeof": Symbol(react.forward_ref),
+      "render": [Function],
+    }
+  }
+  enforceFocus={true}
+  keyboard={true}
+  onHide={[Function]}
+  restoreFocus={true}
+  show={false}
+  size="lg"
+>
+  <ModalHeader
+    closeButton={true}
+    closeLabel="Close"
+  >
+    <ModalTitle>
+      Update Bank
+    </ModalTitle>
+  </ModalHeader>
+  <ModalBody>
+    <FloatingLabel
+      className="modal-input"
+      label="Bank Interest Rate"
+    >
+      <FormControl
+        defaultValue={10}
+        id="interest_rate"
+        onChange={[Function]}
+        placeholder="Interest Rate"
+      />
+    </FloatingLabel>
+    <FloatingLabel
+      className="modal-input"
+      label="Bank Payout Rate in Weeks"
+    >
+      <FormControl
+        defaultValue={1}
+        id="payout_rate"
+        onChange={[Function]}
+        placeholder="Payout Rate"
+      />
+    </FloatingLabel>
+    <p>
+      
+    </p>
+  </ModalBody>
+  <ModalFooter>
+    <Button
+      active={false}
+      className="bank-btns"
+      disabled={false}
+      onClick={[Function]}
+      variant="primary"
+    >
+      Update Bank
+    </Button>
+  </ModalFooter>
+</Modal>
+`;
