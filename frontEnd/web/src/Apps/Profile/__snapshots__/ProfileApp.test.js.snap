@@ -1,0 +1,356 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Student Profile Tests Page Renders should render the inventory modal correctly 1`] = `
+<Modal
+  animation={true}
+  autoFocus={true}
+  backdrop={true}
+  dialogAs={
+    Object {
+      "$$typeof": Symbol(react.forward_ref),
+      "render": [Function],
+    }
+  }
+  enforceFocus={true}
+  keyboard={false}
+  restoreFocus={true}
+  show={true}
+>
+  <ModalHeader
+    closeButton={false}
+    closeLabel="Close"
+  >
+    <ModalTitle>
+      My Inventory
+    </ModalTitle>
+    <Button
+      active={false}
+      disabled={false}
+      onClick={[Function]}
+      variant="secondary"
+    >
+      Close
+    </Button>
+  </ModalHeader>
+  <ModalBody>
+    <Form>
+      <div
+        className="boughtItems"
+      >
+        <ul>
+          <li
+            className="grey cardb"
+          >
+            name
+          </li>
+          <li
+            className="grey cardb"
+          >
+            name2
+          </li>
+        </ul>
+      </div>
+    </Form>
+  </ModalBody>
+</Modal>
+`;
+
+exports[`Student Profile Tests Page Renders should render the student profile correctly 1`] = `
+Array [
+  <div
+    className="wrapper"
+  >
+    <Navbar
+      className="teacher-navbar"
+      collapseOnSelect={true}
+      expand="lg"
+      variant="dark"
+    >
+      <Container
+        fluid={false}
+      >
+        <NavbarBrand
+          className="navbar-header"
+        >
+          Replecon
+        </NavbarBrand>
+        <Nav
+          className="navbar-btns"
+          fill={false}
+          justify={false}
+        >
+          <Button
+            active={false}
+            className="navbar-btn"
+            disabled={false}
+            variant="light"
+          >
+            <Link
+              className="navbar-link"
+              to={
+                Object {
+                  "pathname": "/Profile",
+                  "state": Object {
+                    "role": "Student",
+                    "token": "Token",
+                  },
+                }
+              }
+            >
+              Profile
+            </Link>
+          </Button>
+          <Button
+            active={false}
+            className="navbar-btn"
+            disabled={false}
+            variant="light"
+          >
+            <Link
+              className="navbar-link"
+              to={
+                Object {
+                  "pathname": "/StudentStore",
+                  "state": Object {
+                    "role": "Student",
+                    "token": "Token",
+                  },
+                }
+              }
+            >
+              Store
+            </Link>
+          </Button>
+          <Button
+            active={false}
+            className="navbar-btn"
+            disabled={false}
+            variant="light"
+          >
+            <Link
+              className="navbar-link"
+              to={
+                Object {
+                  "pathname": "/StudentBank",
+                  "state": Object {
+                    "role": "Student",
+                    "token": "Token",
+                  },
+                }
+              }
+            >
+              Bank
+            </Link>
+          </Button>
+          <Button
+            active={false}
+            className="navbar-btn"
+            disabled={false}
+            variant="light"
+          >
+            <Link
+              className="navbar-link"
+              to={
+                Object {
+                  "pathname": "/StudentClass",
+                  "state": Object {
+                    "role": "Student",
+                    "token": "Token",
+                  },
+                }
+              }
+            >
+              Classroom
+            </Link>
+          </Button>
+        </Nav>
+      </Container>
+    </Navbar>
+    <div
+      className="profile-content"
+    >
+      <div
+        className="profile-title"
+      >
+        <div
+          className="profile-name"
+        >
+          <h3>
+            
+          </h3>
+        </div>
+        <div
+          className="profile-balance"
+        >
+          <Button
+            active={false}
+            className="profile-button"
+            disabled={false}
+            onClick={[Function]}
+            variant="primary"
+          >
+            Log Out
+          </Button>
+          <Button
+            active={false}
+            className="inventory-button"
+            disabled={false}
+            onClick={[Function]}
+            variant="primary"
+          >
+            Inventory
+          </Button>
+        </div>
+        <Modal
+          animation={true}
+          autoFocus={true}
+          backdrop={true}
+          dialogAs={
+            Object {
+              "$$typeof": Symbol(react.forward_ref),
+              "render": [Function],
+            }
+          }
+          enforceFocus={true}
+          keyboard={false}
+          restoreFocus={true}
+          show={false}
+        >
+          <ModalHeader
+            closeButton={false}
+            closeLabel="Close"
+          >
+            <ModalTitle>
+              My Inventory
+            </ModalTitle>
+            <Button
+              active={false}
+              disabled={false}
+              onClick={[Function]}
+              variant="secondary"
+            >
+              Close
+            </Button>
+          </ModalHeader>
+          <ModalBody>
+            <Form>
+              <div
+                className="boughtItems"
+              >
+                <ul />
+              </div>
+            </Form>
+          </ModalBody>
+        </Modal>
+      </div>
+      <h3>
+        $
+        
+      </h3>
+      <div
+        className="content"
+      >
+        <div>
+          <ul />
+        </div>
+      </div>
+    </div>
+  </div>,
+]
+`;
+
+exports[`Student Profile Tests Page Renders should render the teacher profile correctly 1`] = `
+Array [
+  <Container
+    className="teacher-container"
+    fluid={false}
+  >
+    <Row>
+      <h3
+        className="teacher-h3"
+      >
+        Welcome Back 
+        
+      </h3>
+      <h4>
+        Your Classes
+      </h4>
+      <div
+        className="teacher-btns-row"
+      >
+        <Button
+          active={false}
+          className="teacher-btn-create"
+          disabled={false}
+          onClick={[Function]}
+          variant="primary"
+        >
+          Create New Class
+        </Button>
+      </div>
+      <div
+        className="teacher-btns-row"
+      >
+        <Button
+          active={false}
+          className="teacher-btn-logout"
+          disabled={false}
+          onClick={[Function]}
+          variant="outline-secondary"
+        >
+          Log Out
+        </Button>
+      </div>
+    </Row>
+    <Modal
+      animation={true}
+      autoFocus={true}
+      backdrop={true}
+      centered={true}
+      dialogAs={
+        Object {
+          "$$typeof": Symbol(react.forward_ref),
+          "render": [Function],
+        }
+      }
+      enforceFocus={true}
+      keyboard={true}
+      onHide={[Function]}
+      restoreFocus={true}
+      show={false}
+      size="lg"
+    >
+      <ModalHeader
+        closeButton={true}
+        closeLabel="Close"
+      >
+        <ModalTitle>
+          Create A Class
+        </ModalTitle>
+      </ModalHeader>
+      <ModalBody>
+        <FloatingLabel
+          label="Class Name"
+        >
+          <FormControl
+            id="new_class_name"
+            onChange={[Function]}
+            placeholder="Class Name"
+          />
+        </FloatingLabel>
+      </ModalBody>
+      <ModalFooter>
+        <Button
+          active={false}
+          className="modal-btn"
+          disabled={false}
+          onClick={[Function]}
+          variant="primary"
+        >
+          Create Class
+        </Button>
+      </ModalFooter>
+    </Modal>
+  </Container>,
+]
+`;
