@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactDOM, { render } from 'react-dom';
 import axios from 'axios'
 import TeacherTaxes from './TeacherTaxes.js';
 jest.mock('axios');

@@ -682,7 +682,8 @@ class TeacherTaxes extends React.Component {
 
     async taxTheClass(tax_type){
         var selected = this.state.students
-        var payload, prog_amount
+        var payload 
+        let prog_amount = 0
         if(tax_type === "Flat Tax"){
             for(let i = 0; i <= Object.keys(selected).length-1; i++)
             {
@@ -701,7 +702,7 @@ class TeacherTaxes extends React.Component {
         else if(tax_type === "Percentage Tax"){
             for(let i = 0; i <= Object.keys(selected).length-1; i++)
             {
-                var percentamount = (selected[i].balance * (this.state.class_tax.percentage_tax/100)).toFixed(2)
+                let percentamount = (selected[i].balance * (this.state.class_tax.percentage_tax/100)).toFixed(2)
                 payload = { user_id: selected[i].id, amount: "-"+percentamount }; 
                 await axios.put(getIP()+'/students/balance/', payload)
                 .then(async response => {
@@ -721,7 +722,7 @@ class TeacherTaxes extends React.Component {
                 prog_amount = (this.getProgressiveTaxAmount(selected[i].balance)).toFixed(2)
                 if(prog_amount>0){
                     payload = { user_id: selected[i].id, amount: '-'+prog_amount }; 
-                    await axios.put(getIP()+'/students/balance/', payload)
+                    await axios.put(getIP()+'/students/balance/', payload) // eslint-disable-next-line
                     .then(async response => {
                         await axios.post(getIP()+'/transactions/teacherPayStudents/', {"user_id": response.data.user, "amount": "-"+prog_amount})
                         .then(response => {
@@ -739,7 +740,7 @@ class TeacherTaxes extends React.Component {
                 prog_amount = (this.getRegressiveTaxAmount(selected[i].balance)).toFixed(2)
                 if(prog_amount>0){
                     payload = { user_id: selected[i].id, amount: '-'+prog_amount }; 
-                    await axios.put(getIP()+'/students/balance/', payload)
+                    await axios.put(getIP()+'/students/balance/', payload) // eslint-disable-next-line
                     .then(async response => {
                         await axios.post(getIP()+'/transactions/teacherPayStudents/', {"user_id": response.data.user, "amount": "-"+prog_amount})
                         .then(response => {

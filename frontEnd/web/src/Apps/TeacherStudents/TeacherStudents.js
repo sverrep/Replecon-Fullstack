@@ -240,7 +240,7 @@ class TeacherStudents extends React.Component {
     }
 
     async deleteSelected(){
-        for (var i = 0; i < Object.keys(this.state.selected).length; i++)
+        for (let i = 0; i < Object.keys(this.state.selected).length; i++)
         {
             await axios.delete(getIP()+`/users/${this.state.selected[i]}/`)
             .then(async response => {
