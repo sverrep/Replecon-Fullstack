@@ -7,19 +7,12 @@ Replecon is an app made to simulate a small economy virtually to allow students 
 As two former economics students we felt that there was a lack of hands on learning in our classes. Having seen teachers trying to implement such a system in a physical manner
 and seeing all the drawbacks that came with it, we wanted to make the system virtual to effortlessly implement the system in any class. 
 
-## Screenshots
-
-<img src="https://github.com/steveno06/RepleconScreenShots/blob/main/62b616c4f431c6bfd9d48cc26326d961.png" alt="screenshot1" width="300"/> <img src="https://github.com/steveno06/RepleconScreenShots/blob/main/d570f21a5bc9c09121485520f15a8baa.png" alt="screenshot1" width="300"/> <img src="https://github.com/steveno06/RepleconScreenShots/blob/main/TecherClassScreen.png" alt="screenshot1" width="300"/> <img src="https://github.com/steveno06/RepleconScreenShots/blob/main/StudentScreen.png" alt="screenshot1" width="300"/> 
-
-
-
-
 ## Tech used
 
 Front End
-- React Native
+- React
 - Javascript
-- Android Emulator
+- Bootstrap
 
 Back End
 - Django
@@ -60,41 +53,27 @@ python manage.py runserver YOURIP:8000
 ```
 
 ### Front End Installation
-Install React Native CLI Quickstart as described [here](https://reactnative.dev/docs/environment-setup)
-When in IDE of your choice with React Native installed and open the cloned repository folder
+Make sure you have the latest version of node installed
+Use NPM to install all required dependencies
 
 ```
 cd frontEnd
-npm install
+cd web
+npm install 
 ```
-
-Change the IP settings.js and setup.js file (frontEnd/components/settings/) to YOURIP:8000
-Then do
+Next you need to add your IP that you are running the server on to the setup.js file in the src directory, and then run it in the node console
 ```
-cd components
-cd settings
 node setup.js
 ```
-
-Now, with all the setup done, you can run the project! (requires two terminals in frontEnd directory)
+Then you need to change the settings.js file, and add the IP address on which you are running the backend server to the ip variable so that the front end calls it.
+With the setup done you can now run the website!
 ```
-npx react-native start
+npm start
 ```
-```
-npx react-native run-android
-```
-
-Now your emulator or connected up mobile device should be running the application
 
 ## Roadmap
 
-With the current working prototype we have, we want to continue working on the project and expanding its features. One such feature is making the stats screen display information
-about the student's purchases and balance. We would also want to rework the entire UI, with a more cohesive theme and better design. Furthermore, we'd like to expand on the 
-project as a whole by creating a webapp that could be used interchangably with the mobile app. 
-
-## Video of App Running
-
-https://drive.google.com/file/d/1exDgi1hZWhVAxAU6iBLqIkcye4KR_b9_/view?usp=sharing
+We are currently continously working on the live version of the website with feedback that we are getting from our set of live users. 
 
 ## ERD
 
@@ -104,12 +83,20 @@ https://github.com/steveno06/RepleconScreenShots/blob/main/Replecon_ERD_1.pdf
 
 https://github.com/steveno06/RepleconScreenShots/blob/main/Replecon_Backend_Architecture.pdf
 
+## Front End Architecture
+
+
+
 ## Backend Description
 
 https://github.com/steveno06/RepleconScreenShots/blob/main/Backend%20API%20Description.pdf
 
 ## Cyber Security Measures Implemented
 https://docs.google.com/document/d/1MOT0_gzFjEICuPPi4KH5cjHGamvCaiEhg8BfUleZ8Vw/edit?usp=sharing
+
+## Deployment Pipeline Diagram
+
+
 
 ## Backend Team Contribution
 
@@ -119,3 +106,8 @@ https://docs.google.com/document/d/1MOT0_gzFjEICuPPi4KH5cjHGamvCaiEhg8BfUleZ8Vw/
 - Tax App - Steven
 - Transaction App - Sverre
 - Users App - Sverre
+
+## Frontend Team Contribution
+- Login and Sign up - Sverre & Steven
+- Student Screens - Steven
+- Teacher Screens - Sverre
