@@ -5,6 +5,13 @@ Replecon is an app made to simulate a small economy virtually to allow students 
 ## Live Website
 
 replecon.com
+#### Demo users (feel free to mess around with these accounts however you please):
+  - Teacher:
+    - Username: alphateacher@mail.com
+    - Password: alpha
+  - Student:
+    - Username: alphastudent@mail.com
+    - Password: alpha
 
 ## Motivation
 
