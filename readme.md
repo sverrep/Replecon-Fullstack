@@ -2,6 +2,10 @@
 
 Replecon is an app made to simulate a small economy virtually to allow students of economics classes to experience topics they learn about hands on.
 
+## Live Website
+
+replecon.com
+
 ## Motivation
 
 As two former economics students we felt that there was a lack of hands on learning in our classes. Having seen teachers trying to implement such a system in a physical manner
@@ -79,13 +83,13 @@ We are currently continously working on the live version of the website with fee
 
 https://github.com/steveno06/RepleconScreenShots/blob/main/Replecon_ERD_1.pdf
 
+## Projec Architecture
+
+<img src="https://lh3.googleusercontent.com/ri34KIzMSKMSWYfX1iTTVYBe-W7zqb8_snRPpJTg3JXM5TVO7ZPAQ_Tw5F1h5AHr3mQ5eFJajF58ZA=w2560-h1369-rw" alt="Deployment pipeline diagram"/>
+
 ## Backend Architecture
 
 https://github.com/steveno06/RepleconScreenShots/blob/main/Replecon_Backend_Architecture.pdf
-
-## Front End Architecture
-
-
 
 ## Backend Description
 
@@ -94,9 +98,13 @@ https://github.com/steveno06/RepleconScreenShots/blob/main/Backend%20API%20Descr
 ## Cyber Security Measures Implemented
 https://docs.google.com/document/d/1MOT0_gzFjEICuPPi4KH5cjHGamvCaiEhg8BfUleZ8Vw/edit?usp=sharing
 
+## Cyber Threat Model
+
+https://drive.google.com/file/d/1vE0p3WX5gI913MC737ZC4oShM1_O_MrC/view?usp=sharing
+
 ## Deployment Pipeline Diagram
 
-
+<img src="https://lh6.googleusercontent.com/znu1ph1zoTJqJeHtD4_1shu_mTxGoZ-WFpJHCsYNuQaX-SS5MZ4f4Nw2OyXWlmH093Lm6CYU63Amnw=w2560-h1369-rw" alt="Deployment pipeline diagram"/>
 
 ## Backend Team Contribution
 
@@ -109,5 +117,6 @@ https://docs.google.com/document/d/1MOT0_gzFjEICuPPi4KH5cjHGamvCaiEhg8BfUleZ8Vw/
 
 ## Frontend Team Contribution
 - Login and Sign up - Sverre & Steven
+- Profile Screen - Sverre(Teacher) & Steven(Student)
 - Student Screens - Steven
 - Teacher Screens - Sverre
