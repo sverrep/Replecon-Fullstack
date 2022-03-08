@@ -64,7 +64,8 @@ class StudentClass extends React.Component {
                 .catch(error => console.log(error))
     }
 
-    validateTransfer(){
+    async validateTransfer(){
+        await this.getStudentBalance()
         if(isNaN(this.state.value)){
             this.setState({variant:'danger'})
             this.setState({message:'Please enter a vaild number'})
@@ -96,8 +97,9 @@ class StudentClass extends React.Component {
     }
 
     async createTransaction(){
-        if(this.validateTransfer()){
-            
+        console.log(this.validateTransfer())
+        if(await this.validateTransfer()){
+        console.log('we made it')
         for (let i = 0; i <= this.state.students.length-1; i++)
         {
             if (this.state.students[i].id === this.state.clicked.id)

@@ -119,7 +119,8 @@ class StudentStore extends React.Component {
 
 
 
-    validatePurchase(item){
+    async validatePurchase(item){
+        await this.getStudentBalance()
         if(this.state.student_balance >= item.price)
     {
         this.setState({variant:'success'})
@@ -138,7 +139,7 @@ class StudentStore extends React.Component {
     //Purchasing of Item
 
     async buyItem(item){
-        if(this.validatePurchase(item)){
+        if(await this.validatePurchase(item)){
         await axios.post(getIP()+'/items/boughtitems/', { item_id: item.id })
             .then(async response => {
                 await axios.get(getIP()+'/students/store/')

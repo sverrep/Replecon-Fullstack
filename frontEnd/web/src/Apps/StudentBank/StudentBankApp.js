@@ -114,7 +114,7 @@ class StudentBank extends React.Component {
 
       //Insert Savings
       async setStudentSavings(){
-        if(this.validateSavings()){
+        if(await this.validateSavings()){
           await axios.post(getIP()+'/transactions/banksavings/', {"amount": this.state.value, "done": false})
           .then(async response => {
             var transaction_id = response.data["id"]
@@ -233,23 +233,39 @@ class StudentBank extends React.Component {
       }
     }
 
-    validateClaim(item){
-      if(item.payout_date <= 0){
-        this.setState({variant:'success'})
-        this.setState({message:'Money claimed successfully'})
-        this.setState({showAlert:true})
-        return true
+    async validateClaim(item){
+      var temp = false
+      await this.getStudentSavings()
+      for(let i = 0; i<= this.state.savings.length -1; i++){
+        if(this.state.savings[i].id===item.id){
+          if(this.state.savings[i].active)
+          temp = true
+        }
+      }
+
+      if(temp === true){
+        if(item.payout_date <= 0){
+          this.setState({variant:'success'})
+          this.setState({message:'Money claimed successfully'})
+          this.setState({showAlert:true})
+          return true
+        }
+        else{
+          this.setState({variant:'danger'})
+          this.setState({message:'That money is not ready to be claimed'})
+          this.setState({showAlert:true})
+          return false
+        }
       }
       else{
-        this.setState({variant:'danger'})
-        this.setState({message:'That money is not ready to be claimed'})
-        this.setState({showAlert:true})
+        console.log('you can not do that :)))))')
         return false
+        
       }
     }
         async claimSavings(item){
           
-          if(this.validateClaim(item))
+          if(await this.validateClaim(item))
           {
             await axios.post(getIP()+'/transactions/banksavings/', {"amount": Math.round(item.final_amount * 10) / 10, "done": true})
             .then(async response => {
@@ -273,7 +289,8 @@ class StudentBank extends React.Component {
         }
 
     
-    validateSavings(){
+    async validateSavings(){
+      await this.getStudentBalance()
         if(isNaN(this.state.value)){
           this.setState({variant:'danger'})
           this.setState({message:'Please enter a vaild number'})
