@@ -279,39 +279,45 @@ describe('Student Bank Tests', ()=>{
     })
 
     describe('Validation', ()=>{
-        it("should pass claim validation", ()=>{
+        it("should pass claim validation", async ()=>{
             const instance = wrapper.instance()
-            const item = {payout_date: 0}
-            const result = instance.validateClaim(item)
+            const item = {id: 0, payout_date: 0, active: true}
+            instance.state.savings[0] = {id: 0, payout_date: 0, active: true}
+            instance.getStudentSavings = jest.fn()
+            const result = await instance.validateClaim(item)
             expect(result).toBe(true)
             expect(instance.state.message).toBe('Money claimed successfully')
             expect(instance.state.showAlert).toBe(true)
         })
 
-        it('should fail claim validation', ()=>{
+        it('should fail claim validation', async ()=>{
             const instance = wrapper.instance()
-            const item = {payout_date: 2}
-            const result = instance.validateClaim(item)
+            const item = {id: 0, payout_date: 2, active: true}
+            instance.state.savings[0] = {id: 0, payout_date: 0, active: true}
+            instance.getStudentSavings = jest.fn()
+            const result = await instance.validateClaim(item)
             expect(result).toBe(false)
             expect(instance.state.message).toBe('That money is not ready to be claimed')
             expect(instance.state.showAlert).toBe(true)
         })
 
-        it('should pass validate savings', ()=>{
+        it('should pass validate savings', async ()=>{
             const instance = wrapper.instance()
             instance.state.value = '123'
             instance.state.student_balance = '200'
-            const result = instance.validateSavings()
+            instance.getStudentBalance = jest.fn()
+            const result = await instance.validateSavings()
 
             expect(result).toBe(true)
             expect(instance.state.message).toBe('Money saved successfully')
         })
 
-        it('should fail validate savings', ()=>{
+        it('should fail validate savings', async ()=>{
             const instance = wrapper.instance()
             instance.state.value = '123'
             instance.state.student_balance = '100'
-            const result = instance.validateSavings()
+            instance.getStudentBalance = jest.fn()
+            const result = await instance.validateSavings()
 
             expect(result).toBe(false)
             expect(instance.state.message).toBe('You dont have that amount of money')

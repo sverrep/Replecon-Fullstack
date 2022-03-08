@@ -142,20 +142,22 @@ describe('Student Store Tests', ()=>{
     })
 
     describe('Purchasing', ()=>{
-        it('should pass purchase validation with enough money', ()=>{
+        it('should pass purchase validation with enough money', async ()=>{
             const instance = wrapper.instance()
             const item = {shop_id: '12', item_name: 'item name', price: '60', description: 'description'}
             instance.state.student_balance = 100
-            const result = instance.validatePurchase(item)
+            instance.getStudentBalance = jest.fn()
+            const result = await instance.validatePurchase(item)
             expect(result).toBe(true)
 
         })
 
-        it('should fail purchase validation with not enough money',()=>{
+        it('should fail purchase validation with not enough money', async()=>{
             const instance = wrapper.instance()
             const item = {shop_id: '12', item_name: 'item name', price: '60', description: 'description'}
             instance.state.student_balance = 40
-            const result = instance.validatePurchase(item)
+            instance.getStudentBalance = jest.fn()
+            const result = await instance.validatePurchase(item)
             expect(result).toBe(false)
         })
 

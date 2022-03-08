@@ -110,21 +110,21 @@ describe('Student Class Tests', ()=>{
     })
 
     describe('Student Transactions', ()=>{
-        it('should pass validate transfer', ()=>{
+        it('should pass validate transfer', async ()=>{
             const instance = wrapper.instance()
             instance.state.value = '100'
             instance.state.balance = '200'
-
-            instance.validateTransfer()
+            instance.getStudentBalance = jest.fn()
+            await instance.validateTransfer()
             expect(instance.state.message).toBe('Money Sent')
         })
 
-        it('should fail validate transfer', ()=>{
+        it('should fail validate transfer', async ()=>{
             const instance = wrapper.instance()
             instance.state.value = '300'
             instance.state.balance = '200'
-
-            instance.validateTransfer()
+            instance.getStudentBalance = jest.fn()
+            await instance.validateTransfer()
             expect(instance.state.message).toBe('You dont have that amount of money')
         })
         //Put is just not registering for some reason wcyd

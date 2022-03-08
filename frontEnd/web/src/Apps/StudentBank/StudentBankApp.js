@@ -242,7 +242,6 @@ class StudentBank extends React.Component {
           temp = true
         }
       }
-
       if(temp === true){
         if(item.payout_date <= 0){
           this.setState({variant:'success'})
