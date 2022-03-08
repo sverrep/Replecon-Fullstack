@@ -97,9 +97,7 @@ class StudentClass extends React.Component {
     }
 
     async createTransaction(){
-        console.log(this.validateTransfer())
         if(await this.validateTransfer()){
-        console.log('we made it')
         for (let i = 0; i <= this.state.students.length-1; i++)
         {
             if (this.state.students[i].id === this.state.clicked.id)
