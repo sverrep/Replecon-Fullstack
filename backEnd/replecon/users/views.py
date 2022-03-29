@@ -5,16 +5,18 @@ from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 from rest_framework import status, viewsets
 from rest_framework.views import APIView
+from django.http import JsonResponse
 from rest_framework import viewsets, generics, mixins, status
 from django.contrib.auth.models import Group
 from users.serializers import CreateUserSerializer, CreateStudentSerializer, CreateTeacherSerializer
+from django.middleware.csrf import get_token
 from .models import Student, Teacher
 from decimal import Decimal
 import logging
 
 class CreateUserAPIView(CreateAPIView):
     permission_classes = [AllowAny]
-
+    
     def post(self, request, *args, **kwargs):
         serializer = CreateUserSerializer(data = request.data)
         serializer.is_valid(raise_exception = True)
@@ -33,7 +35,7 @@ class UserDetails(generics.GenericAPIView, mixins.RetrieveModelMixin, mixins.Upd
     serializer_class = CreateUserSerializer
 
     lookup_field = 'id'
-
+    
     def get(self, request, id):
         return self.retrieve(request, id=id)
 
@@ -221,3 +223,7 @@ class CreateBankStore(APIView):
             bank_serializer.save()
         return Response(status=status.HTTP_201_CREATED)
 
+class CSRFToken(APIView):
+
+    def get(self, request):
+        return JsonResponse({'csrfToken': get_token(request)})

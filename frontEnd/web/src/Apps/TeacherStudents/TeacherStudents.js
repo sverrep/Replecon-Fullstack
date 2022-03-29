@@ -11,6 +11,7 @@ import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import InputGroup from 'react-bootstrap/InputGroup'
 import FormControl from 'react-bootstrap/FormControl'
+import Cookies from 'universal-cookie';
 
 
 
@@ -22,7 +23,6 @@ class TeacherStudents extends React.Component {
             class_name: this.props.location.state.class.class_name,
             teacher_id:  this.props.location.state.teacher_id,
             students: [],
-            token: this.props.location.state.token,
             selected: [],
             selected_name: "",
             selected_balance: "",
@@ -38,7 +38,8 @@ class TeacherStudents extends React.Component {
     }
 
     async componentDidMount(){
-        axios.defaults.headers.common.Authorization = `Token ${this.state.token}`;
+        const cookies = new Cookies()
+        axios.defaults.headers.common.Authorization = cookies.get("Authorization");
         await this.getClassStudents()
         await this.getAllItems()
         
@@ -282,7 +283,7 @@ class TeacherStudents extends React.Component {
     render(){
         return (
             <div className="wrapper">
-                {navbar(this.state.class_name, {class_code: this.state.class_code, class_name: this.state.class_name}, this.state.teacher_id, this.state.token)}
+                {navbar(this.state.class_name, {class_code: this.state.class_code, class_name: this.state.class_name}, this.state.teacher_id)}
                 <Container className="student-container">
                     <Row className="content-row">
                         <Col className="student-list-col">

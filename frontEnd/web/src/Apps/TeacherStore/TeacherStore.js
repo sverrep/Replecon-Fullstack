@@ -12,6 +12,7 @@ import FormControl from 'react-bootstrap/FormControl'
 import FloatingLabel from 'react-bootstrap/FloatingLabel'
 import Modal from 'react-bootstrap/Modal'
 import Card from 'react-bootstrap/Card'
+import Cookies from 'universal-cookie';
 
 
 class TeacherStore extends React.Component {
@@ -21,7 +22,6 @@ class TeacherStore extends React.Component {
         class_code: this.props.location.state.class.class_code, 
         class_name: this.props.location.state.class.class_name,
         teacher_id:  this.props.location.state.teacher_id,
-        token: this.props.location.state.token,
         shops: [],
         shop_id: 0,
         classHasShop: false,
@@ -49,7 +49,8 @@ class TeacherStore extends React.Component {
   }
 
   async componentDidMount(){
-    axios.defaults.headers.common.Authorization = `Token ${this.state.token}`;
+    const cookies = new Cookies()
+    axios.defaults.headers.common.Authorization = cookies.get("Authorization");
     await this.getShops()
   }
 
@@ -476,7 +477,7 @@ class TeacherStore extends React.Component {
     render(){
         return(
             <div className="wrapper">
-                {navbar(this.state.class_name, {class_code: this.state.class_code, class_name: this.state.class_name}, this.state.teacher_id, this.state.token)}
+                {navbar(this.state.class_name, {class_code: this.state.class_code, class_name: this.state.class_name}, this.state.teacher_id)}
                 <Container className="store-container">
                     <Row className="content-row">
                         {this.renderShopView()}

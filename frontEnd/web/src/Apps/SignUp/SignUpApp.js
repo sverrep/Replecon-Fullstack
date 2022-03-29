@@ -9,6 +9,7 @@ import Row from 'react-bootstrap/Row'
 import Form from 'react-bootstrap/Form'
 import FloatingLabel from 'react-bootstrap/FloatingLabel'
 import {passwords} from '../../Components/passwords/mostCommon.js'
+import Cookies from 'universal-cookie';
 
 class SignUpApp extends React.Component {
     constructor(props) {
@@ -46,7 +47,7 @@ class SignUpApp extends React.Component {
                 return(
                     <Redirect to={{
                         pathname: '/Profile', 
-                        state: { email: this.state.email, name: this.state.name, class_code: this.state.class_code, role: this.props.location.state.role, token: this.state.token }}}>
+                        state: { email: this.state.email, name: this.state.name, class_code: this.state.class_code, role: this.props.location.state.role }}}>
                     </Redirect>
                 );
             }
@@ -55,7 +56,7 @@ class SignUpApp extends React.Component {
                 return(
                     <Redirect to={{
                         pathname: '/Profile', 
-                        state: { role: this.props.location.state.role, token: this.state.token }}}>
+                        state: { role: this.props.location.state.role }}}>
                     </Redirect>
                 );
             }
@@ -266,6 +267,8 @@ class SignUpApp extends React.Component {
                 .then(async response => {
                     this.setState({ token: response.data.token })
                     axios.defaults.headers.common.Authorization = `Token ${this.state.token}`;
+                    const cookies = new Cookies();
+                    cookies.set('Authorization', `Token ${this.state.token}`, { path: '/', maxAge: 86400})
                     await axios.post(getIP()+'/students/create/', {class_code: this.state.class_code})
                     .then(response => {
                         this.setState({ redirect_profile : true})
@@ -285,6 +288,8 @@ class SignUpApp extends React.Component {
                 .then(async response => {
                     this.setState({ token: response.data.token })
                     axios.defaults.headers.common.Authorization = `Token ${this.state.token}`;
+                    const cookies = new Cookies();
+                    cookies.set('Authorization', `Token ${this.state.token}`, { path: '/', maxAge: 86400})
                     await axios.post(getIP()+'/teachers/create/', {last_name: this.state.last_name})
                     .then(response => {
                         this.setState({ redirect_profile : true})

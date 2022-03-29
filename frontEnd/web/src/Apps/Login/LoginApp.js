@@ -7,6 +7,7 @@ import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
+import Cookies from 'universal-cookie'
 
 export default class LoginApp extends React.Component {
   constructor(props) {
@@ -31,12 +32,12 @@ export default class LoginApp extends React.Component {
     }
     else if(this.state.redirect_student_profile){
       return(
-        <Redirect to={{pathname: '/Profile', state: { email: this.state.email, role: "Student", token: this.state.token }}}></Redirect>
+        <Redirect to={{pathname: '/Profile', state: { email: this.state.email, role: "Student" }}}></Redirect>
       )
     }
     else if(this.state.redirect_teacher_profile){
       return(
-        <Redirect to={{pathname: '/Profile', state: { email: this.state.email,  role: "Teacher", token: this.state.token }}}></Redirect>
+        <Redirect to={{pathname: '/Profile', state: { email: this.state.email,  role: "Teacher" }}}></Redirect>
       )
     }
     else{
@@ -115,8 +116,10 @@ export default class LoginApp extends React.Component {
       .then(async response => {
         this.setState ({ token: response.data.token })
         axios.defaults.headers.common.Authorization = `Token ${this.state.token}`;
+        const cookies = new Cookies();
+        cookies.set('Authorization', `Token ${this.state.token}`, { path: '/', maxAge: 86400})
         await axios.get(getIP()+'/teachers/isTeacher/')
-        .then(response => {
+        .then(async response => {
           this.setState({ email: response.data})
           if(response.data === true) {
             this.setState({ redirect_teacher_profile : true})
@@ -138,3 +141,7 @@ export default class LoginApp extends React.Component {
     
   }
 }
+
+
+/*const csrfresponse = await axios.get(getIP() + '/getCSRFToken/');
+axios.defaults.headers.post['X-CSRF-Token'] = csrfresponse.data.csrfToken;*/

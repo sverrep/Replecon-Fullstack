@@ -6,8 +6,8 @@ import Container from 'react-bootstrap/Container'
 import Button from 'react-bootstrap/Button'
 import './Navbar.css'
 
-export default function navbar(token){
-    var payload = {role: "Student", token: token}
+export default function navbar(){
+    var payload = {role: "Student"}
     return(
         <Navbar collapseOnSelect expand="lg" className="teacher-navbar" variant="dark">
         <Container>

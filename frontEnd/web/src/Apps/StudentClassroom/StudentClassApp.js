@@ -3,12 +3,13 @@ import { withRouter } from "react-router-dom";
 import axios from 'axios';
 import getIP from '../../settings.js';
 import './StudentClassApp.css';
-import navbar from '../../Components/navbar/Student NavBar/Navbar.js';
+import Navbar from '../../Components/navbar/Student NavBar/Navbar.js';
 import Button from 'react-bootstrap/Button';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import Alert from 'react-bootstrap/Alert';
+import Cookies from 'universal-cookie';
 
 class StudentClass extends React.Component {
     constructor(props) {
@@ -27,7 +28,6 @@ class StudentClass extends React.Component {
             sender_id: '',
             recipient_id: '',
             current_user_name:'',
-            token: this.props.location.state.token,
             current_user_id: 0,
 
             showAlert: false,
@@ -43,7 +43,8 @@ class StudentClass extends React.Component {
     }
     
     async componentDidMount(){
-        axios.defaults.headers.common.Authorization = `Token ${this.state.token}`;
+        const cookies = new Cookies()
+        axios.defaults.headers.common.Authorization = cookies.get("Authorization");
         await axios.get(getIP()+'/students/current/')
         .then(response => { 
             this.setState({message: response.data})
@@ -243,7 +244,7 @@ class StudentClass extends React.Component {
     render(){
         return(
             <div className='wrapper'>
-                {navbar(this.state.token)}
+                <Navbar/>
                 <div className='classroom-content'>
                 <div className='title'>
                     <h3>{this.state.class_name} - Mr.{this.state.teacher}</h3>

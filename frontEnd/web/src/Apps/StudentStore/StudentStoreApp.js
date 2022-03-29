@@ -2,12 +2,14 @@ import React from 'react';
 import { withRouter } from "react-router-dom";
 import axios from 'axios';
 import getIP from '../../settings.js';
-import navbar from '../../Components/navbar/Student NavBar/Navbar.js';
+import Navbar from '../../Components/navbar/Student NavBar/Navbar.js';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import Row from 'react-bootstrap/Row';
 import Alert from 'react-bootstrap/Alert';
 import './StudentStoreApp.css';
+import Cookies from 'universal-cookie';
+
 class StudentStore extends React.Component {
     constructor(props) {
         
@@ -20,7 +22,6 @@ class StudentStore extends React.Component {
             shops:[],
             students: [],
             items: [],
-            token: this.props.location.state.token,
             showAlert: false,
             variant: '',
             message: '',
@@ -31,7 +32,8 @@ class StudentStore extends React.Component {
     }
 
     async componentDidMount(){
-        axios.defaults.headers.common.Authorization = `Token ${this.state.token}`;
+        const cookies = new Cookies()
+        axios.defaults.headers.common.Authorization = cookies.get("Authorization");
         await this.getStudentBalance()
         await this.getClassCode()
     }
@@ -176,7 +178,7 @@ class StudentStore extends React.Component {
     render(){
         return(
             <div className='wrapper'>
-                {navbar(this.state.token)}
+                <Navbar/>
                 <div className='store-content'>
                 <div className='title'>
                     <div className='title-name'><h3>{this.state.store_name}</h3></div>

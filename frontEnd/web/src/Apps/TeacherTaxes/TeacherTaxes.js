@@ -12,6 +12,7 @@ import Col from 'react-bootstrap/Col'
 import FormControl from 'react-bootstrap/FormControl'
 import FloatingLabel from 'react-bootstrap/FloatingLabel'
 import Modal from 'react-bootstrap/Modal'
+import Cookies from 'universal-cookie';
 
 class TeacherTaxes extends React.Component {
     constructor(props) {
@@ -21,7 +22,6 @@ class TeacherTaxes extends React.Component {
             class_name: this.props.location.state.class.class_name,
             teacher_id:  this.props.location.state.teacher_id,
             students: [],
-            token: this.props.location.state.token,
             classHasTaxes: false,
             class_tax: {},
             checked: '',
@@ -69,7 +69,8 @@ class TeacherTaxes extends React.Component {
     }
 
     async componentDidMount(){
-        axios.defaults.headers.common.Authorization = `Token ${this.state.token}`;
+        const cookies = new Cookies()
+        axios.defaults.headers.common.Authorization = cookies.get("Authorization");
         await this.getClassStudents()
         await this.getTaxes("local")
     }
@@ -1030,7 +1031,7 @@ class TeacherTaxes extends React.Component {
     render(){
         return (
             <div className="wrapper">
-                {navbar(this.state.class_name, {class_code: this.state.class_code, class_name: this.state.class_name}, this.state.teacher_id, this.state.token)}
+                {navbar(this.state.class_name, {class_code: this.state.class_code, class_name: this.state.class_name}, this.state.teacher_id)}
                 <Container className="taxes-container">
                     <Row>
                         {this.renderTaxView()}

@@ -7,8 +7,8 @@ import Button from 'react-bootstrap/Button'
 import './TeacherNavbar.css';
 
 
-export default function navbar(htext, current_class, teacher_id, token){
-    var payload = {class: current_class, teacher_id: teacher_id, token: token}
+export default function navbar(htext, current_class, teacher_id){
+    var payload = {class: current_class, teacher_id: teacher_id}
     return(
         <Navbar collapseOnSelect expand="lg" className="teacher-navbar" variant="dark">
         <Container>
@@ -18,7 +18,7 @@ export default function navbar(htext, current_class, teacher_id, token){
                 <Button variant="light" className="navbar-btn"><Link className="navbar-link" to={{pathname: `/Class/${current_class.class_code}/taxes`, state: payload}}>Taxes</Link></Button>
                 <Button variant="light" className="navbar-btn"><Link className="navbar-link" to={{pathname: `/Class/${current_class.class_code}/store`, state: payload}}>Store</Link></Button>
                 <Button variant="light" className="navbar-btn"><Link className="navbar-link" to={{pathname: `/Class/${current_class.class_code}/bank`, state: payload}}>Bank</Link></Button>
-                <Button variant="secondary-outline" className="navbar-btn-class-list"><Link className="navbar-link" to={{pathname: `/Profile/`, state: {role: "Teacher", token: token}}}>Class List</Link></Button>
+                <Button variant="secondary-outline" className="navbar-btn-class-list"><Link className="navbar-link" to={{pathname: `/Profile/`, state: {role: "Teacher"}}}>Class List</Link></Button>
             </Nav>
         </Container>
         </Navbar>
