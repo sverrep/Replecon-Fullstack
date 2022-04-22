@@ -12,6 +12,7 @@ from users.serializers import CreateUserSerializer, CreateStudentSerializer, Cre
 from django.middleware.csrf import get_token
 from .models import Student, Teacher
 from decimal import Decimal
+from policies import checkInq
 import logging
 
 class CreateUserAPIView(CreateAPIView):

@@ -77,7 +77,7 @@ class Profile extends React.Component {
         .catch(error => console.log(error))
       }
     
-      findTeacherClassrooms(classrooms){
+    findTeacherClassrooms(classrooms){
         for (let i = 0; i <= Object.keys(classrooms).length-1; i++)
         {
           if (classrooms[i].teacher_id === this.state.teacher_id)
@@ -85,7 +85,7 @@ class Profile extends React.Component {
             this.setState({ classes: [...this.state.classes, classrooms[i]] });
           }
         }
-      }
+    }
 
     handleLogOut() {
         axios.get(getIP()+'/auth/logout/')

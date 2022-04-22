@@ -1,10 +1,12 @@
-from django.shortcuts import render
-from rest_framework import viewsets, generics, mixins
+from rest_framework import status, generics, mixins
 from rest_framework.permissions import AllowAny, DjangoModelPermissions
+from sqlalchemy import false, true
 from .models import Classroom
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.utils.decorators import method_decorator
 from .serializers import ClassroomSerializer
+from policies import checkInq
+from rest_framework.response import Response
 
 
 # Create your views here.
@@ -16,7 +18,9 @@ class ClassroomList(generics.GenericAPIView, mixins.ListModelMixin, mixins.Creat
     permission_classes = [AllowAny]
 
     def get(self, request):
-        return self.list(request)
+        if checkInq(request.method, "classroom", request.user.groups.get(), {"CSRF": '127.0.0.1'}) == True:
+            return self.list(request)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
 
     def post(self, request):
         return self.create(request)
