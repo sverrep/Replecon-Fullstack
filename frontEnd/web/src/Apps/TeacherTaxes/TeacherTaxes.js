@@ -13,6 +13,7 @@ import FormControl from 'react-bootstrap/FormControl'
 import FloatingLabel from 'react-bootstrap/FloatingLabel'
 import Modal from 'react-bootstrap/Modal'
 import Cookies from 'universal-cookie';
+import getCSRFToken from '../../Components/csrf/getCSRFToken.js';
 
 class TeacherTaxes extends React.Component {
     constructor(props) {
@@ -128,6 +129,7 @@ class TeacherTaxes extends React.Component {
 
     async setUpTax(){
         if(this.setupIsValid()){
+            await getCSRFToken()
             await axios.post(getIP()+'/taxes/', {
                 class_code: this.state.class_code,
                 sales_tax: this.state.current_sales_tax,
@@ -307,8 +309,9 @@ class TeacherTaxes extends React.Component {
         }  
     }
 
-    updateEasyTax(tax_type){
+    async updateEasyTax(tax_type){
         var payload = {}
+        await getCSRFToken()
         if(tax_type === 'Flat Tax') 
         {
             if(this.flat_tax_isValid(this.state.current_flat_tax))
@@ -320,7 +323,7 @@ class TeacherTaxes extends React.Component {
                     sales_tax: this.state.class_tax.sales_tax,
                     id: this.state.class_tax.id,
                 }
-                axios.put(getIP()+'/taxes/'+ this.state.class_tax.id, payload )
+                await axios.put(getIP()+'/taxes/'+ this.state.class_tax.id, payload )
                 .then(response => {
                 })
                 .catch(error => console.log(error))
@@ -339,7 +342,7 @@ class TeacherTaxes extends React.Component {
                     sales_tax: this.state.class_tax.sales_tax,
                     id: this.state.class_tax.id,
                 }
-                axios.put(getIP()+'/taxes/'+ this.state.class_tax.id, payload )
+                await axios.put(getIP()+'/taxes/'+ this.state.class_tax.id, payload )
                 .then(response => {
                 })
                 .catch(error => console.log(error))
@@ -349,12 +352,13 @@ class TeacherTaxes extends React.Component {
         }
     }
 
-    updateBrackets(tax_type){
+    async updateBrackets(tax_type){
+        await getCSRFToken()
         if(tax_type === "Progressive Tax")
         {
             if(this.progressive_taxes_isValid()){
                 for(let i = 0; i<= Object.keys(this.state.progArOfId).length-1; i++){
-                    axios.put(getIP()+'/progressivebrackets/'+ this.state.progArOfId[i], {
+                    await axios.put(getIP()+'/progressivebrackets/'+ this.state.progArOfId[i], {
                         tax_id: this.state.class_tax.id,
                         lower_bracket: this.state.arOfLows[i],
                         higher_bracket: this.state.arOfHighs[i],
@@ -371,7 +375,7 @@ class TeacherTaxes extends React.Component {
         {
             if(this.regressive_taxes_isValid()){
                 for(let i = 0; i<= Object.keys(this.state.regArOfId).length-1; i++){
-                    axios.put(getIP()+'/regressivebrackets/'+ this.state.regArOfId[i], {
+                    await axios.put(getIP()+'/regressivebrackets/'+ this.state.regArOfId[i], {
                         tax_id: this.state.class_tax.id,
                         lower_bracket: this.state.regArOfLows[i],
                         higher_bracket: this.state.regArOfHighs[i],
@@ -685,6 +689,7 @@ class TeacherTaxes extends React.Component {
         var selected = this.state.students
         var payload 
         let prog_amount = 0
+        await getCSRFToken()
         if(tax_type === "Flat Tax"){
             for(let i = 0; i <= Object.keys(selected).length-1; i++)
             {
@@ -796,6 +801,7 @@ class TeacherTaxes extends React.Component {
             {
               await this.getTaxes("import")
               await this.getAllBrackets("import")
+              await getCSRFToken()
               await axios.post(getIP()+'/taxes/', {
                 class_code: this.state.class_code,
                 sales_tax: this.state.tax_import_taxes.sales_tax,

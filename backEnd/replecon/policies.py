@@ -24,7 +24,6 @@ root.addHandler(logging.StreamHandler())
 
 def checkInq(action, resource, subject, context):
     inq = vakt.Inquiry(action=action, resource=resource, subject=subject, context=context)
-    print(inq)
     try:
         assert guard.is_allowed(inq)
         return True
@@ -63,7 +62,6 @@ def createPolicies():
         ),
     ]
     for policy in policies:
-        print("yo")
         storage.add(policy)
 
 #createPolicies()

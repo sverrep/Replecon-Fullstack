@@ -1,7 +1,7 @@
 from django.urls import path, include
 from django.conf.urls import url
 from rest_framework.authtoken.views import obtain_auth_token
-from .views import CreateUserAPIView, UserDetails, LogoutUserAPIView, CreateBankStore, UserViewSet, StudentClassCode, TeacherList, StudentBalance, CurrentStudent, StoreStudent, BankStudent, CreateTeacherAPIView, CreateStudentAPIView, IsUserTeacher, StudentList, CSRFToken 
+from .views import CreateUserAPIView, UserDetails, LogoutUserAPIView, CreateBankStore, UserViewSet, StudentClassCode, TeacherList, StudentBalance, CurrentStudent, StoreStudent, BankStudent, CreateTeacherAPIView, CreateStudentAPIView, IsUserTeacher, StudentList, GetCSRFToken 
 from rest_framework.routers import DefaultRouter
 from django.contrib.auth import views as auth_views
 
@@ -25,5 +25,5 @@ urlpatterns = [
     url('users/<int:id>', UserDetails.as_view()),
     url('teachers/', TeacherList.as_view()),
     url('setup/', CreateBankStore.as_view()),
-    url('getCSRFToken/', CSRFToken.as_view()),
+    url('getCSRFToken/', GetCSRFToken.as_view()),
 ]

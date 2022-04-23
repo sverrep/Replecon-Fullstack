@@ -12,6 +12,7 @@ import Col from 'react-bootstrap/Col'
 import InputGroup from 'react-bootstrap/InputGroup'
 import FormControl from 'react-bootstrap/FormControl'
 import Cookies from 'universal-cookie';
+import getCSRFToken from '../../Components/csrf/getCSRFToken.js';
 
 
 
@@ -158,6 +159,7 @@ class TeacherStudents extends React.Component {
           for(let i = 0; i <= Object.keys(selected).length-1; i++)
           {
             var payload = { user_id: selected[i], amount: selected_amount }; 
+            await getCSRFToken()
             await axios.put(getIP()+'/students/balance/', payload)
             .then(async response => {
                 await axios.post(getIP()+'/transactions/teacherPayStudents/', {"user_id": response.data.user, "amount": selected_amount})
@@ -243,6 +245,7 @@ class TeacherStudents extends React.Component {
     async deleteSelected(){
         for (let i = 0; i < Object.keys(this.state.selected).length; i++)
         {
+            await getCSRFToken()
             await axios.delete(getIP()+`/users/${this.state.selected[i]}/`)
             .then(async response => {
                 await axios.get(getIP()+`/transactions/getTransactionsByID/${this.state.selected[i]}`)

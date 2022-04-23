@@ -13,6 +13,7 @@ import Form from 'react-bootstrap/Form'
 import FormControl from 'react-bootstrap/FormControl'
 import FloatingLabel from 'react-bootstrap/FloatingLabel'
 import Cookies from 'universal-cookie';
+import getCSRFToken from '../../Components/csrf/getCSRFToken.js';
 
 class Profile extends React.Component {
     constructor(props) {
@@ -133,7 +134,8 @@ class Profile extends React.Component {
         .then(async response => {
           this.setState({new_class_code: this.makeClassCode(response.data)}, async() => {
             const payload = {class_name: this.state.new_class_name, teacher_id: this.state.teacher_id, class_code: this.state.new_class_code}
-            await axios.post(getIP()+'/classrooms/', payload)
+            await getCSRFToken()
+            await axios.post(getIP()+'/classrooms/', payload, {withCredentials: true})
             .then(response => {
                 this.setState({showCreateClass: false}, () => {
                     this.setState({ classes: [...this.state.classes, response.data] });
@@ -143,7 +145,9 @@ class Profile extends React.Component {
          })
         })
        .catch(error => console.log(error))
-     }
+    }
+
+
 
      
     makeClassCode(classrooms) {

@@ -10,6 +10,7 @@ import Form from 'react-bootstrap/Form'
 import FloatingLabel from 'react-bootstrap/FloatingLabel'
 import {passwords} from '../../Components/passwords/mostCommon.js'
 import Cookies from 'universal-cookie';
+import getCSRFToken from '../../Components/csrf/getCSRFToken.js';
 
 class SignUpApp extends React.Component {
     constructor(props) {
@@ -263,6 +264,7 @@ class SignUpApp extends React.Component {
         {
             if (await this.validateData()) {
                 const payload = { username: this.state.email, password: this.state.password, first_name: this.state.name, email: this.state.email } 
+                await getCSRFToken()
                 await axios.post(getIP()+'/auth/register/', payload)
                 .then(async response => {
                     this.setState({ token: response.data.token })
@@ -284,6 +286,7 @@ class SignUpApp extends React.Component {
         else if(this.props.location.state.role === "Teacher"){
             if (await this.validateData()) {
                 const payload = { username: this.state.email, password: this.state.password, first_name: this.state.first_name, email: this.state.email } 
+                await getCSRFToken()
                 await axios.post(getIP()+'/auth/register/', payload)
                 .then(async response => {
                     this.setState({ token: response.data.token })

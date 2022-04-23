@@ -11,6 +11,7 @@ import Row from 'react-bootstrap/Row';
 import Alert from 'react-bootstrap/Alert'
 import './StudentBankApp.css';
 import Cookies from 'universal-cookie';
+import getCSRFToken from '../../Components/csrf/getCSRFToken.js';
 
 class StudentBank extends React.Component {
     constructor(props) {
@@ -115,6 +116,7 @@ class StudentBank extends React.Component {
       //Insert Savings
       async setStudentSavings(){
         if(await this.validateSavings()){
+          await getCSRFToken()
           await axios.post(getIP()+'/transactions/banksavings/', {"amount": this.state.value, "done": false})
           .then(async response => {
             var transaction_id = response.data["id"]
@@ -266,6 +268,7 @@ class StudentBank extends React.Component {
           
           if(await this.validateClaim(item))
           {
+            await getCSRFToken()
             await axios.post(getIP()+'/transactions/banksavings/', {"amount": Math.round(item.final_amount * 10) / 10, "done": true})
             .then(async response => {
               await axios.put(getIP()+'/transactioninterestrates/', {active: false, class_code: this.state.classroom, transaction_id: item.transaction_id})

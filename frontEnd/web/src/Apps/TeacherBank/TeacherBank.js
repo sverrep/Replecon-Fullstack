@@ -13,6 +13,7 @@ import FormControl from 'react-bootstrap/FormControl'
 import FloatingLabel from 'react-bootstrap/FloatingLabel'
 import Modal from 'react-bootstrap/Modal'
 import Cookies from 'universal-cookie';
+import getCSRFToken from '../../Components/csrf/getCSRFToken.js';
 
 
 class TeacherBank extends React.Component {
@@ -212,6 +213,7 @@ class TeacherBank extends React.Component {
     async createNewBank(){
         if(this.validateBank())
         {
+          await getCSRFToken()
           await axios.post(getIP()+'/banks/', {
             class_code: this.state.class_code,
             interest_rate: this.state.interest_rate,
@@ -225,10 +227,11 @@ class TeacherBank extends React.Component {
         }
     }
     
-    updateBankRates(){
+    async updateBankRates(){
         if(this.validateBank())
          {
-          axios.put(getIP()+'/banks/' + this.state.bank_id, {
+          await getCSRFToken()
+          await axios.put(getIP()+'/banks/' + this.state.bank_id, {
             class_code: this.state.class_code,
             interest_rate: this.state.interest_rate,
             payout_rate: this.state.payout_rate,

@@ -13,6 +13,7 @@ import FloatingLabel from 'react-bootstrap/FloatingLabel'
 import Modal from 'react-bootstrap/Modal'
 import Card from 'react-bootstrap/Card'
 import Cookies from 'universal-cookie';
+import getCSRFToken from '../../Components/csrf/getCSRFToken.js';
 
 
 class TeacherStore extends React.Component {
@@ -134,6 +135,7 @@ class TeacherStore extends React.Component {
   async createNewStore(){
     if(this.state.store_name !== "")
     {
+      await getCSRFToken()
       await axios.post(getIP()+'/shops/', {
         shop_name: this.state.store_name,
         class_code: this.state.class_code,
@@ -152,6 +154,7 @@ class TeacherStore extends React.Component {
   async addItem(){
     if(this.validateItem())
     {
+      await getCSRFToken()
       await axios.post(getIP()+'/items/', {
         item_name: this.state.item_name,
         description: this.state.item_desc,
@@ -168,6 +171,7 @@ class TeacherStore extends React.Component {
   async updateItem(){
     if(this.validateItem())
     {
+      await getCSRFToken()
       await axios.put(getIP()+'/items/'+ this.state.item_id, {
         item_name: this.state.item_name,
         description: this.state.item_desc,
@@ -190,8 +194,9 @@ class TeacherStore extends React.Component {
     this.setState({item_id:id})
   }
     
-  deleteItem(){
-    axios.delete(getIP()+'/items/'+ this.state.item_id)
+  async deleteItem(){
+    await getCSRFToken()
+    await axios.delete(getIP()+'/items/'+ this.state.item_id)
     .then(response => {
       this.setState({showUpdateItem: false, items: []})
       this.getItems("local")
@@ -210,6 +215,7 @@ class TeacherStore extends React.Component {
           {
             for(i = 0; i<Object.keys(this.state.item_import_list).length; i++)
             {
+              await getCSRFToken()
               axios.post(getIP()+'/items/', {
                 item_name: this.state.item_import_list[i].item_name,
                 description: this.state.item_import_list[i].description,

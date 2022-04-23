@@ -12,7 +12,8 @@ from users.serializers import CreateUserSerializer, CreateStudentSerializer, Cre
 from django.middleware.csrf import get_token
 from .models import Student, Teacher
 from decimal import Decimal
-from policies import checkInq
+from django.views.decorators.csrf import ensure_csrf_cookie
+from django.utils.decorators import method_decorator
 import logging
 
 class CreateUserAPIView(CreateAPIView):
@@ -224,7 +225,8 @@ class CreateBankStore(APIView):
             bank_serializer.save()
         return Response(status=status.HTTP_201_CREATED)
 
-class CSRFToken(APIView):
+@method_decorator(ensure_csrf_cookie, name="dispatch")
+class GetCSRFToken(APIView):
 
     def get(self, request):
         return JsonResponse({'csrfToken': get_token(request)})

@@ -2,7 +2,7 @@ from rest_framework import status, generics, mixins
 from rest_framework.permissions import AllowAny, DjangoModelPermissions
 from sqlalchemy import false, true
 from .models import Classroom
-from django.views.decorators.csrf import ensure_csrf_cookie
+from django.views.decorators.csrf import ensure_csrf_cookie, csrf_protect
 from django.utils.decorators import method_decorator
 from .serializers import ClassroomSerializer
 from policies import checkInq
@@ -10,8 +10,7 @@ from rest_framework.response import Response
 
 
 # Create your views here.
-
-@method_decorator(ensure_csrf_cookie, name="dispatch")
+@method_decorator(csrf_protect, name="dispatch")
 class ClassroomList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
     queryset = Classroom.objects.all()
     serializer_class = ClassroomSerializer

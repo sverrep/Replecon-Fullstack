@@ -9,6 +9,7 @@ import Row from 'react-bootstrap/Row';
 import Alert from 'react-bootstrap/Alert';
 import './StudentStoreApp.css';
 import Cookies from 'universal-cookie';
+import getCSRFToken from '../../Components/csrf/getCSRFToken.js';
 
 class StudentStore extends React.Component {
     constructor(props) {
@@ -142,24 +143,25 @@ class StudentStore extends React.Component {
 
     async buyItem(item){
         if(await this.validatePurchase(item)){
-        await axios.post(getIP()+'/items/boughtitems/', { item_id: item.id })
-            .then(async response => {
-                await axios.get(getIP()+'/students/store/')
-                    .then(async response => {
-                    await axios.put(getIP()+'/students/balance/', { amount: item.price, user_id: response.data, recipient: false })
+            await getCSRFToken()
+            await axios.post(getIP()+'/items/boughtitems/', { item_id: item.id })
+                .then(async response => {
+                    await axios.get(getIP()+'/students/store/')
                         .then(async response => {
-                        await axios.post(getIP()+'/transactions/buyFromStore/', { amount: item.price })
+                        await axios.put(getIP()+'/students/balance/', { amount: item.price, user_id: response.data, recipient: false })
                             .then(async response => {
-                                this.getStudentBalance()
-                            })
-                        .catch(error => console.log(error + "transactions"))
+                            await axios.post(getIP()+'/transactions/buyFromStore/', { amount: item.price })
+                                .then(async response => {
+                                    this.getStudentBalance()
+                                })
+                            .catch(error => console.log(error + "transactions"))
+                        })
+                        . catch(error => console.log(error + "students"))
                     })
-                    . catch(error => console.log(error + "students"))
+                    .catch(error => console.log(error + "store account"))
                 })
-                .catch(error => console.log(error + "store account"))
-            })
-            .catch(error => console.log(error + "items"))
-        }
+                .catch(error => console.log(error + "items"))
+            }
         
     }
 
