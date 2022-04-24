@@ -1,9 +1,11 @@
-from rest_framework import generics, mixins
+from rest_framework import status, generics, mixins
 from .serializers import TaxSerializer, ProgressiveBracketSerializer, RegressiveBracketSerializer
 from .models import Tax, ProgressiveBracket, RegressiveBracket
 from rest_framework.permissions import DjangoModelPermissions
 from django.views.decorators.csrf import csrf_protect
 from django.utils.decorators import method_decorator
+from policies import checkInq
+from rest_framework.response import Response
 
 @method_decorator(csrf_protect, name="dispatch")
 class TaxList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
@@ -12,10 +14,14 @@ class TaxList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModel
     permission_classes = [DjangoModelPermissions]
 
     def get(self, request):
-        return self.list(request)
+        if checkInq(request.method, "tax", request.user.groups.get().name) == True:
+            return self.list(request)
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
     
     def post(self, request):
-        return self.create(request)
+        if checkInq(request.method, "tax", request.user.groups.get().name) == True:
+            return self.create(request)
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 @method_decorator(csrf_protect, name="dispatch")
 class TaxDetails(generics.GenericAPIView, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin):
@@ -26,13 +32,19 @@ class TaxDetails(generics.GenericAPIView, mixins.RetrieveModelMixin, mixins.Upda
     lookup_field = 'id'
 
     def get(self, request, id):
-        return self.retrieve(request, id=id)
+        if checkInq(request.method, "tax", request.user.groups.get().name) == True:
+            return self.retrieve(request, id=id)
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
 
     def put(self, request, id):
-        return self.update(request, id=id)
+        if checkInq(request.method, "tax", request.user.groups.get().name) == True:
+            return self.update(request, id=id)
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
     
     def delete(self, request, id):
-        return self.destroy(request, id=id)
+        if checkInq(request.method, "tax", request.user.groups.get().name) == True:
+            return self.destroy(request, id=id)
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 @method_decorator(csrf_protect, name="dispatch")
 class ProgressiveBracketList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
@@ -41,10 +53,14 @@ class ProgressiveBracketList(generics.GenericAPIView, mixins.ListModelMixin, mix
     permission_classes = [DjangoModelPermissions]
     
     def get(self, request):
-        return self.list(request)
+        if checkInq(request.method, "tax", request.user.groups.get().name) == True:
+            return self.list(request)
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
     
     def post(self, request):
-        return self.create(request)
+        if checkInq(request.method, "tax", request.user.groups.get().name) == True:
+            return self.create(request)
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 @method_decorator(csrf_protect, name="dispatch")
 class ProgressiveBracketDetails(generics.GenericAPIView, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin):
@@ -55,13 +71,19 @@ class ProgressiveBracketDetails(generics.GenericAPIView, mixins.RetrieveModelMix
     lookup_field = 'id'
 
     def get(self, request, id):
-        return self.retrieve(request, id=id)
+        if checkInq(request.method, "tax", request.user.groups.get().name) == True:
+            return self.retrieve(request, id=id)
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
 
     def put(self, request, id):
-        return self.update(request, id=id)
+        if checkInq(request.method, "tax", request.user.groups.get().name) == True:
+            return self.update(request, id=id)
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
     
     def delete(self, request, id):
-        return self.destroy(request, id=id)
+        if checkInq(request.method, "tax", request.user.groups.get().name) == True:
+            return self.destroy(request, id=id)
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 @method_decorator(csrf_protect, name="dispatch")
 class RegressiveBracketList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
@@ -70,10 +92,14 @@ class RegressiveBracketList(generics.GenericAPIView, mixins.ListModelMixin, mixi
     permission_classes = [DjangoModelPermissions]
 
     def get(self, request):
-        return self.list(request)
+        if checkInq(request.method, "tax", request.user.groups.get().name) == True:
+            return self.list(request)
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
     
     def post(self, request):
-        return self.create(request)
+        if checkInq(request.method, "tax", request.user.groups.get().name) == True:
+            return self.create(request)
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 @method_decorator(csrf_protect, name="dispatch")
 class RegressiveBracketDetails(generics.GenericAPIView, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin):
@@ -84,10 +110,16 @@ class RegressiveBracketDetails(generics.GenericAPIView, mixins.RetrieveModelMixi
     lookup_field = 'id'
 
     def get(self, request, id):
-        return self.retrieve(request, id=id)
+        if checkInq(request.method, "tax", request.user.groups.get().name) == True:
+            return self.retrieve(request, id=id)
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
 
     def put(self, request, id):
-        return self.update(request, id=id)
+        if checkInq(request.method, "tax", request.user.groups.get().name) == True:
+            return self.update(request, id=id)
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
     
     def delete(self, request, id):
-        return self.destroy(request, id=id)
+        if checkInq(request.method, "tax", request.user.groups.get().name) == True:
+            return self.destroy(request, id=id)
+        return Response(status=status.HTTP_401_UNAUTHORIZED)

@@ -1,7 +1,5 @@
-from email.policy import HTTP
 from rest_framework import status, generics, mixins
 from rest_framework.permissions import AllowAny, DjangoModelPermissions
-from sqlalchemy import false, true
 from .models import Classroom
 from django.views.decorators.csrf import csrf_protect
 from django.utils.decorators import method_decorator
