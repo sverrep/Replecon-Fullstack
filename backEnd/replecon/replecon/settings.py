@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 import os
 from pathlib import Path
 from corsheaders.defaults import default_headers
+from sqlalchemy import true
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -29,8 +30,11 @@ DEBUG = True
 
 ALLOWED_HOSTS=['*']
 
+
+
 CORS_ORIGIN_ALLOW_ALL = False
 CORS_ORIGIN_WHITELIST = (
+    'http://127.0.0.1:3000',
     'http://localhost:3000',
     'https://replecon.com',
     'https://www.replecon.com',
@@ -42,6 +46,17 @@ CORS_ALLOW_HEADERS = list(default_headers) + [
     'X-CSRFTOKEN',
 ]
 
+CORS_EXPOSE_HEADERS = [
+    '*'
+]
+
+CORS_ALLOW_CREDENTIALS = True
+
+SESSION_COOKIE_SAMESITE = 'Lax'
+
+CSRF_USE_SESSIONS = True
+SESSION_COOKIE_SECURE = False
+SESSION_COOKIE_HTTPONLY = False
 
 # Application definition
 

@@ -8,7 +8,7 @@ from vakt.rules import Eq, Any, StartsWith, NotEq, CIDR, And, Greater, Less, In
 import logging
 
 
-engine = create_engine('mysql://root:12345@localhost:3306/prismadb')
+engine = create_engine('mysql://root:12345@localhost:3306/replecondb')
 Base.metadata.create_all(engine)
 session = scoped_session(sessionmaker(bind=engine))
 storage = SQLStorage(scoped_session= session)
@@ -22,9 +22,8 @@ root.addHandler(logging.StreamHandler())
 
 
 
-def checkInq(action, resource, subject, context):
-    inq = vakt.Inquiry(action=action, resource=resource, subject=subject, context=context)
-    print(inq)
+def checkInq(action, resource, subject):
+    inq = vakt.Inquiry(action=action, resource=resource, subject=subject)
     try:
         assert guard.is_allowed(inq)
         return True
@@ -36,34 +35,31 @@ def createPolicies():
     policies = [
         vakt.Policy(
             str(uuid.uuid4()),
-            description="Can only create a new class if Teacher",
-            actions=[Eq('POST')],
-            resources=[Eq('classroom')],
+            description="Permissions based on teacher attribute / role",
+            actions=[Eq('GET'), Eq('POST'), Eq('PUT'), Eq('DELETE')],
+            resources=[Eq('classroom'), Eq('bank'), Eq('store'), Eq('tax'), Eq('transaction'), Eq('users')],
             subjects=[Eq('Teacher')],
             effect=vakt.ALLOW_ACCESS,
-            context={'CSRF': CIDR('127.0.0.1/32')}
         ),
         vakt.Policy(
             str(uuid.uuid4()),
-            description="Everyone can read classes",
+            description="Permissions based on student attribute / role",
             actions=[Eq('GET')],
             resources=[Eq('classroom')],
-            subjects=[Any()],
+            subjects=[Eq('Student')],
             effect=vakt.ALLOW_ACCESS,
-            context={'CSRF': CIDR('127.0.0.1/32')}
         ),
         vakt.Policy(
             str(uuid.uuid4()),
-            description="Testing policies 2 with Vakt",
-            actions=[Eq('GET'), Eq('POST'), Eq('DELETE')],
-            resources=[Eq('classroom')],
-            subjects=[Eq('Teacher')],
+            description="Permissions allowed to anyone",
+            actions=[Eq('GET')],
+            resources=[Eq('login'), Eq('signup')],
+            subjects=[Any()],
             effect=vakt.ALLOW_ACCESS,
-            context={'CSRF': CIDR('127.0.0.1/32')}
         ),
+
     ]
     for policy in policies:
-        print("yo")
         storage.add(policy)
 
 #createPolicies()

@@ -10,6 +10,7 @@ import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import Alert from 'react-bootstrap/Alert';
 import Cookies from 'universal-cookie';
+import getCSRFToken from '../../Components/csrf/getCSRFToken.js';
 
 class StudentClass extends React.Component {
     constructor(props) {
@@ -87,10 +88,6 @@ class StudentClass extends React.Component {
                 return false
             }
             else{
-                this.setState({variant:'success'})
-                this.setState({message:'Money Sent'})
-                this.setState({showAlert:true})
-                this.setState({active:false})
                 return true
             }
         }
@@ -111,12 +108,17 @@ class StudentClass extends React.Component {
                         
                         const payload = { user_id: this.state.recipient_id, amount: this.state.value, recipient: false };
                         const transaction_payload = { recipient_id: this.state.recipient_id, sender_id: this.state.sender_id, category: "Transfer", amount: this.state.value };
+                        await getCSRFToken()
                         await axios.put(getIP()+'/students/balance/', payload)
                         .then(async response => {
                             
                             await axios.post(getIP()+'/transactions/', transaction_payload)
                             .then( async response => {
                                 this.getStudentBalance()
+                                this.setState({variant:'success'})
+                                this.setState({message:'Money Sent'})
+                                this.setState({showAlert:true})
+                                this.setState({active:false})
                             })
                             .catch(error => console.log(error))
                         })

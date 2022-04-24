@@ -1,16 +1,16 @@
-from django.shortcuts import render
 from .models import Bank, TransactionInterestRate
 from .serializers import BankSerializer, TransactionInterestRateSerializer
-from rest_framework import viewsets, generics, mixins, status
-from django.http import JsonResponse
+from rest_framework import generics, mixins, status
 from rest_framework.response import Response
-from rest_framework.parsers import JSONParser
-from rest_framework.decorators import api_view, APIView
+from rest_framework.decorators import APIView
 from rest_framework.permissions import DjangoModelPermissions
+from django.views.decorators.csrf import csrf_protect
+from django.utils.decorators import method_decorator
 import datetime
 import logging
 # Create your views here.
 
+@method_decorator(csrf_protect, name="dispatch")
 class BankList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
     queryset = Bank.objects.all()
     serializer_class = BankSerializer
@@ -21,7 +21,8 @@ class BankList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateMode
     
     def post(self, request):
         return self.create(request)
-        
+
+@method_decorator(csrf_protect, name="dispatch")
 class BankDetails(generics.GenericAPIView, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin):
     queryset = Bank.objects.all()
     serializer_class = BankSerializer
@@ -38,6 +39,7 @@ class BankDetails(generics.GenericAPIView, mixins.RetrieveModelMixin, mixins.Upd
     def delete(self, request, id):
         return self.destroy(request, id=id)
 
+@method_decorator(csrf_protect, name="dispatch")
 class TransactionIntrestRateList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
     queryset = TransactionInterestRate.objects.all()
     serializer_class = TransactionInterestRateSerializer
@@ -88,6 +90,7 @@ class TransactionIntrestRatePayoutDate(APIView):
         payout_date = transaction.end_date - current_date
         return Response(payout_date, status=status.HTTP_200_OK)
 
+@method_decorator(csrf_protect, name="dispatch")
 class TransactionInterestRates(generics.GenericAPIView, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin):
     queryset = TransactionInterestRate.objects.all()
     serializer_class = TransactionInterestRateSerializer

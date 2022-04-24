@@ -1,19 +1,12 @@
-import React from "react";
 import axios from "axios";
+import getIP from '../../settings.js';
 
-export default async function getCSRFToken(name) {
-  var cookieValue = null;
-  if (document.cookie && document.cookie !== '') {
-      const cookies = document.cookie.split(';');
-      for (var i = 0; i < cookies.length; i++) {
-          const cookie = cookies[i].trim();
-          // Does this cookie string begin with the name we want?
-          if (cookie.substring(0, name.length + 1) === (name + '=')) {
-              cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-              break;
-          }
-      }
-    }
-    console.log(cookieValue)
-    axios.defaults.headers.post['X-CSRF-Token'] = cookieValue;
-  };
+export default async function getCSRFToken() {
+  await axios.get(getIP()+'/getCSRFToken/', {withCredentials: true})
+  .then(response => {
+      axios.defaults.headers.post['X-CSRFToken'] = response.data.csrfToken;
+      axios.defaults.headers.put['X-CSRFToken'] = response.data.csrfToken;
+      axios.defaults.headers.delete['X-CSRFToken'] = response.data.csrfToken;
+      axios.defaults.withCredentials = true
+  })
+};

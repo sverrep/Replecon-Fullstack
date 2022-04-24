@@ -11,6 +11,7 @@ import Row from 'react-bootstrap/Row';
 import Alert from 'react-bootstrap/Alert'
 import './StudentBankApp.css';
 import Cookies from 'universal-cookie';
+import getCSRFToken from '../../Components/csrf/getCSRFToken.js';
 
 class StudentBank extends React.Component {
     constructor(props) {
@@ -115,6 +116,7 @@ class StudentBank extends React.Component {
       //Insert Savings
       async setStudentSavings(){
         if(await this.validateSavings()){
+          await getCSRFToken()
           await axios.post(getIP()+'/transactions/banksavings/', {"amount": this.state.value, "done": false})
           .then(async response => {
             var transaction_id = response.data["id"]
@@ -125,6 +127,9 @@ class StudentBank extends React.Component {
                 await axios.put(getIP()+'/students/balance/', { amount: this.state.value, user_id: response.data, recipient: false })
                 .then(response => {
                   this.setState({show:false})
+                  this.setState({variant:'success'})
+                  this.setState({message:'Money saved successfully'})
+                  this.setState({showAlert:true})
                   this.getStudentSavings()
                   this.getStudentBalance()
                 })
@@ -204,7 +209,6 @@ class StudentBank extends React.Component {
                             "payout_date": payout_date, 
                             "active": response1.data[i].active
                           }
-                          this.setState({message: tempdict})
                           this.setState({savings: [...this.state.savings, tempdict]})
                         })
                         .catch(error => console.log(error))
@@ -244,9 +248,6 @@ class StudentBank extends React.Component {
       }
       if(temp === true){
         if(item.payout_date <= 0){
-          this.setState({variant:'success'})
-          this.setState({message:'Money claimed successfully'})
-          this.setState({showAlert:true})
           return true
         }
         else{
@@ -266,6 +267,7 @@ class StudentBank extends React.Component {
           
           if(await this.validateClaim(item))
           {
+            await getCSRFToken()
             await axios.post(getIP()+'/transactions/banksavings/', {"amount": Math.round(item.final_amount * 10) / 10, "done": true})
             .then(async response => {
               await axios.put(getIP()+'/transactioninterestrates/', {active: false, class_code: this.state.classroom, transaction_id: item.transaction_id})
@@ -276,6 +278,9 @@ class StudentBank extends React.Component {
                   .then(response => {
                     this.getStudentSavings()
                     this.getStudentBalance()
+                    this.setState({variant:'success'})
+                    this.setState({message:'Money claimed successfully'})
+                    this.setState({showAlert:true})
                   })
                   .catch(error => console.log(error))
                 })
@@ -313,9 +318,6 @@ class StudentBank extends React.Component {
               return false
             }
             else{
-              this.setState({variant:'success'})
-              this.setState({message:'Money saved successfully'})
-              this.setState({showAlert:true})
               return true
             }
         }

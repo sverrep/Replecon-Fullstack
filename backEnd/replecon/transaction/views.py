@@ -6,8 +6,11 @@ from rest_framework.permissions import DjangoModelPermissions
 from rest_framework.views import APIView
 from .serializers import TransactionSerializer
 from .models import Transaction
+from django.views.decorators.csrf import csrf_protect
+from django.utils.decorators import method_decorator
 import logging
 
+@method_decorator(csrf_protect, name="dispatch")
 class CreateTransaction(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
     queryset = Transaction.objects.all()
     serializer_class = TransactionSerializer
@@ -18,6 +21,7 @@ class CreateTransaction(generics.GenericAPIView, mixins.ListModelMixin, mixins.C
     def post(self, request):
         return self.create(request)
 
+@method_decorator(csrf_protect, name="dispatch")
 class TransactionDetails(generics.GenericAPIView, mixins.RetrieveModelMixin):
     queryset = Transaction.objects.all()
     serializer_class = TransactionSerializer
@@ -30,7 +34,7 @@ class TransactionDetails(generics.GenericAPIView, mixins.RetrieveModelMixin):
     def delete(self, request, id):
         return self.destroy(request, id=id)
 
-
+@method_decorator(csrf_protect, name="dispatch")
 class StoreTransaction(APIView):
     queryset = Transaction.objects.all()
     serializer_class = TransactionSerializer
@@ -48,6 +52,7 @@ class StoreTransaction(APIView):
             return Response(transaction_serializer.data, status=status.HTTP_201_CREATED)
         return Response(transaction_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+@method_decorator(csrf_protect, name="dispatch")
 class BankTransaction(APIView):
     queryset = Transaction.objects.all()
     serializer_class = TransactionSerializer
@@ -78,6 +83,7 @@ class BankTransaction(APIView):
             return Response(transaction_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
+@method_decorator(csrf_protect, name="dispatch")
 class TeacherPayStudents(APIView):
     queryset = Transaction.objects.all()
     serializer_class = TransactionSerializer

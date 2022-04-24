@@ -12,7 +12,8 @@ from users.serializers import CreateUserSerializer, CreateStudentSerializer, Cre
 from django.middleware.csrf import get_token
 from .models import Student, Teacher
 from decimal import Decimal
-from policies import checkInq
+from django.views.decorators.csrf import ensure_csrf_cookie, csrf_protect
+from django.utils.decorators import method_decorator
 import logging
 
 class CreateUserAPIView(CreateAPIView):
@@ -31,6 +32,7 @@ class CreateUserAPIView(CreateAPIView):
             headers=headers
         )
 
+@method_decorator(csrf_protect, name="dispatch")
 class UserDetails(generics.GenericAPIView, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin):
     queryset = get_user_model().objects.all()
     serializer_class = CreateUserSerializer
@@ -43,6 +45,7 @@ class UserDetails(generics.GenericAPIView, mixins.RetrieveModelMixin, mixins.Upd
     def delete(self, request, id):
         return self.destroy(request, id=id)
 
+@method_decorator(csrf_protect, name="dispatch")
 class TeacherList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
     queryset = Teacher.objects.all()
     serializer_class = CreateTeacherSerializer
@@ -141,7 +144,7 @@ class StudentClassCode(APIView):
         sorted_list = sorted(classroom_students, key=lambda k: k['name']) 
         return Response(sorted_list, status=status.HTTP_200_OK)
 
-
+@method_decorator(csrf_protect, name="dispatch")
 class StudentBalance(APIView):
     
     def get(self, request):
@@ -224,7 +227,8 @@ class CreateBankStore(APIView):
             bank_serializer.save()
         return Response(status=status.HTTP_201_CREATED)
 
-class CSRFToken(APIView):
+@method_decorator(ensure_csrf_cookie, name="dispatch")
+class GetCSRFToken(APIView):
 
     def get(self, request):
         return JsonResponse({'csrfToken': get_token(request)})

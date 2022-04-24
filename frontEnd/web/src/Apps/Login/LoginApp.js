@@ -111,7 +111,7 @@ export default class LoginApp extends React.Component {
 
   async handleLogin() {
     if (this.validateData()) {
-      const payload = { username: this.state.email, password: this.state.password } 
+      const payload = { username: this.state.email, password: this.state.password }
       await axios.post(getIP()+'/auth/login/', payload)
       .then(async response => {
         this.setState ({ token: response.data.token })
@@ -141,7 +141,3 @@ export default class LoginApp extends React.Component {
     
   }
 }
-
-
-/*const csrfresponse = await axios.get(getIP() + '/getCSRFToken/');
-axios.defaults.headers.post['X-CSRF-Token'] = csrfresponse.data.csrfToken;*/
