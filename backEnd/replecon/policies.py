@@ -47,7 +47,9 @@ def createPolicies():
                 Eq('transactions'), Eq('userid'), 
                 Eq('item'), 
                 Eq('boughtitem'), 
-                Eq('students')
+                Eq('students'),
+                Eq('currentstudent'),
+                Eq('balance')
             ],
             subjects=[Eq('Teacher')],
             effect=vakt.ALLOW_ACCESS,
@@ -64,7 +66,7 @@ def createPolicies():
             str(uuid.uuid4()),
             description="PUT Permissions based on teacher attribute / role",
             actions=[Eq('PUT')],
-            resources=[Eq('classroom'), Eq('bank'), Eq('store'), Eq('tax'), Eq('item')],
+            resources=[Eq('classroom'), Eq('bank'), Eq('store'), Eq('tax'), Eq('item'), Eq('balance')],
             subjects=[Eq('Teacher')],
             effect=vakt.ALLOW_ACCESS,
         ),
@@ -111,7 +113,7 @@ def createPolicies():
             str(uuid.uuid4()),
             description="PUT Permissions based on student attribute / role",
             actions=[Eq('PUT')],
-            resources=[Eq('transactionintrest')],
+            resources=[Eq('transactionintrest'), Eq('balance')],
             subjects=[Eq('Student')],
             effect=vakt.ALLOW_ACCESS,
         ),
