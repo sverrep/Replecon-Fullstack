@@ -8,6 +8,7 @@ import logging
 from rest_framework.permissions import DjangoModelPermissions
 from django.views.decorators.csrf import csrf_protect
 from django.utils.decorators import method_decorator
+from policies import checkInq
 
 # Create your views here.
 
@@ -17,10 +18,14 @@ class ShopList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateMode
     serializer_class = ShopSerializer
 
     def get(self, request):
-        return self.list(request)
+        if checkInq(request.method, "store", request.user.groups.get().name) == True:
+            return self.list(request)
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
     
     def post(self, request):
-        return self.create(request)
+        if checkInq(request.method, "store", request.user.groups.get().name) == True:
+            return self.create(request)
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 @method_decorator(csrf_protect, name="dispatch")
 class ShopDetails(generics.GenericAPIView, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin):
