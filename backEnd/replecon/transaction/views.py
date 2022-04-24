@@ -9,6 +9,7 @@ from .models import Transaction
 from django.views.decorators.csrf import csrf_protect
 from django.utils.decorators import method_decorator
 import logging
+from policies import checkInq
 
 @method_decorator(csrf_protect, name="dispatch")
 class CreateTransaction(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
@@ -16,10 +17,15 @@ class CreateTransaction(generics.GenericAPIView, mixins.ListModelMixin, mixins.C
     serializer_class = TransactionSerializer
 
     def get(self, request):
-        return self.list(request)
+        if checkInq(request.method, "transactions", request.user.groups.get().name) == True:
+            return self.list(request)
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
 
     def post(self, request):
-        return self.create(request)
+        if checkInq(request.method, "transactions", request.user.groups.get().name) == True:
+            return self.create(request)
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
+
 
 @method_decorator(csrf_protect, name="dispatch")
 class TransactionDetails(generics.GenericAPIView, mixins.RetrieveModelMixin):
@@ -29,11 +35,14 @@ class TransactionDetails(generics.GenericAPIView, mixins.RetrieveModelMixin):
     lookup_field = 'id'
 
     def get(self, request, id):
-        return self.retrieve(request, id=id)
+        if checkInq(request.method, "transactions", request.user.groups.get().name) == True:
+            return self.retrieve(request, id=id)
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
 
     def delete(self, request, id):
-        return self.destroy(request, id=id)
-
+        if checkInq(request.method, "transactions", request.user.groups.get().name) == True:
+            return self.destroy(request, id=id)
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
 @method_decorator(csrf_protect, name="dispatch")
 class StoreTransaction(APIView):
     queryset = Transaction.objects.all()
@@ -49,7 +58,9 @@ class StoreTransaction(APIView):
         transaction_serializer = TransactionSerializer(data = data)
         if transaction_serializer.is_valid():
             transaction_serializer.save()
-            return Response(transaction_serializer.data, status=status.HTTP_201_CREATED)
+            if checkInq(request.method, "transactions", request.user.groups.get().name) == True:
+                return Response(transaction_serializer.data, status=status.HTTP_201_CREATED)
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
         return Response(transaction_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @method_decorator(csrf_protect, name="dispatch")
@@ -69,7 +80,9 @@ class BankTransaction(APIView):
             transaction_serializer = TransactionSerializer(data = data)
             if transaction_serializer.is_valid():
                 transaction_serializer.save()
-                return Response(transaction_serializer.data, status=status.HTTP_201_CREATED)
+                if checkInq(request.method, "transactions", request.user.groups.get().name) == True:
+                    return Response(transaction_serializer.data, status=status.HTTP_201_CREATED)
+                return Response(status=status.HTTP_401_UNAUTHORIZED)
             return Response(transaction_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         else:
             sender_id = request.user.id
@@ -79,7 +92,9 @@ class BankTransaction(APIView):
             transaction_serializer = TransactionSerializer(data = data)
             if transaction_serializer.is_valid():
                 transaction_serializer.save()
-                return Response(transaction_serializer.data, status=status.HTTP_201_CREATED)
+                if checkInq(request.method, "transactions", request.user.groups.get().name) == True:
+                    return Response(transaction_serializer.data, status=status.HTTP_201_CREATED)
+                return Response(status=status.HTTP_401_UNAUTHORIZED)
             return Response(transaction_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
@@ -99,7 +114,9 @@ class TeacherPayStudents(APIView):
         transaction_serializer = TransactionSerializer(data = data)
         if transaction_serializer.is_valid():
             transaction_serializer.save()
-            return Response(transaction_serializer.data, status=status.HTTP_201_CREATED)
+            if checkInq(request.method, "transactions", request.user.groups.get().name) == True:
+                return Response(transaction_serializer.data, status=status.HTTP_201_CREATED)
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
         return Response(transaction_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -128,7 +145,9 @@ class ListTransactionsByID(APIView):
                     tempdict = {"id": transaction.id, "name": user.first_name, "amount": transaction.amount, "symbol": "+"}
                     transactions.append(tempdict)
         transactions.reverse()
-        return Response(transactions, status=status.HTTP_200_OK)
+        if checkInq(request.method, "transactions", request.user.groups.get().name) == True:
+            return Response(transactions, status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 class GetTransactionsByID(APIView):
     queryset = Transaction.objects.all()
@@ -157,5 +176,6 @@ class GetTransactionsByID(APIView):
                     tempdict = {"id": transaction.id, "name": user.first_name, "amount": transaction.amount, "symbol": "+"}
                     transactions.append(tempdict)
         transactions.reverse()
-        return Response(transactions, status=status.HTTP_200_OK)
-        
+        if checkInq(request.method, "transactions", request.user.groups.get().name) == True:
+            return Response(transactions, status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
