@@ -8,6 +8,7 @@ import logging
 from rest_framework.permissions import DjangoModelPermissions
 from django.views.decorators.csrf import csrf_protect
 from django.utils.decorators import method_decorator
+from policies import checkInq
 
 # Create your views here.
 
@@ -17,10 +18,14 @@ class ShopList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateMode
     serializer_class = ShopSerializer
 
     def get(self, request):
-        return self.list(request)
+        if checkInq(request.method, "store", request.user.groups.get().name) == True:
+            return self.list(request)
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
     
     def post(self, request):
-        return self.create(request)
+        if checkInq(request.method, "store", request.user.groups.get().name) == True:
+            return self.create(request)
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 @method_decorator(csrf_protect, name="dispatch")
 class ShopDetails(generics.GenericAPIView, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin):
@@ -30,13 +35,19 @@ class ShopDetails(generics.GenericAPIView, mixins.RetrieveModelMixin, mixins.Upd
     lookup_field = 'id'
 
     def get(self, request, id):
-        return self.retrieve(request, id=id)
+        if checkInq(request.method, "store", request.user.groups.get().name) == True:
+            return self.retrieve(request, id=id)
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
 
     def put(self, request, id):
-        return self.update(request, id=id)
+        if checkInq(request.method, "store", request.user.groups.get().name) == True:
+            return self.update(request, id=id)
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
     
     def delete(self, request, id):
-        return self.destroy(request, id=id)
+        if checkInq(request.method, "store", request.user.groups.get().name) == True:
+            return self.destroy(request, id=id)
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 @method_decorator(csrf_protect, name="dispatch")
 class ItemList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
@@ -45,10 +56,14 @@ class ItemList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateMode
     permission_classes = [DjangoModelPermissions]
 
     def get(self, request):
-        return self.list(request)
+        if checkInq(request.method, "item", request.user.groups.get().name) == True:
+            return self.list(request)
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
 
     def post(self, request):
-        return self.create(request)
+        if checkInq(request.method, "item", request.user.groups.get().name) == True:
+            return self.create(request)
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 @method_decorator(csrf_protect, name="dispatch")
 class ItemDetails(generics.GenericAPIView, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin):
@@ -58,38 +73,48 @@ class ItemDetails(generics.GenericAPIView, mixins.RetrieveModelMixin, mixins.Upd
     lookup_field = 'id'
 
     def get(self, request, id):
-        return self.retrieve(request, id=id)
+        if checkInq(request.method, "item", request.user.groups.get().name) == True:
+            return self.retrieve(request, id=id)
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
 
     def put(self, request, id):
-        return self.update(request, id=id)
+        if checkInq(request.method, "item", request.user.groups.get().name) == True:
+            return self.update(request, id=id)
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
 
     def delete(self, request, id):
-        return self.destroy(request, id=id)
+        if checkInq(request.method, "item", request.user.groups.get().name) == True:
+            return self.destroy(request, id=id)
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 @method_decorator(csrf_protect, name="dispatch")
 class ListBoughtItems(APIView):
 
     def get(self, request):
-        logger = logging.getLogger(__name__)
-        user = get_user_model().objects.get(id = request.user.id)
-        bought_items = BoughtItems.objects.all()
-        user_items = []
-        for item in bought_items:
-            if item.user_id == user.id:
-                tempitem = Item.objects.get(id = item.item_id)
-                tempdict = {"id": item.id, "item_name": tempitem.item_name, "item_description": tempitem.description}
-                user_items.append(tempdict)
-        return Response(user_items, status=status.HTTP_200_OK)
+        if checkInq(request.method, "boughtitem", request.user.groups.get().name) == True:
+            logger = logging.getLogger(__name__)
+            user = get_user_model().objects.get(id = request.user.id)
+            bought_items = BoughtItems.objects.all()
+            user_items = []
+            for item in bought_items:
+                if item.user_id == user.id:
+                    tempitem = Item.objects.get(id = item.item_id)
+                    tempdict = {"id": item.id, "item_name": tempitem.item_name, "item_description": tempitem.description}
+                    user_items.append(tempdict)
+            return Response(user_items, status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
     
     def post(self, request):
-        logger = logging.getLogger(__name__)
-        user_id = request.user.id
-        data = {"item_id": request.data["item_id"], "user_id": user_id}
-        bought_item_serializer = BoughtItemsSerializer(data = data)
-        if bought_item_serializer.is_valid():
-            bought_item_serializer.save()
-            return Response(bought_item_serializer.data, status=status.HTTP_201_CREATED)
-        return Response(bought_item_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        if checkInq(request.method, "boughtitem", request.user.groups.get().name) == True:
+            logger = logging.getLogger(__name__)
+            user_id = request.user.id
+            data = {"item_id": request.data["item_id"], "user_id": user_id}
+            bought_item_serializer = BoughtItemsSerializer(data = data)
+            if bought_item_serializer.is_valid():
+                bought_item_serializer.save()
+                return Response(bought_item_serializer.data, status=status.HTTP_201_CREATED)
+            return Response(bought_item_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 @method_decorator(csrf_protect, name="dispatch")
 class ListAllBoughtItems(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
@@ -97,7 +122,11 @@ class ListAllBoughtItems(generics.GenericAPIView, mixins.ListModelMixin, mixins.
     serializer_class = BoughtItemsSerializer
 
     def get(self, request):
-        return self.list(request)
+        if checkInq(request.method, "boughtitem", request.user.groups.get().name) == True:
+            return self.list(request)
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
 
     def post(self, request):
-        return self.create(request)
+        if checkInq(request.method, "allboughtitem", request.user.groups.get().name) == True:
+            return self.create(request)
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
