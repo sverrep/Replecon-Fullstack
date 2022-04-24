@@ -8,6 +8,7 @@ from django.views.decorators.csrf import csrf_protect
 from django.utils.decorators import method_decorator
 import datetime
 import logging
+from policies import checkInq
 # Create your views here.
 
 @method_decorator(csrf_protect, name="dispatch")
@@ -17,10 +18,14 @@ class BankList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateMode
     permission_classes = [DjangoModelPermissions]
 
     def get(self, request):
-        return self.list(request)
+        if checkInq(request.method, "bank", request.user.groups.get().name) == True:
+            return self.list(request)
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
     
     def post(self, request):
-        return self.create(request)
+        if checkInq(request.method, "bank", request.user.groups.get().name) == True:
+            return self.create(request)
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 @method_decorator(csrf_protect, name="dispatch")
 class BankDetails(generics.GenericAPIView, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin):
@@ -31,13 +36,19 @@ class BankDetails(generics.GenericAPIView, mixins.RetrieveModelMixin, mixins.Upd
     lookup_field = 'id'
 
     def get(self, request, id):
-        return self.retrieve(request, id=id)
+        if checkInq(request.method, "bank", request.user.groups.get().name) == True:
+            return self.retrieve(request, id=id)
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
 
     def put(self, request, id):
-        return self.update(request, id=id)
+        if checkInq(request.method, "bank", request.user.groups.get().name) == True:
+            return self.update(request, id=id)
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
     
     def delete(self, request, id):
-        return self.destroy(request, id=id)
+        if checkInq(request.method, "bank", request.user.groups.get().name) == True:
+            return self.destroy(request, id=id)
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 @method_decorator(csrf_protect, name="dispatch")
 class TransactionIntrestRateList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
@@ -45,7 +56,9 @@ class TransactionIntrestRateList(generics.GenericAPIView, mixins.ListModelMixin,
     serializer_class = TransactionInterestRateSerializer
 
     def get(self, request):
-        return self.list(request)
+        if checkInq(request.method, "transactionintrest", request.user.groups.get().name) == True:
+            return self.list(request)
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
     
     def post(self, request):
         logger = logging.getLogger(__name__)
@@ -61,7 +74,9 @@ class TransactionIntrestRateList(generics.GenericAPIView, mixins.ListModelMixin,
                 serializer = TransactionInterestRateSerializer(data = data)
                 if serializer.is_valid():
                     serializer.save()
-                    return Response(serializer.data, status=status.HTTP_201_CREATED)
+                    if checkInq(request.method, "transactionintrest", request.user.groups.get().name) == True:
+                        return Response(serializer.data, status=status.HTTP_201_CREATED)
+                    return Response(status=status.HTTP_401_UNAUTHORIZED)
                 logger.error(serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
@@ -74,7 +89,9 @@ class TransactionIntrestRateList(generics.GenericAPIView, mixins.ListModelMixin,
         serializer = TransactionInterestRateSerializer(transaction, data = data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            if checkInq(request.method, "transactionintrest", request.user.groups.get().name) == True:
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
         logger.error(serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -88,7 +105,9 @@ class TransactionIntrestRatePayoutDate(APIView):
         transaction = TransactionInterestRate.objects.get(transaction_id = id)
         current_date = datetime.date.today()
         payout_date = transaction.end_date - current_date
-        return Response(payout_date, status=status.HTTP_200_OK)
+        if checkInq(request.method, "transactionintrest", request.user.groups.get().name) == True:
+            return Response(payout_date, status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 @method_decorator(csrf_protect, name="dispatch")
 class TransactionInterestRates(generics.GenericAPIView, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin):
@@ -98,7 +117,11 @@ class TransactionInterestRates(generics.GenericAPIView, mixins.RetrieveModelMixi
     lookup_field = 'transaction_id'
 
     def get(self, request, transaction_id):
-        return self.retrieve(request, transaction_id=transaction_id)
+        if checkInq(request.method, "transactionintrestpayout", request.user.groups.get().name) == True:
+            return self.retrieve(request, transaction_id=transaction_id)
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
 
     def delete(self, request, transaction_id):
-        return self.destroy(request, transaction_id=transaction_id)
+        if checkInq(request.method, "transactionintrestpayout", request.user.groups.get().name) == True:
+            return self.destroy(request, transaction_id=transaction_id)
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
