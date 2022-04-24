@@ -169,7 +169,7 @@ class TeacherStudents extends React.Component {
                 })
                 .catch(error => console.log(error))
             })
-            .catch(error => this.setState({error: error}))
+            .catch(error => console.log(error))
           }
           this.setState({show:false})
         }
@@ -245,7 +245,6 @@ class TeacherStudents extends React.Component {
     async deleteSelected(){
         for (let i = 0; i < Object.keys(this.state.selected).length; i++)
         {
-            await getCSRFToken()
             await axios.delete(getIP()+`/users/${this.state.selected[i]}/`)
             .then(async response => {
                 await axios.get(getIP()+`/transactions/getTransactionsByID/${this.state.selected[i]}`)

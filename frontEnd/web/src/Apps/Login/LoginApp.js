@@ -8,7 +8,6 @@ import Row from 'react-bootstrap/Row'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 import Cookies from 'universal-cookie'
-import getCSRFToken from '../../Components/csrf/getCSRFToken.js';
 
 export default class LoginApp extends React.Component {
   constructor(props) {
@@ -113,7 +112,6 @@ export default class LoginApp extends React.Component {
   async handleLogin() {
     if (this.validateData()) {
       const payload = { username: this.state.email, password: this.state.password }
-      await getCSRFToken() 
       await axios.post(getIP()+'/auth/login/', payload)
       .then(async response => {
         this.setState ({ token: response.data.token })

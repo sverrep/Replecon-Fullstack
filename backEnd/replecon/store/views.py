@@ -1,18 +1,17 @@
 from django.contrib.auth import get_user_model
-from django.shortcuts import render
 from .models import Shop, Item, BoughtItems
 from .serializers import ShopSerializer, ItemSerializer, BoughtItemsSerializer
-from rest_framework import viewsets, generics, mixins, viewsets, status
+from rest_framework import generics, mixins, status
 from rest_framework.response import Response
-from django.http import JsonResponse
-from rest_framework.parsers import JSONParser
-from rest_framework.decorators import api_view, APIView
+from rest_framework.decorators import APIView
 import logging
-from rest_framework.permissions import AllowAny, DjangoModelPermissions
+from rest_framework.permissions import DjangoModelPermissions
+from django.views.decorators.csrf import csrf_protect
+from django.utils.decorators import method_decorator
 
 # Create your views here.
 
-
+@method_decorator(csrf_protect, name="dispatch")
 class ShopList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
     queryset = Shop.objects.all()
     serializer_class = ShopSerializer
@@ -23,6 +22,7 @@ class ShopList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateMode
     def post(self, request):
         return self.create(request)
 
+@method_decorator(csrf_protect, name="dispatch")
 class ShopDetails(generics.GenericAPIView, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin):
     queryset = Shop.objects.all()
     serializer_class = ShopSerializer
@@ -38,7 +38,7 @@ class ShopDetails(generics.GenericAPIView, mixins.RetrieveModelMixin, mixins.Upd
     def delete(self, request, id):
         return self.destroy(request, id=id)
 
-
+@method_decorator(csrf_protect, name="dispatch")
 class ItemList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
     queryset = Item.objects.all()
     serializer_class = ItemSerializer
@@ -50,6 +50,7 @@ class ItemList(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateMode
     def post(self, request):
         return self.create(request)
 
+@method_decorator(csrf_protect, name="dispatch")
 class ItemDetails(generics.GenericAPIView, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin):
     queryset = Item.objects.all()
     serializer_class = ItemSerializer
@@ -65,6 +66,7 @@ class ItemDetails(generics.GenericAPIView, mixins.RetrieveModelMixin, mixins.Upd
     def delete(self, request, id):
         return self.destroy(request, id=id)
 
+@method_decorator(csrf_protect, name="dispatch")
 class ListBoughtItems(APIView):
 
     def get(self, request):
@@ -89,7 +91,7 @@ class ListBoughtItems(APIView):
             return Response(bought_item_serializer.data, status=status.HTTP_201_CREATED)
         return Response(bought_item_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
+@method_decorator(csrf_protect, name="dispatch")
 class ListAllBoughtItems(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
     queryset = BoughtItems.objects.all()
     serializer_class = BoughtItemsSerializer

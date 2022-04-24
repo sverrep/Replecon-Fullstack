@@ -125,20 +125,17 @@ class StudentStore extends React.Component {
     async validatePurchase(item){
         await this.getStudentBalance()
         if(this.state.student_balance >= item.price)
-    {
-        this.setState({variant:'success'})
-        this.setState({message:'Item was bought successfully'})
-        this.setState({showAlert:true})
-        return true
-    }
-    else
-    {
-        this.setState({variant:'danger'})
-        this.setState({message:'You dont have enough money for this item'})
-        this.setState({showAlert:true})
-        return false
-    }
-    }
+        {
+            return true
+        }
+        else
+        {
+            this.setState({variant:'danger'})
+            this.setState({message:'You dont have enough money for this item'})
+            this.setState({showAlert:true})
+            return false
+        }
+        }
     //Purchasing of Item
 
     async buyItem(item){
@@ -153,6 +150,9 @@ class StudentStore extends React.Component {
                             await axios.post(getIP()+'/transactions/buyFromStore/', { amount: item.price })
                                 .then(async response => {
                                     this.getStudentBalance()
+                                    this.setState({variant:'success'})
+                                    this.setState({message:'Item was bought successfully'})
+                                    this.setState({showAlert:true})
                                 })
                             .catch(error => console.log(error + "transactions"))
                         })

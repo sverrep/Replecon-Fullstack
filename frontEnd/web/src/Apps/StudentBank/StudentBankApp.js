@@ -127,6 +127,9 @@ class StudentBank extends React.Component {
                 await axios.put(getIP()+'/students/balance/', { amount: this.state.value, user_id: response.data, recipient: false })
                 .then(response => {
                   this.setState({show:false})
+                  this.setState({variant:'success'})
+                  this.setState({message:'Money saved successfully'})
+                  this.setState({showAlert:true})
                   this.getStudentSavings()
                   this.getStudentBalance()
                 })
@@ -206,7 +209,6 @@ class StudentBank extends React.Component {
                             "payout_date": payout_date, 
                             "active": response1.data[i].active
                           }
-                          this.setState({message: tempdict})
                           this.setState({savings: [...this.state.savings, tempdict]})
                         })
                         .catch(error => console.log(error))
@@ -246,9 +248,6 @@ class StudentBank extends React.Component {
       }
       if(temp === true){
         if(item.payout_date <= 0){
-          this.setState({variant:'success'})
-          this.setState({message:'Money claimed successfully'})
-          this.setState({showAlert:true})
           return true
         }
         else{
@@ -279,6 +278,9 @@ class StudentBank extends React.Component {
                   .then(response => {
                     this.getStudentSavings()
                     this.getStudentBalance()
+                    this.setState({variant:'success'})
+                    this.setState({message:'Money claimed successfully'})
+                    this.setState({showAlert:true})
                   })
                   .catch(error => console.log(error))
                 })
@@ -316,9 +318,6 @@ class StudentBank extends React.Component {
               return false
             }
             else{
-              this.setState({variant:'success'})
-              this.setState({message:'Money saved successfully'})
-              this.setState({showAlert:true})
               return true
             }
         }

@@ -88,10 +88,6 @@ class StudentClass extends React.Component {
                 return false
             }
             else{
-                this.setState({variant:'success'})
-                this.setState({message:'Money Sent'})
-                this.setState({showAlert:true})
-                this.setState({active:false})
                 return true
             }
         }
@@ -119,6 +115,10 @@ class StudentClass extends React.Component {
                             await axios.post(getIP()+'/transactions/', transaction_payload)
                             .then( async response => {
                                 this.getStudentBalance()
+                                this.setState({variant:'success'})
+                                this.setState({message:'Money Sent'})
+                                this.setState({showAlert:true})
+                                this.setState({active:false})
                             })
                             .catch(error => console.log(error))
                         })

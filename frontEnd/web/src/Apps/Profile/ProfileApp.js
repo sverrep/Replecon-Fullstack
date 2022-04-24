@@ -94,6 +94,7 @@ class Profile extends React.Component {
             axios.defaults.headers.common.Authorization = null
             const cookies = new Cookies();
             cookies.remove('Authorization')
+            cookies.remove('sessionid')
             this.setState({ redirect_login : true})
           })
           .catch(error =>  console.log(error));
