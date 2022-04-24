@@ -44,7 +44,7 @@ def createPolicies():
         vakt.Policy(
             str(uuid.uuid4()),
             description="POST Permissions based on teacher attribute / role",
-            actions=[Eq('GET'), Eq('POST'), Eq('PUT'), Eq('DELETE')],
+            actions=[Eq('POST')],
             resources=[Eq('classroom'), Eq('bank'), Eq('store'), Eq('tax'), Eq('transaction'), Eq('users')],
             subjects=[Eq('Teacher')],
             effect=vakt.ALLOW_ACCESS,
@@ -52,7 +52,7 @@ def createPolicies():
         vakt.Policy(
             str(uuid.uuid4()),
             description="PUT Permissions based on teacher attribute / role",
-            actions=[Eq('GET'), Eq('POST'), Eq('PUT'), Eq('DELETE')],
+            actions=[Eq('PUT')],
             resources=[Eq('classroom'), Eq('bank'), Eq('store'), Eq('tax'), Eq('transaction'), Eq('users')],
             subjects=[Eq('Teacher')],
             effect=vakt.ALLOW_ACCESS,
@@ -60,7 +60,7 @@ def createPolicies():
         vakt.Policy(
             str(uuid.uuid4()),
             description="DELETE Permissions based on teacher attribute / role",
-            actions=[Eq('GET'), Eq('POST'), Eq('PUT'), Eq('DELETE')],
+            actions=[Eq('DELETE')],
             resources=[Eq('classroom'), Eq('bank'), Eq('store'), Eq('tax'), Eq('transaction'), Eq('users')],
             subjects=[Eq('Teacher')],
             effect=vakt.ALLOW_ACCESS,
