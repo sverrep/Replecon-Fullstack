@@ -107,7 +107,7 @@ https://docs.google.com/document/d/1MOT0_gzFjEICuPPi4KH5cjHGamvCaiEhg8BfUleZ8Vw/
 
 ## Cyber Threat Model
 
-https://drive.google.com/file/d/1vE0p3WX5gI913MC737ZC4oShM1_O_MrC/view?usp=sharing
+https://drive.google.com/file/d/1QPBUBEOGWzkOtd7cHClpE5JoVS1yg6PH/view?usp=sharing
 
 ## Deployment Pipeline Diagram
 
